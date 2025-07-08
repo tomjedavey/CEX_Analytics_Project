@@ -85,8 +85,14 @@ def engineer_features(df):
     
     return df
 
+def engineer_features_1(df):
+    '''
+    Wrapper for engineer_features for import in other scripts.
+    '''
+    return engineer_features(df)
+
 #Calling the function to engineer features on the intial dataset
-data_2_rcs = engineer_features(data_1)
+data_2_rcs = engineer_features_1(data_1)
 
 # Saving the processed data to a CSV file and adding it to the processed_data folder as the first processing made to initial dataset
 
