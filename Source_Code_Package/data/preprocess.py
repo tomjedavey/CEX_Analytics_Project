@@ -18,10 +18,15 @@ def scale_features_from_config(data_path=None, config_path=None):
 
     features = config['features']['independent_variables']
     if data_path is None:
-        # Get the directory of the config file
-        config_dir = os.path.dirname(os.path.abspath(config_path))
-        # Join the processed_data_path relative to the config file location
-        data_path = os.path.join(config_dir, config['data']['processed_data_path'])
+        # Find the project root (directory containing pyproject.toml)
+        current_dir = os.path.abspath(os.path.dirname(__file__))
+        while not os.path.exists(os.path.join(current_dir, 'pyproject.toml')):
+            parent_dir = os.path.dirname(current_dir)
+            if parent_dir == current_dir:
+                raise FileNotFoundError('Could not find project root (pyproject.toml)')
+            current_dir = parent_dir
+        project_root = current_dir
+        data_path = os.path.join(project_root, config['data']['processed_data_path'])
         data_path = os.path.normpath(data_path)
     elif not os.path.isabs(data_path):
         data_path = os.path.normpath(os.path.join(os.getcwd(), data_path))

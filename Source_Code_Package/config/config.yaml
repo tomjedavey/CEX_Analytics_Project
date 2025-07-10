@@ -1,6 +1,6 @@
 data:
  raw_data_path: 'data/raw_data/initial_raw_data_polygon.csv' #**NEED TO MAKE SURE THAT THESE DIRECTORIES ARE CORRECT IN TERMS OF EACH FILE USING THIS CONFIG.YAML**
- processed_data_path: 'data/processed_data/AS_1_feature_data.csv'
+ processed_data_path: '/Users/tomdavey/Documents/GitHub/MLProject1/data/processed_data/AS_1_feature_data.csv'
  score_output_path: 'data/scores/AS_1_scores.csv'
 
 preprocessing:
@@ -20,7 +20,7 @@ features:
   - LOG_TOTAL_VOLUME
   - LOG_BRIDGE_VOLUME
   #Activity features
-  - TRANSACTION_FREQUENCY
+  - TX_PER_MONTH
   - TRADING_INTENSITY
   #Sophiptication features
   - PROTOCOL_EXPERTISE
@@ -45,7 +45,7 @@ train_test_split:
  random_state: 42
 
 output:
- model_path: models/linear_regression_model.pkl #**DOES THIS WORK? - IF ANYTHING THIS IS THE MOST LIKELY LOCATION TO PRODUCE ERRORS**
+ model_path: linear_regression_model.pkl #**DOES THIS WORK? - IF ANYTHING THIS IS THE MOST LIKELY LOCATION TO PRODUCE ERRORS**
  #**NEED TO FIGURE OUT HOW THIS ACTUALLY WORKS, WHAT THE ABOVE DOES IN TERMS OF THE RESULTS OF THE LINEAR REGRESSION, AND WHAT ELSE NEEDS TO BE ADDED HERE**
  #logs_path:
  #metrics_path:

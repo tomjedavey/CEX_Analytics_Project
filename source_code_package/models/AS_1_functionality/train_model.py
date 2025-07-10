@@ -26,6 +26,11 @@ def train_linear_regression(config_path=None):
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
 
+    # Always define data_path after loading config
+    data_path = config['data']['processed_data_path']
+    if not os.path.isabs(data_path):
+        data_path = os.path.join(os.path.dirname(__file__), data_path)
+
     # Get dependent variable
     target_col = config['features']['dependent_variable']
 
@@ -35,9 +40,6 @@ def train_linear_regression(config_path=None):
         X, scaler = scale_features_from_config(config_path=config_path)
     else:
         # Load data and select features without scaling
-        data_path = config['data']['processed_data_path']
-        if not os.path.isabs(data_path):
-            data_path = os.path.join(os.path.dirname(__file__), '../../../', data_path)
         df = pd.read_csv(data_path)
         X = df[config['features']['independent_variables']]
 
