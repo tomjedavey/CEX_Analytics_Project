@@ -1,12 +1,5 @@
 #Functionality for the training of the linear regression model 
 
-'''Function to train the linear regression model for the purpose of building a Revenue Contribution Score (RCS) for each wallet. 
-    This Revenue Contribution Score is produced from the predicted value of the revenue proxy by the linear regression model,
-    the independent variables being used in the model are wallet features seen in config.yaml.
-    df is the dataframe containing all features (independent variables) and the revenue proxy for each wallet (dependent variable).
-    X is the independent variables to be used in the model (wallet features).
-    Y is the dependent variable to be used in the model (revenue proxy).'''
-
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import yaml
@@ -67,7 +60,7 @@ def train_linear_regression(config_path=None):
     model = LinearRegression()
     model.fit(X_train, y_train)
 
-    #The concept of what is being attempted is correct - not sure if the code works as intended so check when testing the model
+    #saving the model and scaler (if used) to a file for use in test_model.py functionality when executing model in script
 
     # Save the model (and scaler if used)
     model_path = config.get('output', {}).get('model_path', 'linear_regression_model.pkl')
@@ -78,3 +71,5 @@ def train_linear_regression(config_path=None):
 
     # Optionally, return the model and test data for evaluation elsewhere
     return model, X_test, y_test
+
+#**THE CONCEPT OF WHAT IS BEING ATTEMPTED ABOVE IS CORRECT - NOT SURE IF THE CODE WORKS AS INTENDED SO CHECK WHEN TESTING THE MODEL**

@@ -1,10 +1,11 @@
 data:
- raw_data_path: 'data/raw_data/initial_raw_data_polygon.csv'
+ raw_data_path: 'data/raw_data/initial_raw_data_polygon.csv' #**NEED TO MAKE SURE THAT THESE DIRECTORIES ARE CORRECT IN TERMS OF EACH FILE USING THIS CONFIG.YAML**
  processed_data_path: 'data/processed_data/AS_1_feature_data.csv'
  score_output_path: 'data/scores/AS_1_scores.csv'
 
 preprocessing:
 #SEE WHAT IS NEEDED AS PRODUCTION OF THE LINEAR REGRESSION FUNCTION IN TRAIN_MODEL.PY PROGRESSES THEN ADD THE RELEVANT CATEGORIES + CONFIGURATIONS HERE
+  use_scaling: true
 
 model:
  type: linear_regression
@@ -44,7 +45,7 @@ train_test_split:
  random_state: 42
 
 output:
- model_path: models/linear_regression_model.pkl
+ model_path: models/linear_regression_model.pkl #**DOES THIS WORK? - IF ANYTHING THIS IS THE MOST LIKELY LOCATION TO PRODUCE ERRORS**
  #**NEED TO FIGURE OUT HOW THIS ACTUALLY WORKS, WHAT THE ABOVE DOES IN TERMS OF THE RESULTS OF THE LINEAR REGRESSION, AND WHAT ELSE NEEDS TO BE ADDED HERE**
  #logs_path:
  #metrics_path:
