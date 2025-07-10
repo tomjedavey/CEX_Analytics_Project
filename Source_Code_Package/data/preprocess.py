@@ -16,12 +16,15 @@ def scale_features_from_config(data_path=None, config_path=None):
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
 
-    features = config['features']['independent_variables'] #NOT COMPLETELY SURE IF THIS IS THE RIGHT PATH TO THE FEATURES IN CONFIG.YAML
+    features = config['features']['independent_variables']
     if data_path is None:
-        data_path = config['data']['processed_data_path'] #NOT COMPLETELY SURE IF THIS IS VALID - IS THERE A PATH TO DATA IN CONFIG.YAML?
-    # Adjust path if running from a different working directory
-    if not os.path.isabs(data_path):
-        data_path = os.path.join(os.path.dirname(__file__), '../../../', data_path)
+        # Get the directory of the config file
+        config_dir = os.path.dirname(os.path.abspath(config_path))
+        # Join the processed_data_path relative to the config file location
+        data_path = os.path.join(config_dir, config['data']['processed_data_path'])
+        data_path = os.path.normpath(data_path)
+    elif not os.path.isabs(data_path):
+        data_path = os.path.normpath(os.path.join(os.getcwd(), data_path))
     df = pd.read_csv(data_path)
     X = df[features]
     scaler = StandardScaler()

@@ -8,3 +8,13 @@ from source_code_package.data.preprocess import scale_features_from_config
 import pandas as pd
 import os
 
+#Importing the train_linear_regression function from the train_model.py file:
+from source_code_package.models.AS_1_functionality.train_model import train_linear_regression
+
+#Reading the data path from config.yaml (meaning any changes to the data path in config.yaml will be reflected here):
+with open('source_code_package/config/config.yaml', 'r') as file:
+    config = yaml.safe_load(file)
+data_path = config['data']['processed_data_path']  # Adjust the key as per your config.yaml structure
+
+#Calling of the train_linear_regression function to train the model:
+train_linear_regression(config_path='source_code_package/config/config.yaml')
