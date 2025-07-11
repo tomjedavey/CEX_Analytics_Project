@@ -8,8 +8,9 @@ import os
 
 def scale_features_from_config(data_path=None, config_path=None):
     '''
-    Loads config.yaml, reads the independent variables, loads the data, and applies StandardScaler to those features.
-    Returns the scaled features as a DataFrame and the fitted scaler.
+    Loads config.yaml, reads the independent variables and dependent variable, loads the data, and applies StandardScaler to those features.
+    Returns the scaled features as a DataFrame, the target variable, and the fitted scaler.
+    Because the data path is already specified in config.yaml, this function will use that path to load the data, no need to input data_path itself.
     '''
     if config_path is None:
         config_path = os.path.join(os.path.dirname(__file__), '../config/config.yaml')
@@ -17,6 +18,7 @@ def scale_features_from_config(data_path=None, config_path=None):
         config = yaml.safe_load(f)
 
     features = config['features']['independent_variables']
+    target_col = config['features']['dependent_variable']
     if data_path is None:
         # Find the project root (directory containing pyproject.toml)
         current_dir = os.path.abspath(os.path.dirname(__file__))
@@ -32,11 +34,12 @@ def scale_features_from_config(data_path=None, config_path=None):
         data_path = os.path.normpath(os.path.join(os.getcwd(), data_path))
     df = pd.read_csv(data_path)
     X = df[features]
+    y = df[target_col]
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     X_scaled_df = pd.DataFrame(X_scaled, columns=features, index=df.index)
-    return X_scaled_df, scaler
+    return print(X_scaled_df), print(y), scaler  #now scaling function returns both features and target variable, therefore alignment guarenteed.
+#**CHANGE THIS BACK TO NOT HAVING PRINT STATEMENTS IN THE RETURN**
 
-#FUNCTION INTENTIONS ARE CORRECT BUT NOT SURE THAT THE CODE FULLY WORKS AS INTENDED - CHECK THIS PROCESS FULLY WHEN RUNNING**
 #**ALSO IMPORTANT TO REMEMBER FOR SCALING:
 #"TEST FUNCTION MUST KNOW WHETHER TO USE THE SCALER (BY CHECKING IF IT EXISTS IN THE LOADED OBJECT)" - RE-EVALUATE THIS LATER

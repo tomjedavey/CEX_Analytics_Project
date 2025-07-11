@@ -17,7 +17,11 @@ data_path = config['data']['processed_data_path']  # Adjust the key as per your 
 # Preprocess test data if needed (reuse code from train_model_AS_1.py)
 
 # Evaluate model using the function from test_model.py
-results = test_linear_regression('source_code_package/config/config.yaml')  # Adjust arguments as needed
+results = test_linear_regression('source_code_package/config/config.yaml')
+y_test, y_pred, mse, r2, indices = results
+results_df = pd.DataFrame({'index': indices, 'y_true': y_test, 'y_pred': y_pred})
+results_df.to_csv('data/scores/AS_1_test_results.csv', index=False)
+print(f"MSE: {mse}, R2: {r2}")
+print(results_df)
 
-# Print or save results
-print(results)
+#DON'T THINK THAT THE INDEX IS WORKING IN THIS CODE PROPERLY - NEED TO CHECK THIS

@@ -54,6 +54,15 @@ def test_linear_regression(config_path=None):
 
     # Predict and evaluate
     y_pred = model.predict(X_test)
-    # Add evaluation metrics as needed (e.g., mean squared error, R^2, etc.) - WHERE TO ADD THE EVALUATION METRICS ONCE ALL IS WORKING / RUNNING AS INTENTED
 
-    return y_test, y_pred
+    # Add evaluation metrics as needed (e.g., mean squared error, R^2, etc.) - WHERE TO ADD THE EVALUATION METRICS ONCE ALL IS WORKING / RUNNING AS INTENTED
+    from sklearn.metrics import mean_squared_error, r2_score
+    y_pred = model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    r2 = r2_score(y_test, y_pred)
+
+    # If you want to return indices
+    indices = X_test.index if hasattr(X_test, 'index') else None
+
+
+    return y_test, y_pred, mse, r2, indices

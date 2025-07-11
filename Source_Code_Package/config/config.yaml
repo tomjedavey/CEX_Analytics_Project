@@ -13,39 +13,41 @@ model:
  normalize: true
 
 features:
- dependent_variable: REVENUE_PROXY
- independent_variables:
-  #volume features
-  - LOG_AVG_TRANSFER
-  - LOG_TOTAL_VOLUME
-  - LOG_BRIDGE_VOLUME
-  #Activity features
-  - TX_PER_MONTH
-  - TRADING_INTENSITY
-  #Sophiptication features
-  - PROTOCOL_EXPERTISE
-  - METHOD_SOPHISTICATION
-  - PROTOCOL_DIVERSITY
-  - TOKEN_DIVERSITY
-  #Stability features
-  - WALLET_MATURITY_SCORE
-  - CROSS_CHAIN_INTENSITY
-  - BRIDGE_EFFICIENCY
-  #Engagement features
-  - DOMAIN_BREADTH
-  - INTERACTION_DIVERSITY
-  #Binary indicators
-  - IS_BRIDGE_USER
-  - IS_ADVANCED_USER
-  - IS_HIGH_FREQUENCY
-  - IS_MULTI_DOMAIN
+  dependent_variable: REVENUE_PROXY
+  independent_variables:
+    # Volume features
+    #- LOG_AVG_TRANSFER
+    #- LOG_TOTAL_VOLUME
+    #- LOG_BRIDGE_VOLUME
+    # Activity features
+    - TX_PER_MONTH
+    #- TRADING_INTENSITY
+    # Sophistication features
+    #- PROTOCOL_EXPERTISE
+    #- METHOD_SOPHISTICATION
+    #- PROTOCOL_DIVERSITY
+    #- TOKEN_DIVERSITY
+    # Stability features
+    #- WALLET_MATURITY_SCORE
+    #- CROSS_CHAIN_INTENSITY
+    #- BRIDGE_EFFICIENCY
+    # Engagement features
+    #- DOMAIN_BREADTH
+    #- INTERACTION_DIVERSITY
+    # Binary indicators
+    #- IS_BRIDGE_USER
+    #- IS_ADVANCED_USER
+    #- IS_HIGH_FREQUENCY
+    #- IS_MULTI_DOMAIN
+
 
 train_test_split:
  test_size: 0.2
  random_state: 42
 
-output:
+output: #careful here - this section is brought in in train_model.py and is used to save the model and results
  model_path: linear_regression_model.pkl #**DOES THIS WORK? - IF ANYTHING THIS IS THE MOST LIKELY LOCATION TO PRODUCE ERRORS**
+ test_results_path: data/scores/AS_1_test_results.csv #**NEED TO MAKE SURE THAT THIS IS THE CORRECT PATH FOR THE TEST RESULTS CSV FILE**
  #**NEED TO FIGURE OUT HOW THIS ACTUALLY WORKS, WHAT THE ABOVE DOES IN TERMS OF THE RESULTS OF THE LINEAR REGRESSION, AND WHAT ELSE NEEDS TO BE ADDED HERE**
  #logs_path:
  #metrics_path:

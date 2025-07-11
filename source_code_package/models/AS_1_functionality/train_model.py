@@ -18,8 +18,6 @@ def train_linear_regression(config_path=None):
     Y is the dependent variable to be used in the model (revenue proxy).
     """
 
-    #Code to scale the features if specified in config.yaml
-
     # Load config
     if config_path is None:
         config_path = os.path.join(os.path.dirname(__file__), '../config/config.yaml')
@@ -37,14 +35,12 @@ def train_linear_regression(config_path=None):
     # Check if scaling is enabled
     use_scaling = config.get('preprocessing', {}).get('use_scaling', False)
     if use_scaling:
-        X, scaler = scale_features_from_config(config_path=config_path)
+        X, y, scaler = scale_features_from_config(config_path=config_path)
     else:
         # Load data and select features without scaling
         df = pd.read_csv(data_path)
         X = df[config['features']['independent_variables']]
-
-    # Load target variable
-    y = df[target_col] if not use_scaling else pd.read_csv(data_path)[target_col] #see "Get dependent variable" comment above
+        y = df[target_col]
 
     #Actual code to train the linear regression model, given the independent and dependent variables specified in config.yaml
 
