@@ -38,7 +38,7 @@ def scale_features_from_config(data_path=None, config_path=None):
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
     X_scaled_df = pd.DataFrame(X_scaled, columns=features, index=df.index)
-    return print(X_scaled_df), print(y), scaler  #now scaling function returns both features and target variable, therefore alignment guarenteed.
+    return X_scaled_df, y, scaler  #now scaling function returns both features and target variable, therefore alignment guarenteed.
 #**CHANGE THIS BACK TO NOT HAVING PRINT STATEMENTS IN THE RETURN**
 
 #**ALSO IMPORTANT TO REMEMBER FOR SCALING:

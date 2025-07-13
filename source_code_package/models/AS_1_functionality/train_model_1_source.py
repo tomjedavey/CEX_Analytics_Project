@@ -3,7 +3,7 @@
 from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import train_test_split
 import yaml
-from source_code_package.data.preprocess import scale_features_from_config
+from source_code_package.data.preprocess_AS_1 import scale_features_from_config
 import pandas as pd
 import os
 
@@ -20,7 +20,7 @@ def train_linear_regression(config_path=None):
 
     # Load config
     if config_path is None:
-        config_path = os.path.join(os.path.dirname(__file__), '../config/config.yaml')
+        config_path = os.path.join(os.path.dirname(__file__), '../config/config_AS_1.yaml')
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
 

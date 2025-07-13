@@ -19,7 +19,7 @@ def test_linear_regression(config_path=None):
 
     # Load config
     if config_path is None:
-        config_path = os.path.join(os.path.dirname(__file__), '../config/config.yaml')
+        config_path = os.path.join(os.path.dirname(__file__), '../config/config_AS_1.yaml')
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
 

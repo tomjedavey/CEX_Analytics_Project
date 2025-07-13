@@ -11,7 +11,7 @@ import os
 
 #Importing the feature engineering function from source_code_package/features/AS_1_features.py
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from source_code_package.features.AS_1_features import engineer_features
+from source_code_package.features.AS_1_features_source import engineer_features
 
 #Loading the initial raw data
 data = pd.read_csv('data/raw_data/initial_raw_data_polygon.csv')
