@@ -1,0 +1,20 @@
+#Configurations for relative clustering algortithms 
+
+data:
+  raw_data_path: "data/raw_data/initial_raw_data_polygon.csv"
+
+preprocessing:
+  log_transformation:
+    enabled: true
+    exclude_columns:
+      - "TX_PER_MONTH"
+      - "ACTIVE_DURATION_DAYS"
+    method: "log1p"  # Use log1p for handling zero/negative values
+  
+  scaling:
+    enabled: true
+    method: "standard"  # StandardScaler
+    # Will be added when scaling functionality is implemented
+
+    #CHECK THE VALIDITY OF THE ABOVE AND WHETHER IT WORKS OR NOT:
+    #MAYBE WHEN SCALING CODE IS ADDED - RE-EVALUATE
