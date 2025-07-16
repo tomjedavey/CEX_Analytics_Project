@@ -382,7 +382,6 @@ def preprocess_for_clustering(data_path: Optional[str] = None, config_path: Opti
             print("Scaling completed successfully.")
             
             # Clean up temporary file
-            import os
             os.unlink(temp_data_path)
             
         except Exception as e:
