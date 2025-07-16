@@ -197,6 +197,8 @@ def evaluate_umap_quality(original_data: pd.DataFrame, reduced_data: np.ndarray,
     
     return metrics
 
+#NEED TO UNDERSTAND THE METRICS BEING USED TO ASSESS QUALITY OF UMAP REDUCTION FROM THE ABOVE FUNCTION
+
 
 def save_umap_results(reduced_data: np.ndarray, output_path: str, 
                      original_index: Optional[pd.Index] = None) -> None:
