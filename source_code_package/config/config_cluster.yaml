@@ -14,7 +14,57 @@ preprocessing:
   scaling:
     enabled: true
     method: "standard"  # StandardScaler
-    # Will be added when scaling functionality is implemented
+    exclude_columns: []  # Add any columns to exclude from scaling
+    # Example: exclude_columns: ["WALLET", "CATEGORY_ID"]
+
+# UMAP Dimensionality Reduction Configuration
+umap:
+  # Core UMAP parameters
+  n_neighbors: 15          # Number of neighbors to consider for manifold approximation (2-100)
+  n_components: 2          # Number of dimensions to reduce to
+  metric: "euclidean"      # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
+  
+  # Advanced UMAP parameters
+  min_dist: 0.1           # Minimum distance between points in low-dimensional space (0.0-1.0)
+  spread: 1.0             # How spread out the embedded points should be (>0.0)
+  
+  # Learning parameters
+  learning_rate: 1.0      # Learning rate for optimization (>0.0)
+  n_epochs: null          # Number of training epochs (null for auto)
+  init: "spectral"        # Initialization method ("spectral", "random", "pca")
+  
+  # Reproducibility
+  random_state: 42        # Random seed for reproducibility
+  
+  # Performance parameters
+  verbose: true           # Whether to print progress information
+  low_memory: false       # Use low memory mode (slower but uses less RAM)
+  
+  # Advanced metric parameters (for specific metrics)
+  metric_kwds: null       # Additional keyword arguments for the metric
+  
+  # Embedding parameters
+  output_metric: "euclidean"     # Metric for the output space
+  output_metric_kwds: null       # Additional arguments for output metric
+  
+  # Negative sampling parameters
+  negative_sample_rate: 5        # Number of negative samples per positive sample
+  
+  # Transform parameters (for new data)
+  transform_queue_size: 4.0      # Queue size for approximate nearest neighbor search
+  
+  # Specialized parameters
+  angular_rp_forest: false       # Use angular random projection forest
+  target_n_neighbors: -1         # Number of neighbors for target values (-1 for auto)
+  target_metric: "categorical"   # Metric for target values
+  target_weight: 0.5            # Weight applied to target values
+
+# Output Configuration
+output:
+  save_umap_results: true
+  umap_output_path: "data/processed_data/umap_reduced_data.csv"
+  save_preprocessing_info: true
+  preprocessing_info_path: "data/processed_data/preprocessing_info.yaml"
 
     #CHECK THE VALIDITY OF THE ABOVE AND WHETHER IT WORKS OR NOT:
     #MAYBE WHEN SCALING CODE IS ADDED - RE-EVALUATE
