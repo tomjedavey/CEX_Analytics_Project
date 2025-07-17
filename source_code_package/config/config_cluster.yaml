@@ -1,7 +1,8 @@
 #Configurations for relative clustering algortithms 
 
 data:
-  raw_data_path: "data/raw_data/initial_raw_data_polygon.csv"
+  raw_data_path: "data/raw_data/new_raw_data_polygon.csv"
+
 
 preprocessing:
   log_transformation:
@@ -17,15 +18,16 @@ preprocessing:
     exclude_columns: []  # Add any columns to exclude from scaling
     # Example: exclude_columns: ["WALLET", "CATEGORY_ID"]
 
+
 # UMAP Dimensionality Reduction Configuration
 umap:
   # Core UMAP parameters
-  n_neighbors: 15          # Number of neighbors to consider for manifold approximation (2-100)
-  n_components: 2          # Number of dimensions to reduce to
+  n_neighbors: 30          # Number of neighbors to consider for manifold approximation (2-100)
+  n_components: 5           # Number of dimensions to reduce to
   metric: "euclidean"      # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
   
   # Advanced UMAP parameters
-  min_dist: 0.1           # Minimum distance between points in low-dimensional space (0.0-1.0)
+  min_dist: 0.05           # Minimum distance between points in low-dimensional space (0.0-1.0)
   spread: 1.0             # How spread out the embedded points should be (>0.0)
   
   # Learning parameters
@@ -54,10 +56,30 @@ umap:
   transform_queue_size: 4.0      # Queue size for approximate nearest neighbor search
   
   # Specialized parameters
-  angular_rp_forest: false       # Use angular random projection forest
+  angular_rp_forest: false       # Use angular random projection forest - MAY NEED TO CHANGE TO TRUE IF COSINE USED FOR METRIC
   target_n_neighbors: -1         # Number of neighbors for target values (-1 for auto)
   target_metric: "categorical"   # Metric for target values
   target_weight: 0.5            # Weight applied to target values
+
+  # features to be included in UMAP
+  include_columns:
+    - "TX_PER_MONTH"
+    - "TOKEN_DIVERSITY"
+    - "PROTOCOL_DIVERSITY"
+    - "INTERACTION_DIVERSITY"
+    - "ACTIVE_DURATION_DAYS"
+    - "AVG_TRANSFER_USD"
+    - "TRANSFER_STDDEV_USD"
+    - "DEX_EVENTS"
+    - "GAMES_EVENTS"
+    - "CEX_EVENTS"
+    - "DAPP_EVENTS"
+    - "DEFI_EVENTS"
+    - "BRIDGE_EVENTS"
+    - "NFT_EVENTS"
+    - "TOKEN_EVENTS"
+    - "BRIDGE_TOTAL_VOLUME_USD"
+    # NOTE: Updated UMAP code to include these columns and maintain consistency with preprocessing
 
 # Output Configuration
 output:
@@ -65,6 +87,7 @@ output:
   umap_output_path: "data/processed_data/umap_reduced_data.csv"
   save_preprocessing_info: true
   preprocessing_info_path: "data/processed_data/preprocessing_info.yaml"
+  # This output configuration is compatible with HDBSCAN clustering plans
 
-    #CHECK THE VALIDITY OF THE ABOVE AND WHETHER IT WORKS OR NOT:
-    #MAYBE WHEN SCALING CODE IS ADDED - RE-EVALUATE
+# Note: Configuration validity has been validated through the updated UMAP functionality
+

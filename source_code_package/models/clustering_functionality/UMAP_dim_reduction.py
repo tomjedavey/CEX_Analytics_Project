@@ -28,7 +28,7 @@ def load_umap_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     Returns:
     --------
     dict
-        UMAP configuration dictionary
+        UMAP configuration dictionary including include_columns
     """
     if config_path is None:
         config_path = os.path.join(os.path.dirname(__file__), '../../config/config_cluster.yaml')
@@ -36,6 +36,7 @@ def load_umap_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     
+    # Return the full UMAP configuration including include_columns
     return config.get('umap', {})
 
 
@@ -61,7 +62,7 @@ def apply_umap_reduction(data: pd.DataFrame, config_path: Optional[str] = None,
     
     Notes:
     ------
-    - Only numerical columns are used for UMAP
+    - Uses columns specified in config include_columns, or all numerical columns if not specified
     - NaN values are handled by dropping rows with NaN
     """
     
@@ -71,8 +72,31 @@ def apply_umap_reduction(data: pd.DataFrame, config_path: Optional[str] = None,
     # Override config with any provided kwargs
     umap_params = {**umap_config, **kwargs}
     
-    # Select only numerical columns
-    numerical_data = data.select_dtypes(include=[np.number])
+    # Remove include_columns from umap_params since it's not a UMAP parameter
+    include_columns = umap_params.pop('include_columns', None)
+    
+    # Select columns for UMAP
+    if include_columns:
+        # Use specified columns from config
+        print(f"Using specified columns from config: {include_columns}")
+        
+        # Validate that all specified columns exist in the data
+        missing_columns = [col for col in include_columns if col not in data.columns]
+        if missing_columns:
+            raise ValueError(f"The following columns specified in include_columns are missing from the data: {missing_columns}")
+        
+        # Select only the specified columns
+        numerical_data = data[include_columns]
+        
+        # Validate that all selected columns are numerical
+        non_numerical = numerical_data.select_dtypes(exclude=[np.number]).columns.tolist()
+        if non_numerical:
+            print(f"Warning: The following specified columns are not numerical and will be excluded: {non_numerical}")
+            numerical_data = numerical_data.select_dtypes(include=[np.number])
+    else:
+        # Fallback to all numerical columns if include_columns not specified
+        print("No include_columns specified in config. Using all numerical columns.")
+        numerical_data = data.select_dtypes(include=[np.number])
     
     # Handle NaN values
     if numerical_data.isnull().any().any():
@@ -81,6 +105,7 @@ def apply_umap_reduction(data: pd.DataFrame, config_path: Optional[str] = None,
     
     print(f"Applying UMAP with parameters: {umap_params}")
     print(f"Input data shape: {numerical_data.shape}")
+    print(f"Selected columns: {list(numerical_data.columns)}")
     
     # Initialize UMAP with configuration parameters
     umap_model = umap.UMAP(**umap_params)
@@ -123,6 +148,23 @@ def umap_with_preprocessing(data_path: Optional[str] = None, config_path: Option
     """
     
     print("Starting complete preprocessing + UMAP pipeline...")
+    
+    # Step 0: Validate feature consistency
+    print("\n=== CONFIGURATION VALIDATION ===")
+    validation_results = validate_feature_consistency(config_path)
+    
+    print(f"UMAP include_columns: {validation_results['include_columns']}")
+    print(f"Log transform excluded: {validation_results['log_transform_excluded']}")
+    print(f"Scaling excluded: {validation_results['scaling_excluded']}")
+    
+    if validation_results['warnings']:
+        print("⚠️  WARNINGS:")
+        for warning in validation_results['warnings']:
+            print(f"  - {warning}")
+    
+    print("📋 RECOMMENDATIONS:")
+    for rec in validation_results['recommendations']:
+        print(f"  - {rec}")
     
     # Step 1: Preprocess the data
     print("\n=== PREPROCESSING STAGE ===")
@@ -272,6 +314,69 @@ def run_umap_pipeline_example(config_path: Optional[str] = None):
     except Exception as e:
         print(f"Error in UMAP pipeline: {e}")
         return None, None, None, None
+
+
+def validate_feature_consistency(config_path: Optional[str] = None) -> Dict[str, Any]:
+    """
+    Validate consistency between preprocessing configuration and UMAP include_columns.
+    
+    Parameters:
+    -----------
+    config_path : str, optional
+        Path to the config YAML file. If None, will use default config_cluster.yaml.
+    
+    Returns:
+    --------
+    dict
+        Dictionary containing validation results and recommendations
+    """
+    if config_path is None:
+        config_path = os.path.join(os.path.dirname(__file__), '../../config/config_cluster.yaml')
+    
+    with open(config_path, 'r') as f:
+        config = yaml.safe_load(f)
+    
+    # Extract relevant configurations
+    umap_config = config.get('umap', {})
+    preprocessing_config = config.get('preprocessing', {})
+    
+    include_columns = umap_config.get('include_columns', [])
+    log_exclude_columns = preprocessing_config.get('log_transformation', {}).get('exclude_columns', [])
+    scale_exclude_columns = preprocessing_config.get('scaling', {}).get('exclude_columns', [])
+    
+    validation_results = {
+        'include_columns': include_columns,
+        'log_transform_excluded': log_exclude_columns,
+        'scaling_excluded': scale_exclude_columns,
+        'warnings': [],
+        'recommendations': []
+    }
+    
+    # Check if any include_columns are excluded from log transformation
+    log_excluded_but_included = set(include_columns) & set(log_exclude_columns)
+    if log_excluded_but_included:
+        validation_results['warnings'].append(
+            f"Columns {list(log_excluded_but_included)} are included in UMAP but excluded from log transformation"
+        )
+    
+    # Check if any include_columns are excluded from scaling
+    scale_excluded_but_included = set(include_columns) & set(scale_exclude_columns)
+    if scale_excluded_but_included:
+        validation_results['warnings'].append(
+            f"Columns {list(scale_excluded_but_included)} are included in UMAP but excluded from scaling"
+        )
+    
+    # Add recommendations
+    if validation_results['warnings']:
+        validation_results['recommendations'].append(
+            "Consider reviewing preprocessing exclusions to ensure consistency with UMAP feature selection"
+        )
+    else:
+        validation_results['recommendations'].append(
+            "Configuration appears consistent between preprocessing and UMAP feature selection"
+        )
+    
+    return validation_results
 
 
 if __name__ == "__main__":
