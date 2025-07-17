@@ -22,12 +22,12 @@ preprocessing:
 # UMAP Dimensionality Reduction Configuration
 umap:
   # Core UMAP parameters
-  n_neighbors: 15          # Number of neighbors to consider for manifold approximation (2-100)
-  n_components: 5           # Number of dimensions to reduce to
+  n_neighbors: 20          # Number of neighbors to consider for manifold approximation (2-100)
+  n_components: 10           # Number of dimensions to reduce to
   metric: "cosine"      # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
   
   # Advanced UMAP parameters
-  min_dist: 0.05           # Minimum distance between points in low-dimensional space (0.0-1.0)
+  min_dist: 0.0          # Minimum distance between points in low-dimensional space (0.0-1.0)
   spread: 1.0             # How spread out the embedded points should be (>0.0)
   
   # Learning parameters
@@ -54,12 +54,9 @@ umap:
   
   # Transform parameters (for new data)
   transform_queue_size: 4.0      # Queue size for approximate nearest neighbor search
-  
-  # Specialized parameters
-  angular_rp_forest: false       # Use angular random projection forest - MAY NEED TO CHANGE TO TRUE IF COSINE USED FOR METRIC
-  target_n_neighbors: -1         # Number of neighbors for target values (-1 for auto)
-  target_metric: "categorical"   # Metric for target values
-  target_weight: 0.5            # Weight applied to target values
+
+  #specialized parameters
+  angular_rp_forest: false
 
   # features to be included in UMAP
   include_columns:
