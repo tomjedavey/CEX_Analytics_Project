@@ -346,7 +346,7 @@ def preprocess_for_clustering(data_path: Optional[str] = None, config_path: Opti
                 raise FileNotFoundError('Could not find project root (pyproject.toml)')
             current_dir = parent_dir
         project_root = current_dir
-        data_path = os.path.join(project_root, 'data', 'raw_data', 'initial_raw_data_polygon.csv')
+        data_path = os.path.join(project_root, 'data', 'raw_data', 'new_raw_data_polygon.csv')
         data_path = os.path.normpath(data_path)
     
     df_processed = pd.read_csv(data_path)
