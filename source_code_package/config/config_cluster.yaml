@@ -22,9 +22,9 @@ preprocessing:
 # UMAP Dimensionality Reduction Configuration
 umap:
   # Core UMAP parameters
-  n_neighbors: 30          # Number of neighbors to consider for manifold approximation (2-100)
+  n_neighbors: 15          # Number of neighbors to consider for manifold approximation (2-100)
   n_components: 5           # Number of dimensions to reduce to
-  metric: "euclidean"      # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
+  metric: "cosine"      # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
   
   # Advanced UMAP parameters
   min_dist: 0.05           # Minimum distance between points in low-dimensional space (0.0-1.0)
@@ -69,7 +69,7 @@ umap:
     - "INTERACTION_DIVERSITY"
     - "ACTIVE_DURATION_DAYS"
     - "AVG_TRANSFER_USD"
-    - "TRANSFER_STDDEV_USD"
+    - "USD_TRANSFER_STDDEV"
     - "DEX_EVENTS"
     - "GAMES_EVENTS"
     - "CEX_EVENTS"

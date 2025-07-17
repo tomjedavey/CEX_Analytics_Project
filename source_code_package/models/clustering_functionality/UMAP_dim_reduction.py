@@ -314,6 +314,8 @@ def run_umap_pipeline_example(config_path: Optional[str] = None):
     except Exception as e:
         print(f"Error in UMAP pipeline: {e}")
         return None, None, None, None
+    
+#**MAY WANT TO INTEGRATE THE FUNCTION BELOW THIS INTO THIS PIPELINE TO VALIDATE FEATURE CONSISTENCY - HOWEVER, PROCESSING AND UMAP WILL NOT BE CONSISTANT AS SOME NOT LOG TRANSFORMED - UNDERSTAND AT LATER POINT**
 
 
 def validate_feature_consistency(config_path: Optional[str] = None) -> Dict[str, Any]:
@@ -383,3 +385,4 @@ if __name__ == "__main__":
     # Run example pipeline
     run_umap_pipeline_example()
 
+#**THE ABOVE IS WHY THE PIPELINE FUNCTION RUNS WHEN THIS FILE IS EXECUTED DIRECTLY - MAYBE WANT TO GET RID ONCE SCRIPTS FILES ARE COMPLETED**
