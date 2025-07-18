@@ -48,7 +48,7 @@ umap:
   # Embedding parameters
   output_metric: "euclidean"     # Metric for the output space
   output_metric_kwds: null       # Additional arguments for output metric
-  
+
   # Negative sampling parameters
   negative_sample_rate: 5        # Number of negative samples per positive sample
   
@@ -77,6 +77,44 @@ umap:
     - "TOKEN_EVENTS"
     - "BRIDGE_TOTAL_VOLUME_USD"
     # NOTE: Updated UMAP code to include these columns and maintain consistency with preprocessing
+
+
+# HDBSCAN Clustering Configuration
+hdbscan:
+  # Core HDBSCAN parameters - optimized based on parameter tuning results
+  min_cluster_size: 100          # Optimal for meaningful clusters (tested: produces 2 clusters, 0.1% noise)
+  min_samples: 30                # Optimal noise reduction (tested: silhouette score 0.571)
+  cluster_selection_epsilon: 0.0 # Distance threshold for cluster selection (0.0 for auto)
+  
+  # Distance metric
+  metric: "euclidean"            # Distance metric ("euclidean", "manhattan", "cosine", "minkowski")
+  
+  # Algorithm parameters
+  alpha: 1.0                     # Strength of regularization for soft clustering (>0.0)
+  algorithm: "best"              # Algorithm to use ("best", "generic", "prims_kdtree", "prims_balltree", "boruvka_kdtree", "boruvka_balltree")
+  leaf_size: 40                  # Leaf size for tree-based algorithms (10-100)
+  
+  # Cluster selection method
+  cluster_selection_method: "eom"  # Method for selecting clusters ("eom" or "leaf")
+  allow_single_cluster: false    # Allow single cluster result
+  
+  # Advanced parameters
+  max_cluster_size: 0            # Maximum cluster size (0 for no limit)
+  
+  # Prediction parameters
+  prediction_data: true          # Whether to generate data for predicting cluster membership
+  
+  # Performance parameters
+  core_dist_n_jobs: -1          # Number of parallel jobs for core distance computation (-1 for all cores)
+  
+  # Output parameters
+  gen_min_span_tree: false      # Generate minimum spanning tree
+  
+  # Additional parameters
+  approx_min_span_tree: true    # Use approximation for minimum spanning tree
+  match_reference_implementation: false  # Match reference implementation exactly
+  
+  
 
 # Output Configuration
 output:
