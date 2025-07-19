@@ -23,7 +23,7 @@ preprocessing:
 umap:
   # Core UMAP parameters
   n_neighbors: 20          # Number of neighbors to consider for manifold approximation (2-100)
-  n_components: 10           # Number of dimensions to reduce to
+  n_components: 15           # Number of dimensions to reduce to
   metric: "cosine"      # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
   
   # Advanced UMAP parameters
@@ -82,8 +82,8 @@ umap:
 # HDBSCAN Clustering Configuration
 hdbscan:
   # Core HDBSCAN parameters - optimized based on parameter tuning results
-  min_cluster_size: 100          # Optimal for meaningful clusters (tested: produces 2 clusters, 0.1% noise)
-  min_samples: 30                # Optimal noise reduction (tested: silhouette score 0.571)
+  min_cluster_size: 75          # Optimal for meaningful clusters (tested: produces 2 clusters, 0.1% noise)
+  min_samples: 20                # Optimal noise reduction (tested: silhouette score 0.571)
   cluster_selection_epsilon: 0.0 # Distance threshold for cluster selection (0.0 for auto)
   
   # Distance metric
