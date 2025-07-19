@@ -21,13 +21,16 @@ preprocessing:
 
 # UMAP Dimensionality Reduction Configuration
 umap:
+  # Enable/disable UMAP dimensionality reduction
+  enabled: false            # Set to false to skip UMAP and run HDBSCAN directly on preprocessed features
+  
   # Core UMAP parameters
-  n_neighbors: 20          # Number of neighbors to consider for manifold approximation (2-100)
-  n_components: 15           # Number of dimensions to reduce to
+  n_neighbors: 30          # Number of neighbors to consider for manifold approximation (2-100)
+  n_components: 2           # Number of dimensions to reduce to
   metric: "cosine"      # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
   
   # Advanced UMAP parameters
-  min_dist: 0.0          # Minimum distance between points in low-dimensional space (0.0-1.0)
+  min_dist: 0.1          # Minimum distance between points in low-dimensional space (0.0-1.0)
   spread: 1.0             # How spread out the embedded points should be (>0.0)
   
   # Learning parameters
@@ -56,25 +59,25 @@ umap:
   transform_queue_size: 4.0      # Queue size for approximate nearest neighbor search
 
   #specialized parameters
-  angular_rp_forest: false
+  angular_rp_forest: true
 
   # features to be included in UMAP
   include_columns:
     - "TX_PER_MONTH"
     - "TOKEN_DIVERSITY"
     - "PROTOCOL_DIVERSITY"
-    - "INTERACTION_DIVERSITY"
+    #- "INTERACTION_DIVERSITY"
     - "ACTIVE_DURATION_DAYS"
     - "AVG_TRANSFER_USD"
     - "USD_TRANSFER_STDDEV"
-    - "DEX_EVENTS"
-    - "GAMES_EVENTS"
-    - "CEX_EVENTS"
-    - "DAPP_EVENTS"
-    - "DEFI_EVENTS"
-    - "BRIDGE_EVENTS"
-    - "NFT_EVENTS"
-    - "TOKEN_EVENTS"
+    #- "DEX_EVENTS"
+    #- "GAMES_EVENTS"
+    #- "CEX_EVENTS"
+    #- "DAPP_EVENTS"
+    #- "DEFI_EVENTS"
+    #- "BRIDGE_EVENTS"
+    #- "NFT_EVENTS"
+    #- "TOKEN_EVENTS"
     - "BRIDGE_TOTAL_VOLUME_USD"
     # NOTE: Updated UMAP code to include these columns and maintain consistency with preprocessing
 
@@ -82,8 +85,8 @@ umap:
 # HDBSCAN Clustering Configuration
 hdbscan:
   # Core HDBSCAN parameters - optimized based on parameter tuning results
-  min_cluster_size: 75          # Optimal for meaningful clusters (tested: produces 2 clusters, 0.1% noise)
-  min_samples: 20                # Optimal noise reduction (tested: silhouette score 0.571)
+  min_cluster_size: 100          # Optimal for meaningful clusters (tested: produces 2 clusters, 0.1% noise)
+  min_samples: 30                # Optimal noise reduction (tested: silhouette score 0.571)
   cluster_selection_epsilon: 0.0 # Distance threshold for cluster selection (0.0 for auto)
   
   # Distance metric

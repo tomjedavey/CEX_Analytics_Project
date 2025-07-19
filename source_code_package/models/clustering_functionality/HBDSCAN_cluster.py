@@ -646,21 +646,27 @@ def hdbscan_clustering_pipeline(umap_data: np.ndarray, config_path: Optional[str
     # Step 3: Create visualizations
     if create_visualizations:
         print("Step 3: Creating visualizations...")
-        if umap_data.shape[1] >= 2:
-            # For visualization, use first 2 dimensions if more than 2D
-            viz_data = umap_data[:, :2] if umap_data.shape[1] > 2 else umap_data
-            
-            if save_results:
-                viz_path = os.path.join(output_dir, "hdbscan_clustering_results.png")
-                plot_clustering_results(viz_data, cluster_labels, 
-                                      title="HDBSCAN Clustering Results",
-                                      save_path=viz_path)
-                results['file_paths']['visualization'] = viz_path
+        try:
+            if umap_data.shape[1] >= 2:
+                # For visualization, use first 2 dimensions if more than 2D
+                print(f"  Data shape for visualization: {umap_data.shape}")
+                viz_data = umap_data[:, :2] if umap_data.shape[1] > 2 else umap_data
+                print(f"  Visualization data shape: {viz_data.shape}")
+                
+                if save_results:
+                    viz_path = os.path.join(output_dir, "hdbscan_clustering_results.png")
+                    plot_clustering_results(viz_data, cluster_labels, 
+                                          title="HDBSCAN Clustering Results",
+                                          save_path=viz_path)
+                    results['file_paths']['visualization'] = viz_path
+                else:
+                    plot_clustering_results(viz_data, cluster_labels, 
+                                          title="HDBSCAN Clustering Results")
             else:
-                plot_clustering_results(viz_data, cluster_labels, 
-                                      title="HDBSCAN Clustering Results")
-        else:
-            print("  Warning: Data has less than 2 dimensions, skipping visualization")
+                print("  Warning: Data has less than 2 dimensions, skipping visualization")
+        except Exception as e:
+            print(f"  Warning: Error creating visualization: {e}")
+            print("  Continuing without visualization...")
     
     # Step 4: Save results
     if save_results:
@@ -754,10 +760,13 @@ def run_umap_hdbscan_pipeline(data_path: Optional[str] = None,
     
     # Import UMAP functionality
     try:
-        from UMAP_dim_reduction import umap_with_preprocessing
+        from .UMAP_dim_reduction import umap_with_preprocessing
     except ImportError:
-        print("ERROR: Could not import UMAP functionality. Ensure UMAP_dim_reduction.py is available.")
-        raise
+        try:
+            from UMAP_dim_reduction import umap_with_preprocessing
+        except ImportError:
+            print("ERROR: Could not import UMAP functionality. Ensure UMAP_dim_reduction.py is available.")
+            raise
     
     # Create output directory
     if not os.path.exists(output_dir):
@@ -832,6 +841,167 @@ def run_umap_hdbscan_pipeline(data_path: Optional[str] = None,
     print("Pipeline completed successfully!")
     
     return combined_results
+
+
+def run_flexible_hdbscan_pipeline(data_path: Optional[str] = None, 
+                                config_path: Optional[str] = None,
+                                output_dir: str = "flexible_hdbscan_results") -> Dict[str, Any]:
+    """
+    Flexible pipeline that can run HDBSCAN with or without UMAP dimensionality reduction.
+    
+    This function checks the configuration to determine whether to apply UMAP 
+    dimensionality reduction before HDBSCAN clustering. If UMAP is disabled in the 
+    config, it will run HDBSCAN directly on the preprocessed features.
+    
+    Parameters:
+    -----------
+    data_path : str, optional
+        Path to data file. If None, uses path from config file.
+    config_path : str, optional
+        Path to configuration file
+    output_dir : str, default="flexible_hdbscan_results"
+        Directory to save all results
+        
+    Returns:
+    --------
+    dict
+        Complete pipeline results. Structure varies based on whether UMAP was used:
+        - If UMAP enabled: includes both UMAP and HDBSCAN results
+        - If UMAP disabled: includes preprocessing and HDBSCAN results only
+        
+    Example:
+    --------
+    >>> # Run pipeline with UMAP (if enabled in config)
+    >>> results = run_flexible_hdbscan_pipeline(
+    ...     data_path="data/processed_data.csv",
+    ...     config_path="config/config_cluster.yaml",
+    ...     output_dir="results"
+    ... )
+    >>> if results['umap_enabled']:
+    ...     print("Used UMAP dimensionality reduction")
+    ... else:
+    ...     print("Ran HDBSCAN directly on preprocessed features")
+    """
+    print("Starting flexible HDBSCAN pipeline...")
+    
+    # Load configuration
+    if config_path is None:
+        config_path = os.path.join(os.path.dirname(__file__), '../../config/config_cluster.yaml')
+    
+    try:
+        with open(config_path, 'r') as file:
+            config = yaml.safe_load(file)
+    except Exception as e:
+        raise ValueError(f"Error loading configuration from {config_path}: {e}")
+    
+    # Check if UMAP is enabled
+    umap_enabled = config.get('umap', {}).get('enabled', True)  # Default to True for backward compatibility
+    
+    # Create output directory
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    
+    if umap_enabled:
+        print("UMAP is enabled - running complete UMAP + HDBSCAN pipeline...")
+        results = run_umap_hdbscan_pipeline(
+            data_path=data_path,
+            config_path=config_path,
+            output_dir=output_dir
+        )
+        results['umap_enabled'] = True
+        return results
+    else:
+        print("UMAP is disabled - running HDBSCAN directly on preprocessed features...")
+        
+        # Import preprocessing functionality
+        try:
+            from ...data.preprocess_cluster import preprocess_for_clustering
+        except ImportError:
+            try:
+                from data.preprocess_cluster import preprocess_for_clustering
+            except ImportError:
+                print("ERROR: Could not import preprocessing functionality. Ensure preprocess_cluster.py is available.")
+                raise
+        
+        # Step 1: Load and preprocess data (without UMAP)
+        print("Step 1: Loading and preprocessing data...")
+        
+        # Determine data path
+        if data_path is None:
+            data_path = config.get('data', {}).get('raw_data_path', 'data/raw_data/new_raw_data_polygon.csv')
+            # Convert relative path to absolute
+            if not os.path.isabs(data_path):
+                data_path = os.path.join(os.path.dirname(config_path), '../../', data_path)
+        
+        # Preprocess data
+        preprocessed_data, preprocessing_info = preprocess_for_clustering(
+            data_path=data_path,
+            config_path=config_path
+        )
+        
+        print(f"Preprocessed data shape: {preprocessed_data.shape}")
+        
+        # Apply column selection (use UMAP include_columns even though UMAP is disabled)
+        include_columns = config.get('umap', {}).get('include_columns', None)
+        if include_columns:
+            print(f"Selecting specified columns: {include_columns}")
+            # Filter to only include specified columns that exist in the data
+            available_columns = [col for col in include_columns if col in preprocessed_data.columns]
+            if available_columns:
+                preprocessed_data = preprocessed_data[available_columns]
+                print(f"After column selection, data shape: {preprocessed_data.shape}")
+            else:
+                print("Warning: None of the specified include_columns were found in the data")
+        else:
+            print("No column selection specified - using all numeric columns")
+            # Select only numeric columns to avoid string columns like 'WALLET'
+            preprocessed_data = preprocessed_data.select_dtypes(include=[np.number])
+            print(f"After selecting numeric columns, data shape: {preprocessed_data.shape}")
+        
+        # Step 2: Apply HDBSCAN clustering directly
+        print("Step 2: Applying HDBSCAN clustering...")
+        hdbscan_results = hdbscan_clustering_pipeline(
+            umap_data=preprocessed_data,  # Using preprocessed data instead of UMAP data
+            config_path=config_path,
+            evaluate_quality=True,
+            create_visualizations=True,
+            save_results=True,
+            output_dir=os.path.join(output_dir, "hdbscan_results")
+        )
+        
+        # Combine results
+        complete_results = {
+            'umap_enabled': False,
+            'preprocessing_results': {
+                'preprocessed_data': preprocessed_data,
+                'preprocessing_info': preprocessing_info
+            },
+            'hdbscan_results': hdbscan_results,
+            'pipeline_info': {
+                'n_original_features': preprocessed_data.shape[1],
+                'n_reduced_features': preprocessed_data.shape[1],  # Same as original since no UMAP
+                'n_clusters_found': hdbscan_results['cluster_info']['n_clusters'],
+                'total_data_points': preprocessed_data.shape[0],
+                'noise_points': hdbscan_results['cluster_info']['n_noise_points'],
+                'umap_applied': False
+            }
+        }
+        
+        # Save summary
+        summary_path = os.path.join(output_dir, "pipeline_summary.txt")
+        with open(summary_path, 'w') as f:
+            f.write("Flexible HDBSCAN Pipeline Summary\n")
+            f.write("=" * 40 + "\n")
+            f.write(f"UMAP Dimensionality Reduction: DISABLED\n")
+            f.write(f"Original Features: {complete_results['pipeline_info']['n_original_features']}\n")
+            f.write(f"Features Used for Clustering: {complete_results['pipeline_info']['n_reduced_features']}\n")
+            f.write(f"Clusters Found: {complete_results['pipeline_info']['n_clusters_found']}\n")
+            f.write(f"Total Data Points: {complete_results['pipeline_info']['total_data_points']}\n")
+            f.write(f"Noise Points: {complete_results['pipeline_info']['noise_points']}\n")
+            f.write(f"Noise Percentage: {(complete_results['pipeline_info']['noise_points'] / complete_results['pipeline_info']['total_data_points'] * 100):.1f}%\n")
+        
+        print(f"Pipeline completed! Results saved to: {output_dir}")
+        return complete_results
 
 
 if __name__ == "__main__":

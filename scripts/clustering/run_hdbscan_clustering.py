@@ -23,6 +23,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../../source_code_packa
 from models.clustering_functionality.HBDSCAN_cluster import (
     hdbscan_clustering_pipeline,
     run_umap_hdbscan_pipeline,
+    run_flexible_hdbscan_pipeline,
     load_hdbscan_config,
     validate_hdbscan_config
 )
@@ -115,10 +116,39 @@ def main():
             print(f"Error running HDBSCAN on existing data: {e}")
     
     else:
-        print("No existing UMAP data found. Will run complete pipeline.")
+        print("No existing UMAP data found. Will run flexible pipeline.")
         
-        # Example 3: Complete UMAP + HDBSCAN pipeline
-        print("\n3. Running complete UMAP + HDBSCAN pipeline...")
+        # Example 3: Flexible pipeline (respects UMAP enabled/disabled setting)
+        print("\n3. Running flexible HDBSCAN pipeline...")
+        print("   (This will check config to decide whether to use UMAP or not)")
+        
+        try:
+            # Run flexible pipeline that respects UMAP configuration
+            results = run_flexible_hdbscan_pipeline(
+                data_path=None,  # Will use path from config
+                config_path=config_path,
+                output_dir=os.path.join(output_dir, "flexible_pipeline")
+            )
+            
+            print("Flexible pipeline completed!")
+            if results['umap_enabled']:
+                print("  - UMAP dimensionality reduction was applied")
+                print(f"  - Original features: {results['pipeline_info']['n_original_features']}")
+                print(f"  - Reduced features: {results['pipeline_info']['n_reduced_features']}")
+            else:
+                print("  - UMAP was disabled - clustering performed on preprocessed features")
+                print(f"  - Features used: {results['pipeline_info']['n_reduced_features']}")
+            
+            print(f"  - Clusters found: {results['pipeline_info']['n_clusters_found']}")
+            print(f"  - Total data points: {results['pipeline_info']['total_data_points']}")
+            print(f"  - Noise points: {results['pipeline_info']['noise_points']}")
+            
+        except Exception as e:
+            print(f"Error running flexible pipeline: {e}")
+            print("This might be due to missing data files or configuration issues.")
+        
+        # Example 4: Complete UMAP + HDBSCAN pipeline (for comparison)
+        print("\n4. Running complete UMAP + HDBSCAN pipeline...")
         
         try:
             # Run complete pipeline
