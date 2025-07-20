@@ -14,6 +14,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+import yaml
 from typing import Optional
 
 # Add source_code_package to path
@@ -75,12 +76,24 @@ def main():
         print(f"Error validating configuration: {e}")
         return
     
-    # Example 2: Check if UMAP-reduced data exists
-    print("\n2. Checking for existing UMAP-reduced data...")
+    # Example 2: Check configuration and existing UMAP data
+    print("\n2. Determining clustering approach based on configuration...")
+    
+    # First check if UMAP is enabled in config
+    try:
+        with open(config_path, 'r') as file:
+            config_check = yaml.safe_load(file)
+        umap_enabled_in_config = config_check.get('umap', {}).get('enabled', True)
+    except Exception as e:
+        print(f"Warning: Could not read config for UMAP setting: {e}")
+        umap_enabled_in_config = True  # Default to enabled if can't read config
+    
     umap_data_path = os.path.join(os.path.dirname(__file__), 
                                  '../../data/processed_data/umap_reduced_data.csv')
+    umap_data_exists = os.path.exists(umap_data_path)
     
-    if os.path.exists(umap_data_path):
+    if umap_enabled_in_config and umap_data_exists:
+        print(f"✓ UMAP is enabled in config AND existing UMAP data found")
         print(f"Found UMAP data at: {umap_data_path}")
         print("Running HDBSCAN clustering on existing UMAP data...")
         
@@ -115,9 +128,20 @@ def main():
         except Exception as e:
             print(f"Error running HDBSCAN on existing data: {e}")
     
+    elif not umap_enabled_in_config and umap_data_exists:
+        print(f"⚠️  UMAP is DISABLED in config but existing UMAP data found at: {umap_data_path}")
+        print("Configuration setting takes precedence - will run flexible pipeline (no UMAP)")
+        print("Note: You may want to delete the old UMAP data file to avoid confusion")
+    
+    elif umap_enabled_in_config and not umap_data_exists:
+        print(f"✓ UMAP is enabled in config but no existing UMAP data found")
+        print("Will run flexible pipeline (which will create UMAP data)")
+    
     else:
-        print("No existing UMAP data found. Will run flexible pipeline.")
-        
+        print("✓ UMAP is disabled in config and no existing UMAP data found")
+        print("Will run flexible pipeline (without UMAP)")
+    # Continue with flexible pipeline based on configuration
+    if not (umap_enabled_in_config and umap_data_exists):
         # Example 3: Flexible pipeline (respects UMAP enabled/disabled setting)
         print("\n3. Running flexible HDBSCAN pipeline...")
         print("   (This will check config to decide whether to use UMAP or not)")

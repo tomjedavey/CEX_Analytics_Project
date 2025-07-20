@@ -9,7 +9,7 @@ def test_linear_regression(config_path=None):
 
     '''
     Function to test the linear regression model, making sure the train test split is being used as specified in config.yaml.
-    This function loads the model and scaler, in order to applu the same preprocessing as during training specified in congig.yaml,
+    This function loads the model and scaler, in order to apply the same preprocessing as during training specified in congig.yaml,
     and evaluates the model on the test set to display the accuracy of the model in producing the Revenue Contribution Score (RCS) for each wallet.
     The independent variables being used in the model are wallet features seen in config.yaml.
     The dependent variable is the revenue proxy for each wallet, which is also specified in config.yaml
