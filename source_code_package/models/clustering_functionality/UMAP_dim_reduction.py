@@ -318,6 +318,21 @@ def apply_umap_reduction(data: pd.DataFrame, config_path: Optional[str] = None,
     # Remove include_columns from umap_params since it's not a UMAP parameter
     include_columns = umap_params.pop('include_columns', None)
     
+    # Remove enabled from umap_params since it's not a UMAP parameter
+    umap_params.pop('enabled', None)
+    
+    # Define valid UMAP parameters to filter out any config parameters that aren't UMAP parameters
+    valid_umap_params = {
+        'n_neighbors', 'n_components', 'metric', 'min_dist', 'spread', 'learning_rate',
+        'n_epochs', 'init', 'random_state', 'verbose', 'low_memory', 'metric_kwds',
+        'output_metric', 'output_metric_kwds', 'negative_sample_rate', 'transform_queue_size',
+        'angular_rp_forest', 'set_op_mix_ratio', 'local_connectivity', 'repulsion_strength',
+        'n_jobs', 'transform_seed'
+    }
+    
+    # Filter umap_params to only include valid UMAP parameters
+    umap_params = {k: v for k, v in umap_params.items() if k in valid_umap_params}
+    
     # Select columns for UMAP
     if include_columns:
         # Use specified columns from config

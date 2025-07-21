@@ -1,0 +1,9 @@
+Flexible HDBSCAN Pipeline Summary
+========================================
+UMAP Dimensionality Reduction: DISABLED
+Original Features: 7
+Features Used for Clustering: 7
+Clusters Found: 9
+Total Data Points: 20174
+Noise Points: 7859
+Noise Percentage: 39.0%

@@ -774,7 +774,7 @@ def run_umap_hdbscan_pipeline(data_path: Optional[str] = None,
     
     # Step 1: UMAP Dimensionality Reduction
     print("Step 1: Applying UMAP dimensionality reduction...")
-    umap_results = umap_with_preprocessing(
+    reduced_data, umap_model, preprocessed_data, preprocessing_info = umap_with_preprocessing(
         data_path=data_path,
         config_path=config_path,
         save_results=True,
@@ -784,7 +784,7 @@ def run_umap_hdbscan_pipeline(data_path: Optional[str] = None,
     # Step 2: HDBSCAN Clustering
     print("Step 2: Applying HDBSCAN clustering...")
     hdbscan_results = hdbscan_clustering_pipeline(
-        umap_data=umap_results['reduced_data'],
+        umap_data=reduced_data,
         config_path=config_path,
         evaluate_quality=True,
         create_visualizations=True,
@@ -794,12 +794,22 @@ def run_umap_hdbscan_pipeline(data_path: Optional[str] = None,
     
     # Step 3: Create combined results
     print("Step 3: Creating combined results...")
+    
+    # Create umap_results dictionary for consistency
+    umap_results = {
+        'reduced_data': reduced_data,
+        'umap_model': umap_model,
+        'preprocessed_data': preprocessed_data,
+        'preprocessing_info': preprocessing_info,
+        'original_data_shape': preprocessed_data.shape
+    }
+    
     combined_results = {
         'umap_results': umap_results,
         'hdbscan_results': hdbscan_results,
         'pipeline_info': {
-            'n_original_features': umap_results.get('original_data_shape', [None, None])[1],
-            'n_reduced_features': umap_results['reduced_data'].shape[1],
+            'n_original_features': preprocessed_data.shape[1],
+            'n_reduced_features': reduced_data.shape[1],
             'n_clusters_found': hdbscan_results['cluster_info']['n_clusters'],
             'total_data_points': len(hdbscan_results['cluster_labels']),
             'noise_points': hdbscan_results['cluster_info']['n_noise_points']
