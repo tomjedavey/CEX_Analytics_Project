@@ -971,7 +971,7 @@ def run_flexible_hdbscan_pipeline(data_path: Optional[str] = None,
         # Step 2: Apply HDBSCAN clustering directly
         print("Step 2: Applying HDBSCAN clustering...")
         hdbscan_results = hdbscan_clustering_pipeline(
-            umap_data=preprocessed_data,  # Using preprocessed data instead of UMAP data
+            umap_data=preprocessed_data.values,  # Convert DataFrame to numpy array for clustering
             config_path=config_path,
             evaluate_quality=True,
             create_visualizations=True,

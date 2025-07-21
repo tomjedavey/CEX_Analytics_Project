@@ -24,7 +24,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../../source_code_packa
 from models.clustering_functionality.HBDSCAN_cluster import (
     hdbscan_clustering_pipeline,
     run_umap_hdbscan_pipeline,
-    run_flexible_hdbscan_pipeline,
+     run_flexible_hdbscan_pipeline,
     load_hdbscan_config,
     validate_hdbscan_config
 )
@@ -170,9 +170,14 @@ def main():
         except Exception as e:
             print(f"Error running flexible pipeline: {e}")
             print("This might be due to missing data files or configuration issues.")
-        
-        # Example 4: Complete UMAP + HDBSCAN pipeline (for comparison)
-        print("\n4. Running complete UMAP + HDBSCAN pipeline...")
+    
+    # Optional: Only run complete pipeline if specifically requested or for comparison
+    # Note: This always uses UMAP regardless of config setting
+    run_complete_pipeline = False  # Set to True if you want to compare with UMAP-enabled results
+    
+    if run_complete_pipeline:
+        print("\n4. Running complete UMAP + HDBSCAN pipeline (for comparison)...")
+        print("   (This ignores config UMAP setting and always applies UMAP)")
         
         try:
             # Run complete pipeline
@@ -192,6 +197,9 @@ def main():
         except Exception as e:
             print(f"Error running complete pipeline: {e}")
             print("This might be due to missing data files or configuration issues.")
+    else:
+        print("\n4. Complete UMAP + HDBSCAN pipeline skipped")
+        print("   (Set run_complete_pipeline = True if you want to compare with UMAP results)")
     
     print(f"\nResults saved to: {output_dir}")
     print("Script completed!")

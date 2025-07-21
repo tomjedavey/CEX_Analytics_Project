@@ -523,12 +523,12 @@ def main():
     print("UMAP + HDBSCAN Comprehensive Parameter Tuning")
     print("=" * 50)
     
-    # Load data - try multiple possible paths
+    # Load data - try multiple possible paths for raw data (consistent with clustering pipeline)
     possible_data_paths = [
         # From clustering_functionality folder
-        os.path.join(os.path.dirname(__file__), '../../../data/processed_data/AS_1_feature_data.csv'),
+        os.path.join(os.path.dirname(__file__), '../../../data/raw_data/new_raw_data_polygon.csv'),
         # From project root
-        os.path.join(os.getcwd(), 'data/processed_data/AS_1_feature_data.csv'),
+        os.path.join(os.getcwd(), 'data/raw_data/new_raw_data_polygon.csv'),
     ]
     
     data_path = None
@@ -538,13 +538,13 @@ def main():
             break
     
     if data_path is None:
-        print("Error: Feature data not found. Tried the following paths:")
+        print("Error: Raw data not found. Tried the following paths:")
         for path in possible_data_paths:
             print(f"  - {path}")
         print("\\nPlease ensure you're running from the project root directory.")
         return
     
-    print(f"Loading feature data from: {data_path}")
+    print(f"Loading raw data from: {data_path}")
     
     # Load and preprocess data
     try:
