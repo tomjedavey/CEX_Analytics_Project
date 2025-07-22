@@ -75,8 +75,8 @@ umap:
     #- "GAMES_EVENTS"
     #- "CEX_EVENTS"
     #- "DAPP_EVENTS"
-    #- "DEFI_EVENT
-    #- "BRIDGE_EVENTS"
+    - "DEFI_EVENT"
+    - "BRIDGE_EVENTS"
     #- "NFT_EVENTS"
     #- "TOKEN_EVENTS"
     #- "BRIDGE_TOTAL_VOLUME_USD"
@@ -85,9 +85,9 @@ umap:
 
 # HDBSCAN Clustering Configuration
 hdbscan:
-  # Core HDBSCAN parameters - optimized based on parameter tuning results
-  min_cluster_size: 150           # Optimal for meaningful clusters (tested: produces 2 clusters, 0.1% noise)
-  min_samples: 40                # Optimal noise reduction (tested: silhouette score 0.571)
+  # Core HDBSCAN parameters
+  min_cluster_size: 150           # Minimum number of points required to form a cluster. Smaller values create more clusters but may include noise as clusters
+  min_samples: 40                 # Number of samples in a neighborhood for a point to be considered a core point. Higher values make clustering more conservative (fewer outliers become core points)
   cluster_selection_epsilon: 0.0 # Distance threshold for cluster selection (0.0 for auto)
   
   # Distance metric
