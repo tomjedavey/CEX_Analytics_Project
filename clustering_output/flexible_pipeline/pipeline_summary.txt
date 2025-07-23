@@ -2,16 +2,16 @@ UMAP + HDBSCAN Pipeline Summary
 ========================================
 
 UMAP Dimensionality Reduction:
-  Original dimensions: 4
+  Original dimensions: 9
   Reduced dimensions: 2
   Total data points: 20174
 
 HDBSCAN Clustering:
-  Clusters found: 2
-  Noise points: 158
-  Noise percentage: 0.8%
+  Clusters found: 7
+  Noise points: 99
+  Noise percentage: 0.5%
 
 Clustering Quality Metrics:
-  Silhouette Score: 0.459
-  Calinski-Harabasz Score: 20597.29
-  Davies-Bouldin Score: 0.919
+  Silhouette Score: 0.519
+  Calinski-Harabasz Score: 23089.38
+  Davies-Bouldin Score: 0.523
