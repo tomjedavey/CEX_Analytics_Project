@@ -1,5 +1,5 @@
 {
-  "analysis_date": "2025-07-23 21:33:55",
+  "analysis_date": "2025-07-24 08:40:18",
   "dataset_info": {
     "total_wallets": 20174,
     "total_features": 21,
@@ -10,9 +10,9 @@
     "num_clusters": 7,
     "noise_points": 99,
     "noise_percentage": 0.49073064340239914,
-    "silhouette_score": 0.486,
-    "calinski_harabasz_score": 24066.77,
-    "davies_bouldin_score": 0.501
+    "silhouette_score": 0.519,
+    "calinski_harabasz_score": 23089.38,
+    "davies_bouldin_score": 0.523
   },
   "cluster_profiles": {
     "cluster_0": {
