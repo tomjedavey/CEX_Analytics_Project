@@ -8,8 +8,8 @@ preprocessing:
   log_transformation:
     enabled: true
     exclude_columns:
-      - "TX_PER_MONTH"
-      - "ACTIVE_DURATION_DAYS"
+      #- "TX_PER_MONTH"
+      #- "ACTIVE_DURATION_DAYS"
     method: "log1p"  # Use log1p for handling zero/negative values
   
   scaling:
@@ -25,7 +25,7 @@ umap:
   enabled: true            # Set to false to skip UMAP and run HDBSCAN directly on preprocessed features
   
   # Core UMAP parameters
-  n_neighbors: 20          # Number of neighbors to consider for manifold approximation (2-100)
+  n_neighbors: 15          # Number of neighbors to consider for manifold approximation (2-100)
   n_components: 2           # Number of dimensions to reduce to
   metric: "cosine"      # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
   
@@ -65,19 +65,19 @@ umap:
   include_columns:
     - "TX_PER_MONTH"
     #- "TOKEN_DIVERSITY"
-    - "PROTOCOL_DIVERSITY"
+    #- "PROTOCOL_DIVERSITY"
     #- "INTERACTION_DIVERSITY"
     - "ACTIVE_DURATION_DAYS"
     #- "AVG_TRANSFER_USD"
-    #- "USD_TRANSFER_STDDEV"
+    - "USD_TRANSFER_STDDEV"
     - "TOTAL_TRANSFER_USD"
-    - "DEX_EVENTS"
-    - "GAMES_EVENTS"
-    - "CEX_EVENTS"
+    #- "DEX_EVENTS"
+    #- "GAMES_EVENTS"
+    #- "CEX_EVENTS"
     #- "DAPP_EVENTS"
-    - "DEFI_EVENTS"
+    #- "DEFI_EVENTS"
     #- "BRIDGE_EVENTS"
-    - "NFT_EVENTS"
+    #- "NFT_EVENTS"
     #- "TOKEN_EVENTS"
     #- "BRIDGE_TOTAL_VOLUME_USD"
     # NOTE: Updated UMAP code to include these columns and maintain consistency with preprocessing
@@ -86,8 +86,8 @@ umap:
 # HDBSCAN Clustering Configuration
 hdbscan:
   # Core HDBSCAN parameters
-  min_cluster_size: 110           # Minimum number of points required to form a cluster. Smaller values create more clusters but may include noise as clusters
-  min_samples: 35                 # Number of samples in a neighborhood for a point to be considered a core point. Higher values make clustering more conservative (fewer outliers become core points)
+  min_cluster_size: 50          # Minimum number of points required to form a cluster. Smaller values create more clusters but may include noise as clusters
+  min_samples: 15                # Number of samples in a neighborhood for a point to be considered a core point. Higher values make clustering more conservative (fewer outliers become core points)
   cluster_selection_epsilon: 0.0 # Distance threshold for cluster selection (0.0 for auto)
   
   # Distance metric
