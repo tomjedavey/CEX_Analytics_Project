@@ -24,7 +24,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../../source_code_packa
 from models.clustering_functionality.HBDSCAN_cluster import (
     hdbscan_clustering_pipeline,
     run_umap_hdbscan_pipeline,
-     run_flexible_hdbscan_pipeline,
+      run_flexible_hdbscan_pipeline,
     load_hdbscan_config,
     validate_hdbscan_config
 )
