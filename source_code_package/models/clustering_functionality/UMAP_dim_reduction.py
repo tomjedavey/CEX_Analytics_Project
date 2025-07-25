@@ -983,7 +983,10 @@ def _print_quality_summary(metrics: Dict[str, Any]) -> None:
 def save_umap_results(reduced_data: np.ndarray, output_path: str, 
                      original_index: Optional[pd.Index] = None) -> None:
     """
-    Save UMAP reduced data to CSV file.
+    DEPRECATED: Save UMAP reduced data to CSV file.
+    
+    ⚠️  WARNING: This function is deprecated to prevent storing UMAP data as CSV files.
+    UMAP data should be kept in memory and passed directly to clustering algorithms.
     
     Parameters:
     -----------
@@ -995,6 +998,13 @@ def save_umap_results(reduced_data: np.ndarray, output_path: str,
         Original DataFrame index to preserve row identification
     """
     
+    print("⚠️  WARNING: save_umap_results() is deprecated!")
+    print("UMAP data should not be saved to CSV files.")
+    print("This function call will be ignored to prevent CSV storage.")
+    print("UMAP data will remain in memory for direct use in clustering.")
+    return  # Exit without saving
+    
+    # The following code is kept for reference but will not execute
     # Create DataFrame with reduced dimensions
     n_components = reduced_data.shape[1]
     column_names = [f'UMAP_{i+1}' for i in range(n_components)]
@@ -1038,7 +1048,7 @@ def run_umap_pipeline_example(config_path: Optional[str] = None):
         for metric, value in quality_metrics.items():
             print(f"{metric}: {value}")
         
-        # Save results (optional)
+        # Save results (optional) - DISABLED to prevent CSV storage
         if config_path is None:
             config_path = os.path.join(os.path.dirname(__file__), '../../config/config_cluster.yaml')
         
@@ -1046,9 +1056,11 @@ def run_umap_pipeline_example(config_path: Optional[str] = None):
             config = yaml.safe_load(f)
         
         output_config = config.get('output', {})
+        # UMAP results saving is disabled to prevent CSV storage
+        # This ensures UMAP data stays in memory and is passed directly to clustering
         if output_config.get('save_umap_results', False):
-            output_path = output_config.get('umap_output_path', 'data/processed_data/umap_reduced_data.csv')
-            save_umap_results(reduced_data, output_path, preprocessed_data.index)
+            print("⚠️  Warning: save_umap_results is enabled but will be ignored to prevent CSV storage")
+            print("UMAP data will be kept in memory and passed directly to clustering")
         
         return reduced_data, umap_model, preprocessed_data, preprocessing_info
         

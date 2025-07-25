@@ -88,88 +88,39 @@ def main():
         print(f"Warning: Could not read config for UMAP setting: {e}")
         umap_enabled_in_config = True  # Default to enabled if can't read config
     
-    umap_data_path = os.path.join(os.path.dirname(__file__), 
-                                 '../../data/processed_data/umap_reduced_data.csv')
-    umap_data_exists = os.path.exists(umap_data_path)
+    # Always run the flexible pipeline - no more dependency on saved UMAP data
+    print(f"✓ UMAP is {'enabled' if umap_enabled_in_config else 'disabled'} in config")
+    print("Running flexible pipeline that will handle UMAP in-memory...")
+    print("(UMAP data will not be saved to CSV files - processed in memory only)")
     
-    if umap_enabled_in_config and umap_data_exists:
-        print(f"✓ UMAP is enabled in config AND existing UMAP data found")
-        print(f"Found UMAP data at: {umap_data_path}")
-        print("Running HDBSCAN clustering on existing UMAP data...")
+    # Example 3: Flexible pipeline (respects UMAP enabled/disabled setting)
+    print("\n3. Running flexible HDBSCAN pipeline...")
+    print("   (This will check config to decide whether to use UMAP or not)")
+    
+    try:
+        # Run flexible pipeline that respects UMAP configuration
+        results = run_flexible_hdbscan_pipeline(
+            data_path=None,  # Will use path from config
+            config_path=config_path,
+            output_dir=os.path.join(output_dir, "flexible_pipeline")
+        )
         
-        try:
-            # Load UMAP data
-            umap_df = pd.read_csv(umap_data_path)
-            print(f"Loaded UMAP data shape: {umap_df.shape}")
-            
-            # Convert to numpy array (assuming all columns are numeric)
-            umap_data = umap_df.select_dtypes(include=[np.number]).values
-            
-            # Run HDBSCAN clustering
-            results = hdbscan_clustering_pipeline(
-                umap_data=umap_data,
-                config_path=config_path,
-                evaluate_quality=True,
-                create_visualizations=True,
-                save_results=True,
-                output_dir=os.path.join(output_dir, "hdbscan_only")
-            )
-            
-            print(f"Clustering completed!")
-            print(f"  - Found {results['cluster_info']['n_clusters']} clusters")
-            print(f"  - Noise points: {results['cluster_info']['n_noise_points']}")
-            print(f"  - Noise percentage: {results['cluster_info']['noise_percentage']:.1f}%")
-            
-            if 'evaluation_metrics' in results:
-                metrics = results['evaluation_metrics']
-                if 'silhouette_score' in metrics:
-                    print(f"  - Silhouette Score: {metrics['silhouette_score']:.3f}")
-                    
-        except Exception as e:
-            print(f"Error running HDBSCAN on existing data: {e}")
-    
-    elif not umap_enabled_in_config and umap_data_exists:
-        print(f"⚠️  UMAP is DISABLED in config but existing UMAP data found at: {umap_data_path}")
-        print("Configuration setting takes precedence - will run flexible pipeline (no UMAP)")
-        print("Note: You may want to delete the old UMAP data file to avoid confusion")
-    
-    elif umap_enabled_in_config and not umap_data_exists:
-        print(f"✓ UMAP is enabled in config but no existing UMAP data found")
-        print("Will run flexible pipeline (which will create UMAP data)")
-    
-    else:
-        print("✓ UMAP is disabled in config and no existing UMAP data found")
-        print("Will run flexible pipeline (without UMAP)")
-    # Continue with flexible pipeline based on configuration
-    if not (umap_enabled_in_config and umap_data_exists):
-        # Example 3: Flexible pipeline (respects UMAP enabled/disabled setting)
-        print("\n3. Running flexible HDBSCAN pipeline...")
-        print("   (This will check config to decide whether to use UMAP or not)")
+        print("Flexible pipeline completed!")
+        if results['umap_enabled']:
+            print("  - UMAP dimensionality reduction was applied")
+            print(f"  - Original features: {results['pipeline_info']['n_original_features']}")
+            print(f"  - Reduced features: {results['pipeline_info']['n_reduced_features']}")
+        else:
+            print("  - UMAP was disabled - clustering performed on preprocessed features")
+            print(f"  - Features used: {results['pipeline_info']['n_reduced_features']}")
         
-        try:
-            # Run flexible pipeline that respects UMAP configuration
-            results = run_flexible_hdbscan_pipeline(
-                data_path=None,  # Will use path from config
-                config_path=config_path,
-                output_dir=os.path.join(output_dir, "flexible_pipeline")
-            )
-            
-            print("Flexible pipeline completed!")
-            if results['umap_enabled']:
-                print("  - UMAP dimensionality reduction was applied")
-                print(f"  - Original features: {results['pipeline_info']['n_original_features']}")
-                print(f"  - Reduced features: {results['pipeline_info']['n_reduced_features']}")
-            else:
-                print("  - UMAP was disabled - clustering performed on preprocessed features")
-                print(f"  - Features used: {results['pipeline_info']['n_reduced_features']}")
-            
-            print(f"  - Clusters found: {results['pipeline_info']['n_clusters_found']}")
-            print(f"  - Total data points: {results['pipeline_info']['total_data_points']}")
-            print(f"  - Noise points: {results['pipeline_info']['noise_points']}")
-            
-        except Exception as e:
-            print(f"Error running flexible pipeline: {e}")
-            print("This might be due to missing data files or configuration issues.")
+        print(f"  - Clusters found: {results['pipeline_info']['n_clusters_found']}")
+        print(f"  - Total data points: {results['pipeline_info']['total_data_points']}")
+        print(f"  - Noise points: {results['pipeline_info']['noise_points']}")
+        
+    except Exception as e:
+        print(f"Error running flexible pipeline: {e}")
+        print("This might be due to missing data files or configuration issues.")
     
     # Optional: Only run complete pipeline if specifically requested or for comparison
     # Note: This always uses UMAP regardless of config setting

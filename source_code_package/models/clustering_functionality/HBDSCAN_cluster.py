@@ -677,10 +677,10 @@ def hdbscan_clustering_pipeline(umap_data: np.ndarray, config_path: Optional[str
         pd.DataFrame({'cluster_label': cluster_labels}).to_csv(labels_path, index=False)
         results['file_paths']['cluster_labels'] = labels_path
         
-        # Save clustered data with labels
+        # Save clustered data with labels (without UMAP dimensions to prevent CSV storage)
         clustered_data_path = os.path.join(output_dir, "clustered_data.csv")
-        clustered_df = pd.DataFrame(umap_data, columns=[f'dim_{i}' for i in range(umap_data.shape[1])])
-        clustered_df['cluster_label'] = cluster_labels
+        # Only save cluster labels, not UMAP dimensions
+        clustered_df = pd.DataFrame({'cluster_label': cluster_labels})
         clustered_df.to_csv(clustered_data_path, index=False)
         results['file_paths']['clustered_data'] = clustered_data_path
         

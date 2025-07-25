@@ -4,6 +4,20 @@
 
 This document explains the HDBSCAN clustering functionality built for the MLProject1. The implementation provides a comprehensive clustering solution that integrates with UMAP dimensionality reduction and includes extensive configuration options, quality evaluation metrics, and visualization capabilities.
 
+## 🚨 Important Changes - UMAP Data Storage
+
+**As of July 2025**: The clustering pipeline has been updated to **prevent storing UMAP dimensionality reduction data as CSV files**. This change ensures that:
+
+- UMAP data is processed **in-memory only**
+- No `umap_reduced_data.csv` files are created in `data/processed_data/`
+- The `clustered_data.csv` output contains **only cluster labels**, not UMAP dimensions
+- All UMAP processing happens dynamically during clustering execution
+
+### Migration Notes
+- Old clustering outputs that contain `dim_0`, `dim_1`, etc. columns are from the deprecated format
+- New clustering runs will only save cluster labels in CSV files
+- UMAP visualizations must be generated in-memory or by re-running the clustering pipeline
+
 ## Files Created/Modified
 
 ### 1. `source_code_package/models/clustering_functionality/HBDSCAN_cluster.py`

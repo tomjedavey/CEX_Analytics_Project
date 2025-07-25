@@ -122,7 +122,7 @@ hdbscan:
 
 # Output Configuration
 output:
-  save_umap_results: true
+  save_umap_results: false
   umap_output_path: "data/processed_data/umap_reduced_data.csv"
   save_preprocessing_info: true
   preprocessing_info_path: "data/processed_data/preprocessing_info.yaml"
