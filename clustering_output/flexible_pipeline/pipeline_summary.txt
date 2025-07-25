@@ -8,10 +8,10 @@ UMAP Dimensionality Reduction:
 
 HDBSCAN Clustering:
   Clusters found: 2
-  Noise points: 158
-  Noise percentage: 0.8%
+  Noise points: 97
+  Noise percentage: 0.5%
 
 Clustering Quality Metrics:
-  Silhouette Score: 0.459
-  Calinski-Harabasz Score: 20597.29
-  Davies-Bouldin Score: 0.919
+  Silhouette Score: 0.458
+  Calinski-Harabasz Score: 20584.92
+  Davies-Bouldin Score: 0.921
