@@ -129,8 +129,15 @@ def log_transform_features_from_config(config_path: Optional[str] = None) -> Tup
         print("Log transformation is disabled in config file")
         return None, []
     
-    # Get exclude columns from config
-    exclude_columns = log_config.get('exclude_columns', ['TX_PER_MONTH', 'ACTIVE_DURATION_DAYS'])
+    # Check if exclude_no_columns is enabled (overrides exclude_columns)
+    exclude_no_columns = log_config.get('exclude_no_columns', False)
+    
+    if exclude_no_columns:
+        print("exclude_no_columns is enabled - applying log transformation to ALL numerical columns")
+        exclude_columns = []  # Empty list means no columns are excluded
+    else:
+        # Get exclude columns from config
+        exclude_columns = log_config.get('exclude_columns', ['TX_PER_MONTH', 'ACTIVE_DURATION_DAYS'])
     
     # Get data path from config
     data_config = config.get('data', {})
@@ -271,8 +278,15 @@ def scale_features_from_config(config_path: Optional[str] = None) -> Tuple[pd.Da
         print("Scaling is disabled in config file")
         return None, [], None
     
-    # Get exclude columns from config (if any)
-    exclude_columns = scaling_config.get('exclude_columns', [])
+    # Check if exclude_no_columns is enabled (overrides exclude_columns)
+    exclude_no_columns = scaling_config.get('exclude_no_columns', False)
+    
+    if exclude_no_columns:
+        print("exclude_no_columns is enabled - applying scaling to ALL numerical columns")
+        exclude_columns = []  # Empty list means no columns are excluded
+    else:
+        # Get exclude columns from config (if any)
+        exclude_columns = scaling_config.get('exclude_columns', [])
     
     # Get data path from config
     data_config = config.get('data', {})

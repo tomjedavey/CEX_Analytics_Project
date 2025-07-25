@@ -952,8 +952,17 @@ def run_flexible_hdbscan_pipeline(data_path: Optional[str] = None,
         print(f"Preprocessed data shape: {preprocessed_data.shape}")
         
         # Apply column selection (use UMAP include_columns even though UMAP is disabled)
-        include_columns = config.get('umap', {}).get('include_columns', None)
-        if include_columns:
+        umap_config = config.get('umap', {})
+        include_columns = umap_config.get('include_columns', None)
+        include_all_columns = umap_config.get('include_all_columns', False)
+        
+        if include_all_columns:
+            print("include_all_columns is enabled - using ALL numerical columns")
+            # Select only numeric columns to avoid string columns like 'WALLET'
+            preprocessed_data = preprocessed_data.select_dtypes(include=[np.number])
+            print(f"Using all {len(preprocessed_data.columns)} numerical columns")
+            print(f"After selecting all numerical columns, data shape: {preprocessed_data.shape}")
+        elif include_columns:
             print(f"Selecting specified columns: {include_columns}")
             # Filter to only include specified columns that exist in the data
             available_columns = [col for col in include_columns if col in preprocessed_data.columns]

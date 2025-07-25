@@ -82,36 +82,64 @@ def validate_feature_consistency(config_path: Optional[str] = None) -> Dict[str,
     preprocessing_config = config.get('preprocessing', {})
     
     include_columns = umap_config.get('include_columns', [])
+    include_all_columns = umap_config.get('include_all_columns', False)
     log_exclude_columns = preprocessing_config.get('log_transformation', {}).get('exclude_columns', [])
+    log_exclude_no_columns = preprocessing_config.get('log_transformation', {}).get('exclude_no_columns', False)
     scale_exclude_columns = preprocessing_config.get('scaling', {}).get('exclude_columns', [])
+    scale_exclude_no_columns = preprocessing_config.get('scaling', {}).get('exclude_no_columns', False)
     
     validation_results = {
         'include_columns': include_columns,
+        'include_all_columns': include_all_columns,
         'log_transform_excluded': log_exclude_columns,
+        'log_exclude_no_columns': log_exclude_no_columns,
         'scaling_excluded': scale_exclude_columns,
+        'scale_exclude_no_columns': scale_exclude_no_columns,
         'warnings': [],
         'recommendations': []
     }
     
-    # Check if any include_columns are excluded from log transformation
-    log_excluded_but_included = set(include_columns) & set(log_exclude_columns)
-    if log_excluded_but_included:
-        validation_results['warnings'].append(
-            f"Columns {list(log_excluded_but_included)} are included in UMAP but excluded from log transformation"
+    # Special case: if include_all_columns or exclude_no_columns are enabled
+    if include_all_columns and (log_exclude_no_columns and scale_exclude_no_columns):
+        validation_results['recommendations'].append(
+            "✓ Optimal configuration: include_all_columns=true with exclude_no_columns=true for both preprocessing steps"
         )
+        return validation_results
+    elif include_all_columns:
+        if not log_exclude_no_columns:
+            validation_results['warnings'].append(
+                "include_all_columns is enabled but log transformation excludes some columns - this may cause inconsistencies"
+            )
+        if not scale_exclude_no_columns:
+            validation_results['warnings'].append(
+                "include_all_columns is enabled but scaling excludes some columns - this may cause inconsistencies"
+            )
     
-    # Check if any include_columns are excluded from scaling
-    scale_excluded_but_included = set(include_columns) & set(scale_exclude_columns)
-    if scale_excluded_but_included:
-        validation_results['warnings'].append(
-            f"Columns {list(scale_excluded_but_included)} are included in UMAP but excluded from scaling"
-        )
+    # Check if any include_columns are excluded from log transformation (only if specific columns are used)
+    if not include_all_columns and include_columns and not log_exclude_no_columns:
+        log_excluded_but_included = set(include_columns) & set(log_exclude_columns)
+        if log_excluded_but_included:
+            validation_results['warnings'].append(
+                f"Columns {list(log_excluded_but_included)} are included in UMAP but excluded from log transformation"
+            )
+    
+    # Check if any include_columns are excluded from scaling (only if specific columns are used)
+    if not include_all_columns and include_columns and not scale_exclude_no_columns:
+        scale_excluded_but_included = set(include_columns) & set(scale_exclude_columns)
+        if scale_excluded_but_included:
+            validation_results['warnings'].append(
+                f"Columns {list(scale_excluded_but_included)} are included in UMAP but excluded from scaling"
+            )
     
     # Add recommendations
     if validation_results['warnings']:
         validation_results['recommendations'].append(
             "Consider reviewing preprocessing exclusions to ensure consistency with UMAP feature selection"
         )
+        if include_all_columns:
+            validation_results['recommendations'].append(
+                "Set exclude_no_columns=true for both preprocessing steps when using include_all_columns=true"
+            )
     else:
         validation_results['recommendations'].append(
             "Configuration appears consistent between preprocessing and UMAP feature selection"
@@ -318,6 +346,9 @@ def apply_umap_reduction(data: pd.DataFrame, config_path: Optional[str] = None,
     # Remove include_columns from umap_params since it's not a UMAP parameter
     include_columns = umap_params.pop('include_columns', None)
     
+    # Remove include_all_columns from umap_params since it's not a UMAP parameter  
+    include_all_columns = umap_params.pop('include_all_columns', False)
+    
     # Remove enabled from umap_params since it's not a UMAP parameter
     umap_params.pop('enabled', None)
     
@@ -334,7 +365,12 @@ def apply_umap_reduction(data: pd.DataFrame, config_path: Optional[str] = None,
     umap_params = {k: v for k, v in umap_params.items() if k in valid_umap_params}
     
     # Select columns for UMAP
-    if include_columns:
+    if include_all_columns:
+        # Use all available numerical columns
+        print("include_all_columns is enabled - using ALL numerical columns from preprocessed data")
+        numerical_data = data.select_dtypes(include=[np.number])
+        print(f"Using all {len(numerical_data.columns)} numerical columns")
+    elif include_columns:
         # Use specified columns from config
         print(f"Using specified columns from config: {include_columns}")
         
@@ -443,8 +479,13 @@ def umap_with_preprocessing(data_path: Optional[str] = None, config_path: Option
     print("\n=== FILTERING PREPROCESSED DATA FOR UMAP ===")
     umap_config = load_umap_config(config_path)
     include_columns = umap_config.get('include_columns', None)
+    include_all_columns = umap_config.get('include_all_columns', False)
     
-    if include_columns:
+    if include_all_columns:
+        print("include_all_columns is enabled - using ALL numerical columns from preprocessed data")
+        preprocessed_data = preprocessed_data.select_dtypes(include=[np.number])
+        print(f"Using all {len(preprocessed_data.columns)} numerical columns: {list(preprocessed_data.columns)}")
+    elif include_columns:
         print(f"Filtering preprocessed data to include only UMAP columns: {include_columns}")
         
         # Check which columns are actually available in preprocessed data
