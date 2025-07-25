@@ -1,5 +1,5 @@
 {
-  "analysis_date": "2025-07-24 09:02:34",
+  "analysis_date": "2025-07-25 10:00:18",
   "dataset_info": {
     "total_wallets": 20174,
     "total_features": 21,
@@ -7,131 +7,48 @@
   },
   "clustering_results": {
     "algorithm": "HDBSCAN",
-    "num_clusters": 7,
-    "noise_points": 99,
-    "noise_percentage": 0.49073064340239914,
-    "silhouette_score": 0.519,
-    "calinski_harabasz_score": 23089.38,
-    "davies_bouldin_score": 0.523
+    "num_clusters": 2,
+    "noise_points": 158,
+    "noise_percentage": 0.7831862793694855,
+    "silhouette_score": 0.459,
+    "calinski_harabasz_score": 20597.29,
+    "davies_bouldin_score": 0.919
   },
   "cluster_profiles": {
     "cluster_0": {
-      "size": 1285,
-      "percentage": 6.369584613859423,
+      "size": 11369,
+      "percentage": 56.354713988301775,
       "characteristics": [
-        "High-Volume Trader",
+        "High-Volume Traders",
         "Very Active",
-        "Diversified Portfolio",
-        "Small Transactions",
-        "Short-term User"
+        "Highly Diversified Portfolio",
+        "Multi-Protocol Power Users",
+        "Large Transaction Preference",
+        "Medium-term Users"
       ],
       "key_metrics": {
-        "avg_total_transfer_usd": 26964.161595330745,
-        "avg_tx_per_month": 30.860570687937745,
-        "avg_token_diversity": 5.91284046692607,
-        "avg_protocol_diversity": 13.483268482490272
+        "avg_total_transfer_usd": 2236034.736194916,
+        "avg_tx_per_month": 52.070835897704285,
+        "avg_token_diversity": 6.029114258070191,
+        "avg_protocol_diversity": 17.8347260093236
       }
     },
     "cluster_1": {
-      "size": 2489,
-      "percentage": 12.337662337662337,
+      "size": 8647,
+      "percentage": 42.86209973232874,
       "characteristics": [
-        "High-Volume Trader",
-        "Occasional User",
-        "Focused Activity",
-        "Medium Transactions",
-        "Short-term User"
+        "High-Volume Traders",
+        "Moderately Active",
+        "Focused Portfolio",
+        "Single-Protocol Users",
+        "Large Transaction Preference",
+        "Medium-term Users"
       ],
       "key_metrics": {
-        "avg_total_transfer_usd": 11747.077352350341,
-        "avg_tx_per_month": 4.299383970670951,
-        "avg_token_diversity": 1.099236641221374,
-        "avg_protocol_diversity": 1.0032141422257934
-      }
-    },
-    "cluster_2": {
-      "size": 963,
-      "percentage": 4.773470804005155,
-      "characteristics": [
-        "High-Volume Trader",
-        "Very Active",
-        "Diversified Portfolio",
-        "Large Transactions",
-        "Short-term User"
-      ],
-      "key_metrics": {
-        "avg_total_transfer_usd": 371502.44975077873,
-        "avg_tx_per_month": 21.71997230321911,
-        "avg_token_diversity": 5.512980269989616,
-        "avg_protocol_diversity": 17.05815160955348
-      }
-    },
-    "cluster_3": {
-      "size": 120,
-      "percentage": 0.5948250223059383,
-      "characteristics": [
-        "Medium-Volume User",
-        "Very Active",
-        "Diversified Portfolio",
-        "Small Transactions",
-        "Short-term User"
-      ],
-      "key_metrics": {
-        "avg_total_transfer_usd": 6217.050166666667,
-        "avg_tx_per_month": 32.75694445,
-        "avg_token_diversity": 7.033333333333333,
-        "avg_protocol_diversity": 18.541666666666668
-      }
-    },
-    "cluster_4": {
-      "size": 6384,
-      "percentage": 31.64469118667592,
-      "characteristics": [
-        "High-Volume Trader",
-        "Very Active",
-        "Diversified Portfolio",
-        "Large Transactions",
-        "Short-term User"
-      ],
-      "key_metrics": {
-        "avg_total_transfer_usd": 3243955.431676065,
-        "avg_tx_per_month": 33.85244361074562,
-        "avg_token_diversity": 5.673872180451128,
-        "avg_protocol_diversity": 13.914160401002507
-      }
-    },
-    "cluster_5": {
-      "size": 1478,
-      "percentage": 7.326261524734807,
-      "characteristics": [
-        "High-Volume Trader",
-        "Occasional User",
-        "Focused Activity",
-        "Medium Transactions",
-        "Short-term User"
-      ],
-      "key_metrics": {
-        "avg_total_transfer_usd": 18730.732334235454,
-        "avg_tx_per_month": 7.784844400541273,
-        "avg_token_diversity": 1.6718538565629228,
-        "avg_protocol_diversity": 2.00744248985115
-      }
-    },
-    "cluster_6": {
-      "size": 7356,
-      "percentage": 36.462773867354024,
-      "characteristics": [
-        "High-Volume Trader",
-        "Very Active",
-        "Diversified Portfolio",
-        "Large Transactions",
-        "Short-term User"
-      ],
-      "key_metrics": {
-        "avg_total_transfer_usd": 705472.606877379,
-        "avg_tx_per_month": 51.15495287411636,
-        "avg_token_diversity": 4.784801522566612,
-        "avg_protocol_diversity": 13.277188689505167
+        "avg_total_transfer_usd": 107250.65391580896,
+        "avg_tx_per_month": 10.099128802590492,
+        "avg_token_diversity": 2.500173470567827,
+        "avg_protocol_diversity": 2.8176246096912223
       }
     }
   },
@@ -143,140 +60,4 @@
   ],
   "business_insights": {
     "cluster_insights": {
-      "0": {
-        "size": 1285,
-        "percentage": 6.369584613859423,
-        "profile": [
-          "High-Volume Trader",
-          "Very Active",
-          "Diversified Portfolio",
-          "Small Transactions",
-          "Short-term User"
-        ],
-        "insights": [
-          "High value segment with average $26,964 per wallet",
-          "Very active users with 30.9 transactions/month",
-          "Highly diversified token portfolio (5.9 tokens)",
-          "Multi-protocol users (13.5 protocols)"
-        ]
-      },
-      "1": {
-        "size": 2489,
-        "percentage": 12.337662337662337,
-        "profile": [
-          "High-Volume Trader",
-          "Occasional User",
-          "Focused Activity",
-          "Medium Transactions",
-          "Short-term User"
-        ],
-        "insights": [
-          "High value segment with average $11,747 per wallet",
-          "Low activity users with only 4.3 transactions/month"
-        ]
-      },
-      "2": {
-        "size": 963,
-        "percentage": 4.773470804005155,
-        "profile": [
-          "High-Volume Trader",
-          "Very Active",
-          "Diversified Portfolio",
-          "Large Transactions",
-          "Short-term User"
-        ],
-        "insights": [
-          "High value segment with average $371,502 per wallet",
-          "Very active users with 21.7 transactions/month",
-          "Highly diversified token portfolio (5.5 tokens)",
-          "Multi-protocol users (17.1 protocols)"
-        ]
-      },
-      "3": {
-        "size": 120,
-        "percentage": 0.5948250223059383,
-        "profile": [
-          "Medium-Volume User",
-          "Very Active",
-          "Diversified Portfolio",
-          "Small Transactions",
-          "Short-term User"
-        ],
-        "insights": [
-          "High value segment with average $6,217 per wallet",
-          "Very active users with 32.8 transactions/month",
-          "Highly diversified token portfolio (7.0 tokens)",
-          "Multi-protocol users (18.5 protocols)"
-        ]
-      },
-      "4": {
-        "size": 6384,
-        "percentage": 31.64469118667592,
-        "profile": [
-          "High-Volume Trader",
-          "Very Active",
-          "Diversified Portfolio",
-          "Large Transactions",
-          "Short-term User"
-        ],
-        "insights": [
-          "High value segment with average $3,243,955 per wallet",
-          "Very active users with 33.9 transactions/month",
-          "Highly diversified token portfolio (5.7 tokens)",
-          "Multi-protocol users (13.9 protocols)"
-        ]
-      },
-      "5": {
-        "size": 1478,
-        "percentage": 7.326261524734807,
-        "profile": [
-          "High-Volume Trader",
-          "Occasional User",
-          "Focused Activity",
-          "Medium Transactions",
-          "Short-term User"
-        ],
-        "insights": [
-          "High value segment with average $18,731 per wallet"
-        ]
-      },
-      "6": {
-        "size": 7356,
-        "percentage": 36.462773867354024,
-        "profile": [
-          "High-Volume Trader",
-          "Very Active",
-          "Diversified Portfolio",
-          "Large Transactions",
-          "Short-term User"
-        ],
-        "insights": [
-          "High value segment with average $705,473 per wallet",
-          "Very active users with 51.2 transactions/month",
-          "Multi-protocol users (13.3 protocols)"
-        ]
-      }
-    },
-    "overall_insights": [
-      "Identified 7 distinct user segments from 20,174 wallets",
-      "Largest segment: Cluster 6 with 7,356 wallets (36.5%)",
-      "Smallest segment: Cluster 3 with 120 wallets (0.6%)",
-      "Noise points: 99 wallets represent outliers or unique behaviors"
-    ],
-    "recommendations": [
-      "Cluster 0: Consider specialized offerings for this niche segment",
-      "Cluster 0: High-value users - prioritize premium features and support",
-      "Cluster 1: Consider specialized offerings for this niche segment",
-      "Cluster 1: High-value users - prioritize premium features and support",
-      "Cluster 2: Consider specialized offerings for this niche segment",
-      "Cluster 2: High-value users - prioritize premium features and support",
-      "Cluster 3: Consider specialized offerings for this niche segment",
-      "Cluster 4: Develop targeted features for this significant segment",
-      "Cluster 4: High-value users - prioritize premium features and support",
-      "Cluster 5: Consider specialized offerings for this niche segment",
-      "Cluster 5: High-value users - prioritize premium features and support",
-      "Cluster 6: Develop targeted features for this significant segment",
-      "Cluster 6: High-value users - prioritize premium features and support"
-    ]
-  }
-}
+      
