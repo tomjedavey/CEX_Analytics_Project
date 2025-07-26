@@ -114,26 +114,35 @@ def show_parameter_spaces():
     
     search_types = ["quick", "default", "comprehensive", "fine_tune"]
     
-    for search_type in search_types:
-        print(f"\n{search_type.upper()} search space:")
+    # Example with different feature counts
+    feature_counts = [4, 10, 21]  # 4 features (current config), 10 features, 21 features (all columns)
+    
+    for n_features in feature_counts:
+        print(f"\n{'='*50}")
+        print(f"Parameter spaces for {n_features} input features:")
+        print(f"{'='*50}")
         
-        umap_space = ParameterSpace.get_umap_parameter_space(search_type)
-        hdbscan_space = ParameterSpace.get_hdbscan_parameter_space(search_type)
-        
-        # Calculate total combinations
-        umap_combinations = 1
-        for param_values in umap_space.values():
-            umap_combinations *= len(param_values)
-        
-        hdbscan_combinations = 1
-        for param_values in hdbscan_space.values():
-            hdbscan_combinations *= len(param_values)
-        
-        total_combinations = umap_combinations * hdbscan_combinations
-        
-        print(f"  UMAP parameters: {len(umap_space)} types")
-        print(f"  HDBSCAN parameters: {len(hdbscan_space)} types")
-        print(f"  Total combinations: {total_combinations}")
+        for search_type in search_types:
+            print(f"\n{search_type.upper()} search space:")
+            
+            umap_space = ParameterSpace.get_umap_parameter_space(search_type, n_features)
+            hdbscan_space = ParameterSpace.get_hdbscan_parameter_space(search_type)
+            
+            # Calculate total combinations
+            umap_combinations = 1
+            for param_values in umap_space.values():
+                umap_combinations *= len(param_values)
+            
+            hdbscan_combinations = 1
+            for param_values in hdbscan_space.values():
+                hdbscan_combinations *= len(param_values)
+            
+            total_combinations = umap_combinations * hdbscan_combinations
+            
+            print(f"  UMAP parameters: {len(umap_space)} types")
+            print(f"  n_components options: {umap_space.get('n_components', [])}")
+            print(f"  HDBSCAN parameters: {len(hdbscan_space)} types")
+            print(f"  Total combinations: {total_combinations}")
 
 
 def main():

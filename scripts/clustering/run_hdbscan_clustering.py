@@ -88,7 +88,7 @@ def main():
         print(f"Warning: Could not read config for UMAP setting: {e}")
         umap_enabled_in_config = True  # Default to enabled if can't read config
     
-    # Always run the flexible pipeline - no more dependency on saved UMAP data
+     # Always run the flexible pipeline - no more dependency on saved UMAP data
     print(f"✓ UMAP is {'enabled' if umap_enabled_in_config else 'disabled'} in config")
     print("Running flexible pipeline that will handle UMAP in-memory...")
     print("(UMAP data will not be saved to CSV files - processed in memory only)")

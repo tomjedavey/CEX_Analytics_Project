@@ -98,7 +98,7 @@ class ParameterSpace:
             }
     
     @staticmethod
-    def get_umap_parameter_space(search_type: str = "default") -> Dict[str, List]:
+    def get_umap_parameter_space(search_type: str = "default", n_input_features: int = None) -> Dict[str, List]:
         """
         Get UMAP parameter space for optimization.
         
@@ -106,36 +106,65 @@ class ParameterSpace:
         -----------
         search_type : str
             Type of search space: "default", "comprehensive", "quick", "fine_tune"
+        n_input_features : int, optional
+            Number of input features to adjust n_components accordingly
             
         Returns:
         --------
         dict
             Dictionary containing parameter ranges for UMAP
         """
+        # Determine max n_components based on input features
+        if n_input_features is not None:
+            # n_components should be less than input features
+            max_components = min(n_input_features - 1, 20)  # Cap at 20 for computational efficiency
+            # Ensure minimum of 2 components
+            max_components = max(max_components, 2)
+        else:
+            max_components = 20  # Default maximum
+        
         if search_type == "quick":
+            n_components_options = [2, min(3, max_components)]
+            if max_components > 5:
+                n_components_options.append(min(5, max_components))
             return {
-                'n_components': [10, 15],
+                'n_components': list(set(n_components_options)),  # Remove duplicates
                 'n_neighbors': [15, 30],
                 'min_dist': [0.1],
                 'metric': ['euclidean']
             }
         elif search_type == "comprehensive":
+            # For comprehensive search, test more n_components values
+            if max_components <= 5:
+                n_components_options = list(range(2, max_components + 1))
+            else:
+                n_components_options = [2, 3, 5, min(10, max_components), min(15, max_components), max_components]
             return {
-                'n_components': [5, 10, 12, 15, 20],
+                'n_components': list(set([x for x in n_components_options if x <= max_components])),
                 'n_neighbors': [5, 10, 15, 30, 50],
                 'min_dist': [0.01, 0.05, 0.1, 0.5],
                 'metric': ['euclidean', 'cosine', 'manhattan']
             }
         elif search_type == "fine_tune":
+            # For fine tuning, focus on reasonable ranges
+            if max_components <= 5:
+                n_components_options = [2, min(3, max_components), max_components]
+            else:
+                n_components_options = [2, 3, min(5, max_components), min(8, max_components)]
             return {
-                'n_components': [10, 12, 15, 18],
+                'n_components': list(set([x for x in n_components_options if x <= max_components])),
                 'n_neighbors': [15, 20, 25, 30],
                 'min_dist': [0.05, 0.1, 0.15],
                 'metric': ['euclidean']
             }
         else:  # default
+            # For default search
+            if max_components <= 5:
+                n_components_options = [2, min(3, max_components), max_components]
+            else:
+                n_components_options = [2, 3, min(5, max_components)]
             return {
-                'n_components': [10, 15, 20],
+                'n_components': list(set([x for x in n_components_options if x <= max_components])),
                 'n_neighbors': [15, 30, 50],
                 'min_dist': [0.01, 0.1],
                 'metric': ['euclidean', 'cosine']
@@ -417,17 +446,20 @@ class HDBSCANParameterOptimizer:
             if include_all_columns:
                 # Select only numeric columns
                 self.data = preprocessed_data.select_dtypes(include=[np.number]).values
+                print(f"Using all numeric columns: {self.data.shape[1]} features")
             elif include_columns:
-                # Filter to specified columns
+                # Filter to specified columns - be strict about using only these
                 available_columns = [col for col in include_columns if col in preprocessed_data.columns]
                 if available_columns:
                     self.data = preprocessed_data[available_columns].values
+                    print(f"Using specified columns: {available_columns}")
+                    print(f"Feature count: {len(available_columns)}")
                 else:
-                    print("Warning: No specified columns found, using all numeric columns")
-                    self.data = preprocessed_data.select_dtypes(include=[np.number]).values
+                    raise ValueError(f"None of the specified columns {include_columns} found in preprocessed data. "
+                                   f"Available columns: {list(preprocessed_data.columns)}")
             else:
-                # Use all numeric columns by default
-                self.data = preprocessed_data.select_dtypes(include=[np.number]).values
+                raise ValueError("No feature selection specified. Please set either 'include_columns' or "
+                               "'include_all_columns: true' in the UMAP configuration.")
             
             print(f"Data loaded: {self.data.shape[0]} samples, {self.data.shape[1]} features")
             return self.data
@@ -465,9 +497,11 @@ class HDBSCANParameterOptimizer:
         
         # Load data
         data = self.load_and_preprocess_data()
+        n_features = data.shape[1]
+        print(f"Optimizing with {n_features} input features")
         
         # Get parameter spaces
-        umap_space = ParameterSpace.get_umap_parameter_space(search_type)
+        umap_space = ParameterSpace.get_umap_parameter_space(search_type, n_features)
         hdbscan_space = ParameterSpace.get_hdbscan_parameter_space(search_type)
         
         # Generate all parameter combinations
@@ -551,6 +585,18 @@ class HDBSCANParameterOptimizer:
         
         # Load data
         data = self.load_and_preprocess_data()
+        n_features = data.shape[1]
+        print(f"Optimizing with {n_features} input features")
+        
+        # Determine valid n_components range based on input features
+        max_components = min(n_features - 1, 25)  # Cap at 25 for computational efficiency
+        max_components = max(max_components, 2)   # Ensure minimum of 2 components
+        
+        if max_components <= 5:
+            n_components_choices = list(range(2, max_components + 1))
+        else:
+            n_components_choices = [2, 3, 5, min(10, max_components), min(15, max_components), min(20, max_components), max_components]
+            n_components_choices = list(set([x for x in n_components_choices if x <= max_components]))
         
         # Generate random parameter combinations
         param_pairs = []
@@ -559,7 +605,7 @@ class HDBSCANParameterOptimizer:
         for _ in range(n_trials):
             # Random UMAP parameters
             umap_params = {
-                'n_components': np.random.choice([5, 10, 12, 15, 20, 25]),
+                'n_components': np.random.choice(n_components_choices),
                 'n_neighbors': np.random.choice([5, 10, 15, 20, 30, 50]),
                 'min_dist': np.random.choice([0.01, 0.05, 0.1, 0.2, 0.5]),
                 'metric': np.random.choice(['euclidean', 'cosine', 'manhattan'])

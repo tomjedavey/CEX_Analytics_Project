@@ -1,5 +1,5 @@
 {
-  "analysis_date": "2025-07-25 15:22:03",
+  "analysis_date": "2025-07-26 10:47:24",
   "dataset_info": {
     "total_wallets": 20174,
     "total_features": 21,
@@ -8,34 +8,16 @@
   "clustering_results": {
     "algorithm": "HDBSCAN",
     "num_clusters": 2,
-    "noise_points": 97,
-    "noise_percentage": 0.4808168930306335,
-    "silhouette_score": 0.458,
-    "calinski_harabasz_score": 20584.92,
-    "davies_bouldin_score": 0.921
+    "noise_points": 158,
+    "noise_percentage": 0.7831862793694855,
+    "silhouette_score": 0.459,
+    "calinski_harabasz_score": 20597.29,
+    "davies_bouldin_score": 0.919
   },
   "cluster_profiles": {
     "cluster_0": {
-      "size": 8694,
-      "percentage": 43.09507286606523,
-      "characteristics": [
-        "High-Volume Traders",
-        "Moderately Active",
-        "Focused Portfolio",
-        "Single-Protocol Users",
-        "Large Transaction Preference",
-        "Medium-term Users"
-      ],
-      "key_metrics": {
-        "avg_total_transfer_usd": 106677.54030710836,
-        "avg_tx_per_month": 10.076412861973775,
-        "avg_token_diversity": 2.5017253278122844,
-        "avg_protocol_diversity": 2.83367839889579
-      }
-    },
-    "cluster_1": {
-      "size": 11383,
-      "percentage": 56.424110240904135,
+      "size": 11369,
+      "percentage": 56.354713988301775,
       "characteristics": [
         "High-Volume Traders",
         "Very Active",
@@ -45,10 +27,28 @@
         "Medium-term Users"
       ],
       "key_metrics": {
-        "avg_total_transfer_usd": 2233285.6196688046,
-        "avg_tx_per_month": 52.02489091812352,
-        "avg_token_diversity": 6.026794342440481,
-        "avg_protocol_diversity": 17.83624703505227
+        "avg_total_transfer_usd": 2236034.736194916,
+        "avg_tx_per_month": 52.070835897704285,
+        "avg_token_diversity": 6.029114258070191,
+        "avg_protocol_diversity": 17.8347260093236
+      }
+    },
+    "cluster_1": {
+      "size": 8647,
+      "percentage": 42.86209973232874,
+      "characteristics": [
+        "High-Volume Traders",
+        "Moderately Active",
+        "Focused Portfolio",
+        "Single-Protocol Users",
+        "Large Transaction Preference",
+        "Medium-term Users"
+      ],
+      "key_metrics": {
+        "avg_total_transfer_usd": 107250.65391580896,
+        "avg_tx_per_month": 10.099128802590492,
+        "avg_token_diversity": 2.500173470567827,
+        "avg_protocol_diversity": 2.8176246096912223
       }
     }
   },
