@@ -1,0 +1,51 @@
+{
+  "generation_timestamp": "2025-07-28T12:26:14.472905",
+  "source_data": {
+    "original_file": "new_raw_data_polygon.csv",
+    "clustering_results": "cluster_labels.csv",
+    "total_records": 20174
+  },
+  "cluster_statistics": {
+    "cluster_-1": {
+      "count": 158,
+      "percentage": 0.78
+    },
+    "cluster_0": {
+      "count": 11369,
+      "percentage": 56.35
+    },
+    "cluster_1": {
+      "count": 8647,
+      "percentage": 42.86
+    },
+    "noise_points": {
+      "count": 158,
+      "percentage": 0.78
+    },
+    "total_records": 20174
+  },
+  "created_datasets": {
+    "cluster_0": {
+      "file_path": "/Users/tomdavey/Documents/GitHub/MLProject1/data/raw_data/cluster_datasets/new_raw_data_polygon_cluster_0.csv",
+      "filename": "new_raw_data_polygon_cluster_0.csv",
+      "record_count": 11369,
+      "description": "cluster 0"
+    },
+    "cluster_1": {
+      "file_path": "/Users/tomdavey/Documents/GitHub/MLProject1/data/raw_data/cluster_datasets/new_raw_data_polygon_cluster_1.csv",
+      "filename": "new_raw_data_polygon_cluster_1.csv",
+      "record_count": 8647,
+      "description": "cluster 1"
+    }
+  },
+  "noise_handling": {
+    "strategy": "exclude",
+    "rationale": "Noise points excluded to focus on clear cluster patterns"
+  },
+  "next_steps": [
+    "Run feature engineering on each cluster dataset",
+    "Train separate AS_1 models for each cluster",
+    "Compare cluster-specific model performance",
+    "Analyze feature importance differences between clusters"
+  ]
+}

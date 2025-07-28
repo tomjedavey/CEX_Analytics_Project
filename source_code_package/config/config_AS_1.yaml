@@ -1,5 +1,5 @@
 data:
- raw_data_path: 'data/raw_data/initial_raw_data_polygon.csv' #**NEED TO MAKE SURE THAT THESE DIRECTORIES ARE CORRECT IN TERMS OF EACH FILE USING THIS CONFIG.YAML**
+ raw_data_path: 'data/raw_data/new_raw_data_polygon.csv' # Updated to use current dataset
  processed_data_path: '/Users/tomdavey/Documents/GitHub/MLProject1/data/processed_data/AS_1_feature_data.csv'
  score_output_path: 'data/scores/AS_1_scores.csv'
 
