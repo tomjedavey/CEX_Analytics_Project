@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Core functionality for preparing cluster-specific datasets for AS_1 analysis.
+Core functionality for preparing cluster-specific datasets for later analytic algorithm + score production.
 
 This module provides functions to:
 1. Load and merge original data with clustering results

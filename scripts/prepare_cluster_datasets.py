@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Execution script for preparing cluster-specific datasets for AS_1 analysis.
+Execution script for preparing cluster-specific datasets for analytic algorithms + scores.
+Utilises the results of UMAP + Clustering pipeline with the current configurations to produce clustered data from new_raw_data_polygon.csv.
 
 This script serves as a simple execution wrapper around the core functionality
 in source_code_package.data.cluster_datasets module.

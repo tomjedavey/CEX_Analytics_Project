@@ -1,0 +1,60 @@
+data:
+  raw_data_path: 'data/raw_data/cluster_datasets/new_raw_data_polygon_cluster_0.csv'
+  processed_data_path: '/Users/tomdavey/Documents/GitHub/MLProject1/data/processed_data/AS_1_feature_data_cluster_0.csv'
+  score_output_path: 'data/scores/AS_1_scores_cluster_0.csv'
+
+preprocessing:
+  use_scaling: true
+
+model:
+  type: linear_regression
+  fit_intercept: true
+  normalize: true
+
+features:
+  dependent_variable: REVENUE_PROXY
+  independent_variables:
+    # Volume features
+    #- LOG_AVG_TRANSFER
+    #- LOG_TOTAL_VOLUME
+    #- LOG_BRIDGE_VOLUME
+    # Activity features
+    - TX_PER_MONTH
+    #- TRADING_INTENSITY
+    # Sophistication features
+    #- PROTOCOL_EXPERTISE
+    #- METHOD_SOPHISTICATION
+    #- PROTOCOL_DIVERSITY
+    #- TOKEN_DIVERSITY
+    # Stability features
+    #- WALLET_MATURITY_SCORE
+    #- CROSS_CHAIN_INTENSITY
+    #- BRIDGE_EFFICIENCY
+    # Engagement features
+    #- DOMAIN_BREADTH
+    #- INTERACTION_DIVERSITY
+    # Binary indicators
+    #- IS_BRIDGE_USER
+    #- IS_ADVANCED_USER
+    #- IS_HIGH_FREQUENCY
+    #- IS_MULTI_DOMAIN
+
+train_test_split:
+  test_size: 0.2
+  random_state: 42
+
+output:
+  model_path: linear_regression_model_cluster_0.pkl
+  test_results_path: data/scores/AS_1_test_results_cluster_0.csv
+  logs_path: data/logs/AS_1_training_cluster_0.log
+  metrics_path: data/scores/AS_1_metrics_cluster_0.json
+  predictions_path: data/scores/AS_1_predictions_cluster_0.csv
+
+# Metadata for tracking
+metadata:
+  dataset_type: "cluster_0"
+  source_data: "new_raw_data_polygon_cluster_0.csv"
+  clustering_applied: true
+  cluster_id: 0
+  expected_size: 11369
+  description: "AS_1 model training on cluster 0 (larger cluster)"
