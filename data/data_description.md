@@ -1,29 +1,103 @@
 # Data Description - Onchain Data from Flipside Crypto on Snowflake Marketplace + Features
 
+## For the data with the directory: data/raw_data/new_raw_data_polygon.csv
+
+### 1. Overview of the Dataset
+
 Data is sourced from Flipside Crypto using SQL queries of Snowflake Marketplace to gain onchain crypto data. The data currently only holds onchain data for the Polygon blockchain, but as the base code is produced and progress is made overall in terms of producing a UEX, or the final output, then more data will be integrated from other blockchains to build a bigger picture and more value to CEXs.
 
-The data shows a number of pre-engineered features (completed on SQL and as can be seen in the query under "query_initial_data.sql") for each wallet address over the 6 month period before the 4th July. This data includes 50,000 rows and subsequently data for 50,000 wallets on the Polygon blockchain.
+The form of this supposed data from other blockchains will be decided and understood once significant process is made in terms of the production of the UEX, from there I can integrate a wider variety of blockchains to build a bigger picture for the purpose of providing analytic value.
 
-The features engineered are as follows:
+- Date Range being used for building analytic scores - 16/01/2025 to 16/07/2025 (6 months)
+- Size: 20,174 rows, 22 columns (21 features)
+- File Type: CSV
 
-1. transaction frequency - transactions per week/month
-2. token diversity - number of unique tokens used
-3. protocol diversity - number of unique contracts interacted with
-4. total transfer diversity - sum of token values sent/recieved
-5. interaction diversity - number of distinct methods used (e.g., swap, stake etc)
-6. active duration - number of days between first and last activity
-7. Average transfer USD
-8. DEX events count 
-9. Dapp events count
-10. Chadmin events count
-11. DeFi events count
-12. Bridge Events count
-13. NFT events count
-14. Token events count
-15. Flotsam events count
-16. Bridge outflow events count
-17. Bridge inflow events count
-18. Bridge total volume USD
+### 2. Schema and Field Descriptions
 
+1. **WALLET**
+   - Data Type: string
+   - Description: Unique wallet address identifier for each user on the Polygon blockchain
 
-#### Key to remember here - more features have to be engineered or maybe the current features may have to be normalised or tweaked in python code in order to produce the analytic scores (using analytic algorithms of some sort) successfully.
+2. **TX_PER_MONTH**
+   - Data Type: float
+   - Description: Average number of transactions per month for the wallet during the analysis period
+
+3. **TOKEN_DIVERSITY**
+   - Data Type: integer
+   - Description: Number of different tokens the wallet has interacted with
+
+4. **PROTOCOL_DIVERSITY**
+   - Data Type: integer
+   - Description: Number of different protocols the wallet has interacted with
+
+5. **TOTAL_TRANSFER_USD**
+   - Data Type: float
+   - Description: Total USD value of all transfers made by the wallet
+
+6. **INTERACTION_DIVERSITY**
+   - Data Type: integer
+   - Description: Number of different types of interactions the wallet has performed
+
+7. **ACTIVE_DURATION_DAYS**
+   - Data Type: integer
+   - Description: Number of days the wallet has been active during the analysis period
+
+8. **AVG_TRANSFER_USD**
+   - Data Type: float
+   - Description: Average USD value per transfer for the wallet
+
+9. **USD_TRANSFER_STDDEV**
+   - Data Type: float
+   - Description: Standard deviation of USD transfer values, indicating transfer amount volatility
+
+10. **DEX_EVENTS**
+    - Data Type: integer
+    - Description: Number of decentralized exchange (DEX) events/transactions
+
+11. **GAMES_EVENTS**
+    - Data Type: integer
+    - Description: Number of gaming-related events/transactions
+
+12. **CEX_EVENTS**
+    - Data Type: integer
+    - Description: Number of centralized exchange (CEX) events/transactions
+
+13. **DAPP_EVENTS**
+    - Data Type: integer
+    - Description: Number of decentralized application (DApp) events/transactions
+
+14. **CHADMIN_EVENTS**
+    - Data Type: integer
+    - Description: Number of chain admin events/transactions
+
+15. **DEFI_EVENTS**
+    - Data Type: integer
+    - Description: Number of decentralized finance (DeFi) events/transactions
+
+16. **BRIDGE_EVENTS**
+    - Data Type: integer
+    - Description: Number of bridge events/transactions for cross-chain transfers
+
+17. **NFT_EVENTS**
+    - Data Type: integer
+    - Description: Number of non-fungible token (NFT) events/transactions
+
+18. **TOKEN_EVENTS**
+    - Data Type: integer
+    - Description: Number of token-related events/transactions
+
+19. **FLOTSAM_EVENTS**
+    - Data Type: integer
+    - Description: Number of miscellaneous or uncategorized events/transactions
+
+20. **BRIDGE_OUTFLOW_COUNT**
+    - Data Type: integer
+    - Description: Number of bridge transactions moving assets out of Polygon
+
+21. **BRIDGE_INFLOW_COUNT**
+    - Data Type: integer
+    - Description: Number of bridge transactions moving assets into Polygon
+
+22. **BRIDGE_TOTAL_VOLUME_USD**
+    - Data Type: float
+    - Description: Total USD volume of all bridge transactions (inflow and outflow combined)

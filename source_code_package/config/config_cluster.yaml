@@ -122,11 +122,8 @@ hdbscan:
 
 # Output Configuration
 output:
-  save_umap_results: false
-  umap_output_path: "data/processed_data/umap_reduced_data.csv"
   save_preprocessing_info: true
   preprocessing_info_path: "data/processed_data/preprocessing_info.yaml"
-  # This output configuration is compatible with HDBSCAN clustering plans
 
 # Note: Configuration validity has been validated through the updated UMAP functionality
 

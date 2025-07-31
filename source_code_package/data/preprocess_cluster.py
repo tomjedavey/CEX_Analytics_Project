@@ -1,5 +1,4 @@
 #This functionality is used to preprocess the data for clustering algorithms, such as scaling and log-transformation.
-#This file also replicates the work from preprocess_AS_1.py, in regards to scaling. 
 #However, this functionality is reproduced for modularity as well as the opportunity to edit functionality in the future.
 
 import pandas as pd

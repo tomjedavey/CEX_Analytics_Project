@@ -875,9 +875,12 @@ def run_flexible_hdbscan_pipeline(data_path: Optional[str] = None,
     Returns:
     --------
     dict
-        Complete pipeline results. Structure varies based on whether UMAP was used:
-        - If UMAP enabled: includes both UMAP and HDBSCAN results
-        - If UMAP disabled: includes preprocessing and HDBSCAN results only
+        Standardized pipeline results with consistent structure:
+        - umap_enabled: boolean indicating if UMAP was used
+        - pipeline_info: standardized information about the pipeline execution
+        - umap_results: UMAP results (if applicable) or preprocessing results
+        - hdbscan_results: HDBSCAN clustering results
+        - file_paths: paths to saved files
         
     Example:
     --------
@@ -913,13 +916,24 @@ def run_flexible_hdbscan_pipeline(data_path: Optional[str] = None,
     
     if umap_enabled:
         print("UMAP is enabled - running complete UMAP + HDBSCAN pipeline...")
-        results = run_umap_hdbscan_pipeline(
+        
+        # Run the UMAP + HDBSCAN pipeline
+        umap_pipeline_results = run_umap_hdbscan_pipeline(
             data_path=data_path,
             config_path=config_path,
             output_dir=output_dir
         )
-        results['umap_enabled'] = True
-        return results
+        
+        # Standardize the return structure to match flexible pipeline format
+        standardized_results = {
+            'umap_enabled': True,
+            'pipeline_info': umap_pipeline_results['pipeline_info'],
+            'umap_results': umap_pipeline_results['umap_results'],
+            'hdbscan_results': umap_pipeline_results['hdbscan_results'],
+            'file_paths': umap_pipeline_results.get('file_paths', {})
+        }
+        
+        return standardized_results
     else:
         print("UMAP is disabled - running HDBSCAN directly on preprocessed features...")
         
@@ -988,14 +1002,9 @@ def run_flexible_hdbscan_pipeline(data_path: Optional[str] = None,
             output_dir=os.path.join(output_dir, "hdbscan_results")
         )
         
-        # Combine results
-        complete_results = {
+        # Combine results in standardized format
+        standardized_results = {
             'umap_enabled': False,
-            'preprocessing_results': {
-                'preprocessed_data': preprocessed_data,
-                'preprocessing_info': preprocessing_info
-            },
-            'hdbscan_results': hdbscan_results,
             'pipeline_info': {
                 'n_original_features': preprocessed_data.shape[1],
                 'n_reduced_features': preprocessed_data.shape[1],  # Same as original since no UMAP
@@ -1003,7 +1012,15 @@ def run_flexible_hdbscan_pipeline(data_path: Optional[str] = None,
                 'total_data_points': preprocessed_data.shape[0],
                 'noise_points': hdbscan_results['cluster_info']['n_noise_points'],
                 'umap_applied': False
-            }
+            },
+            'umap_results': {
+                'preprocessing_results': {
+                    'preprocessed_data': preprocessed_data,
+                    'preprocessing_info': preprocessing_info
+                }
+            },
+            'hdbscan_results': hdbscan_results,
+            'file_paths': {'pipeline_summary': summary_path}
         }
         
         # Save summary
@@ -1012,15 +1029,15 @@ def run_flexible_hdbscan_pipeline(data_path: Optional[str] = None,
             f.write("Flexible HDBSCAN Pipeline Summary\n")
             f.write("=" * 40 + "\n")
             f.write(f"UMAP Dimensionality Reduction: DISABLED\n")
-            f.write(f"Original Features: {complete_results['pipeline_info']['n_original_features']}\n")
-            f.write(f"Features Used for Clustering: {complete_results['pipeline_info']['n_reduced_features']}\n")
-            f.write(f"Clusters Found: {complete_results['pipeline_info']['n_clusters_found']}\n")
-            f.write(f"Total Data Points: {complete_results['pipeline_info']['total_data_points']}\n")
-            f.write(f"Noise Points: {complete_results['pipeline_info']['noise_points']}\n")
-            f.write(f"Noise Percentage: {(complete_results['pipeline_info']['noise_points'] / complete_results['pipeline_info']['total_data_points'] * 100):.1f}%\n")
+            f.write(f"Original Features: {standardized_results['pipeline_info']['n_original_features']}\n")
+            f.write(f"Features Used for Clustering: {standardized_results['pipeline_info']['n_reduced_features']}\n")
+            f.write(f"Clusters Found: {standardized_results['pipeline_info']['n_clusters_found']}\n")
+            f.write(f"Total Data Points: {standardized_results['pipeline_info']['total_data_points']}\n")
+            f.write(f"Noise Points: {standardized_results['pipeline_info']['noise_points']}\n")
+            f.write(f"Noise Percentage: {(standardized_results['pipeline_info']['noise_points'] / standardized_results['pipeline_info']['total_data_points'] * 100):.1f}%\n")
         
         print(f"Pipeline completed! Results saved to: {output_dir}")
-        return complete_results
+        return standardized_results
 
 
 if __name__ == "__main__":

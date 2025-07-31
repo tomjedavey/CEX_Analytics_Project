@@ -2,8 +2,8 @@
 """
 Example script demonstrating how to run HDBSCAN clustering without UMAP dimensionality reduction.
 
-This script shows how to configure and run HDBSCAN directly on preprocessed features
-by disabling UMAP in the configuration file.
+This script shows how to force direct HDBSCAN clustering on preprocessed features
+using the simplified clustering interface.
 
 Author: Tom Davey
 Date: July 2025
@@ -11,12 +11,11 @@ Date: July 2025
 
 import os
 import sys
-import yaml
 
 # Add source_code_package to path
 sys.path.append(os.path.join(os.path.dirname(__file__), '../../source_code_package'))
 
-from models.clustering_functionality.HBDSCAN_cluster import run_flexible_hdbscan_pipeline
+from models.clustering_functionality.simplified_clustering import run_clustering_pipeline
 
 
 def main():
@@ -34,64 +33,48 @@ def main():
     output_dir = os.path.join(os.path.dirname(__file__), '../../clustering_output/no_umap_example')
     
     print("\nThis example demonstrates running HDBSCAN without UMAP dimensionality reduction.")
-    print("The script will automatically check the configuration and guide you through setup.")
-    print("\n" + "=" * 50)
-    
-    # Check current UMAP configuration
-    try:
-        import yaml
-        with open(config_path, 'r') as file:
-            config = yaml.safe_load(file)
-        
-        umap_enabled = config.get('umap', {}).get('enabled', True)
-        
-        if umap_enabled:
-            print("\n⚠️  UMAP is currently ENABLED in the configuration.")
-            print("This script is designed to demonstrate HDBSCAN WITHOUT UMAP.")
-            print("\nTo disable UMAP, you need to edit config_cluster.yaml and set:")
-            print("umap:")
-            print("  enabled: false")
-            print("\nWould you like to continue anyway? (UMAP will still be used)")
-            print("Or manually edit the config file and run the script again.")
-            print("\nContinuing with current configuration...")
-        else:
-            print("\n✓ UMAP is DISABLED in the configuration.")
-            print("This script will run HDBSCAN directly on preprocessed features.")
-            
-    except Exception as e:
-        print(f"\n⚠️  Could not check configuration: {e}")
-        print("Proceeding with default behavior...")
-    
+    print("The script uses force_umap=False to override any config setting.")
     print("\n" + "=" * 50)
     
     try:
-        # Run the flexible pipeline
-        print("\nRunning flexible HDBSCAN pipeline...")
-        results = run_flexible_hdbscan_pipeline(
-            data_path=None,  # Will use path from config
+        # Run the pipeline with UMAP forced OFF
+        print("\nRunning HDBSCAN pipeline without UMAP...")
+        results = run_clustering_pipeline(
             config_path=config_path,
-            output_dir=output_dir
+            data_path=None,  # Will use path from config
+            output_dir=output_dir,
+            force_umap=False  # Force direct HDBSCAN, ignore config UMAP setting
         )
         
+        if not results['success']:
+            print(f"\n❌ Pipeline failed: {results['error_message']}")
+            return 1
+        
         # Display results
+        print("\n✅ Pipeline completed successfully!")
         print("\nResults:")
         print("-" * 30)
+        
         if results['umap_enabled']:
-            print("✓ UMAP dimensionality reduction was applied")
-            print(f"  Original features: {results['pipeline_info']['n_original_features']}")
-            print(f"  Reduced to: {results['pipeline_info']['n_reduced_features']} dimensions")
+            print("⚠️  Warning: UMAP was still used despite force_umap=False")
+            print("    This might indicate a configuration issue.")
         else:
             print("✓ UMAP was disabled - clustering performed on preprocessed features")
-            print(f"  Features used: {results['pipeline_info']['n_reduced_features']}")
         
-        print(f"✓ Clusters found: {results['pipeline_info']['n_clusters_found']}")
-        print(f"✓ Total data points: {results['pipeline_info']['total_data_points']}")
-        print(f"✓ Noise points: {results['pipeline_info']['noise_points']}")
-        print(f"✓ Noise percentage: {(results['pipeline_info']['noise_points'] / results['pipeline_info']['total_data_points'] * 100):.1f}%")
+        pipeline_info = results['pipeline_info']
+        print(f"✓ Features used: {pipeline_info['n_reduced_features']}")
+        print(f"✓ Clusters found: {pipeline_info['n_clusters_found']}")
+        print(f"✓ Total data points: {pipeline_info['total_data_points']:,}")
+        print(f"✓ Noise points: {pipeline_info['noise_points']:,}")
+        
+        if pipeline_info['total_data_points'] > 0:
+            noise_percentage = (pipeline_info['noise_points'] / pipeline_info['total_data_points']) * 100
+            print(f"✓ Noise percentage: {noise_percentage:.1f}%")
         
         # Show evaluation metrics if available
-        if 'evaluation_metrics' in results.get('hdbscan_results', {}):
-            metrics = results['hdbscan_results']['evaluation_metrics']
+        hdbscan_results = results.get('hdbscan_results', {})
+        if 'evaluation_metrics' in hdbscan_results:
+            metrics = hdbscan_results['evaluation_metrics']
             print("\nClustering Quality Metrics:")
             print("-" * 30)
             if 'silhouette_score' in metrics:
@@ -102,7 +85,13 @@ def main():
                 print(f"✓ Davies-Bouldin Score: {metrics['davies_bouldin_score']:.3f}")
         
         print(f"\n✓ Results saved to: {output_dir}")
-        print("\nScript completed successfully!")
+        print("\n" + "=" * 50)
+        print("💡 Key Points:")
+        print("   • This script used force_umap=False to ensure direct HDBSCAN")
+        print("   • The config UMAP setting was ignored")
+        print("   • Clustering was performed on preprocessed features")
+        print("   • This approach is useful when you want to work with")
+        print("     the original feature space without dimensionality reduction")
         
     except Exception as e:
         print(f"\n❌ Error running pipeline: {e}")
@@ -110,6 +99,7 @@ def main():
         print("1. Ensure your data file exists at the path specified in config")
         print("2. Check that all required Python packages are installed")
         print("3. Verify the config file format is correct")
+        print("4. Try running: python scripts/clustering/run_simple_clustering.py --validate-only")
         return 1
     
     return 0

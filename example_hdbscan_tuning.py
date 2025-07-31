@@ -12,7 +12,7 @@ import sys
 # Add the parent directory to path to import from source_code_package
 sys.path.append(os.path.join(os.path.dirname(__file__), '../'))
 
-from source_code_package.models.clustering_functionality.tune_hdbscan_parameters import (
+from source_code_package.models.clustering_functionality.hdbscan_tune_not_used import (
     optimize_hdbscan_parameters, HDBSCANParameterOptimizer
 )
 
@@ -110,7 +110,7 @@ def show_parameter_spaces():
     print("\nParameter Space Examples")
     print("=" * 30)
     
-    from source_code_package.models.clustering_functionality.tune_hdbscan_parameters import ParameterSpace
+    from source_code_package.models.clustering_functionality.hdbscan_tune_not_used import ParameterSpace
     
     search_types = ["quick", "default", "comprehensive", "fine_tune"]
     
