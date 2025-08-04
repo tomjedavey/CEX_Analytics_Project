@@ -243,14 +243,38 @@ class ClusterDatasetManager:
     
     def generate_summary_report(self, created_files: Dict, noise_strategy: str = 'exclude'):
         """
-        Generate a summary report of the cluster dataset creation process.
+        Generate a comprehensive summary report of cluster dataset creation process.
+        
+        This method creates a detailed JSON report documenting the cluster dataset
+        creation process, including source data information, cluster statistics,
+        file creation details, and recommended next steps for analysis.
         
         Parameters:
         -----------
-        created_files : dict
-            Information about created files
-        noise_strategy : str
-            Strategy used for noise handling
+        created_files : Dict
+            Dictionary containing information about created cluster dataset files,
+            including file paths, record counts, and descriptions
+        noise_strategy : str, default 'exclude'
+            Strategy used for handling noise points during dataset creation
+        
+        Returns:
+        --------
+        None
+            Saves summary report as JSON file and prints confirmation
+        
+        Notes:
+        ------
+        - Creates 'cluster_datasets_summary.json' in the output directory
+        - Includes timestamp, source data info, cluster statistics, and next steps
+        - Provides rationale for noise handling strategy used
+        - Designed to support reproducibility and audit trails
+        
+        Example:
+        --------
+        >>> manager = ClusterDatasetManager(data_path, results_path, output_dir)
+        >>> created_files = manager.create_cluster_datasets()
+        >>> manager.generate_summary_report(created_files, 'exclude')
+        Summary report saved to: /path/to/output/cluster_datasets_summary.json
         """
         print("Generating summary report...")
         

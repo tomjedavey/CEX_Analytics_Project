@@ -1,43 +1,94 @@
-#Importing necessary libraries
+#!/usr/bin/env python3
+"""
+AS_1 Feature Engineering Source Module.
+
+This module provides feature engineering functionality for creating revenue contribution
+scores and related features from raw wallet activity data. The engineered features
+support linear regression modeling for revenue prediction and wallet segmentation.
+
+Author: Tom Davey
+Date: August 2025
+"""
+
+# Importing necessary libraries
 import pandas as pd
 import numpy as np
 import sys
 import os
 
-#Building Features for Analytic Score 1: Revenue Contribution Score (with linear regression)
+# Building Features for Analytic Score 1: Revenue Contribution Score (with linear regression)
 
 data_1 = pd.read_csv('data/raw_data/initial_raw_data_polygon.csv')
 
-#1.1 - caulculating a Proxy of Revenue (large part of inaccuaracy here overall - looking for a good indicator etc)
 
-# Create comprehensive feature set
-def engineer_features(df):
-    '''
-    Function to engineer new features from the initial dataset in order to be able to produce a revenue contribution score using linear regression.
-    Returns a new dataframe with the engineered features which has been saved to processed data folder.
-
-    New features include:
-
-    - REVENUE_PROXY: A proxy for revenue based on transaction volume, events, and bridge volume.
-    - ESTIMATED_TOTAL_VOLUME: Estimated total volume based on average transfer and transactions per month.
-    - TRADING_EVENTS_TOTAL: Total trading events combining DEX and DeFi events.
-    - TOTAL_EVENTS: Total number of events across all categories.
-    - PROTOCOL_EXPERTISE: Diversity of protocols used relative to active duration.
-    - METHOD_SOPHISTICATION: Diversity of interaction methods relative to transaction volume.
-    - TRADING_INTENSITY: Ratio of trading events to transactions per month.
-    - WALLET_MATURITY_SCORE: Logarithmic score based on active duration.
-    - ACTIVITY_VELOCITY: Ratio of total events to active duration.
-    - CROSS_CHAIN_INTENSITY: Ratio of bridge events to transactions per month.
-    - BRIDGE_EFFICIENCY: Average volume per bridge event.
-    - DOMAIN_BREADTH: Count of different event types the wallet has interacted with.
-    - IS_BRIDGE_USER: Binary indicator if the wallet has used bridges.
-    - IS_ADVANCED_USER: Binary indicator if the wallet has high protocol diversity.
-    - IS_HIGH_FREQUENCY: Binary indicator if the wallet has above median transaction frequency.
-    - IS_MULTI_DOMAIN: Binary indicator if the wallet has interacted with multiple event domains.
-    - LOG_AVG_TRANSFER: Log-transformed average transfer amount.
-    - LOG_TOTAL_VOLUME: Log-transformed estimated total volume.
-    - LOG_BRIDGE_VOLUME: Log-transformed total bridge volume.
-    '''
+def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Engineer comprehensive features from wallet activity data for revenue modeling.
+    
+    This function creates a wide range of derived features from raw wallet data
+    including revenue proxies, sophistication metrics, engagement indicators,
+    and behavioral flags to support revenue contribution score modeling.
+    
+    Parameters:
+    -----------
+    df : pd.DataFrame
+        Input DataFrame containing raw wallet activity data with columns:
+        - AVG_TRANSFER_USD: Average transfer amount in USD
+        - TX_PER_MONTH: Number of transactions per month
+        - DEX_EVENTS, DEFI_EVENTS: DeFi activity indicators
+        - BRIDGE_EVENTS, BRIDGE_TOTAL_VOLUME_USD: Cross-chain activity
+        - PROTOCOL_DIVERSITY, INTERACTION_DIVERSITY: Complexity metrics
+        - ACTIVE_DURATION_DAYS: Wallet lifetime
+        - Various event type columns (NFT_EVENTS, TOKEN_EVENTS, etc.)
+    
+    Returns:
+    --------
+    pd.DataFrame
+        Enhanced DataFrame with all original columns plus 20+ engineered features:
+        
+        Core Features:
+        - REVENUE_PROXY: Weighted revenue estimation target variable
+        - ESTIMATED_TOTAL_VOLUME: Volume-based activity metric
+        - TRADING_EVENTS_TOTAL: Combined DeFi trading activity
+        - TOTAL_EVENTS: Sum of all event types
+        
+        Sophistication Features:
+        - PROTOCOL_EXPERTISE: Protocol diversity normalized by duration
+        - METHOD_SOPHISTICATION: Interaction complexity per transaction
+        - TRADING_INTENSITY: Trading events per transaction ratio
+        
+        Behavioral Features:
+        - WALLET_MATURITY_SCORE: Log-scaled wallet age metric
+        - ACTIVITY_VELOCITY: Events per day ratio
+        - CROSS_CHAIN_INTENSITY: Bridge usage intensity
+        - BRIDGE_EFFICIENCY: Average volume per bridge transaction
+        - DOMAIN_BREADTH: Count of different activity domains
+        
+        Binary Indicators:
+        - IS_BRIDGE_USER: Cross-chain activity flag
+        - IS_ADVANCED_USER: High protocol diversity flag
+        - IS_HIGH_FREQUENCY: Above-median transaction frequency flag
+        - IS_MULTI_DOMAIN: Multiple domain interaction flag
+        
+        Log-Transformed Features:
+        - LOG_AVG_TRANSFER: Log-scaled average transfer amount
+        - LOG_TOTAL_VOLUME: Log-scaled total volume estimate
+        - LOG_BRIDGE_VOLUME: Log-scaled bridge volume
+    
+    Notes:
+    ------
+    - Uses numpy.maximum() to prevent division by zero errors
+    - Applies log1p transformation to handle zero values in log features
+    - Revenue proxy uses weighted combination (40% volume, 35% trading, 25% bridge)
+    - Binary flags use median thresholds for classification
+    - All derived metrics are designed for linear regression compatibility
+    
+    Example:
+    --------
+    >>> raw_data = pd.read_csv('wallet_data.csv')
+    >>> enriched_data = engineer_features(raw_data)
+    >>> print(f"Added {enriched_data.shape[1] - raw_data.shape[1]} new features")
+    """
 
     # Revenue proxy (target variable)
     df["REVENUE_PROXY"] = (

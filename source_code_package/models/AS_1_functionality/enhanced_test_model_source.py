@@ -585,7 +585,41 @@ def save_test_results(y_test: pd.Series, y_pred: np.ndarray, test_indices: pd.In
 
 
 def save_test_metrics(test_results: Dict[str, Any], config: Dict[str, Any], logger: Optional[logging.Logger] = None):
-    """Save test metrics to JSON file."""
+    """
+    Save test metrics to a JSON file with automatic path handling.
+    
+    This function saves model testing results to a JSON file, automatically
+    handling path resolution and directory creation. The output path is derived
+    from the configuration with automatic modification for test-specific naming.
+    
+    Parameters:
+    -----------
+    test_results : Dict[str, Any]
+        Dictionary containing test results and metrics to save
+    config : Dict[str, Any]
+        Configuration dictionary containing output path settings
+    logger : logging.Logger, optional
+        Logger instance for output messages. If None, uses print statements
+    
+    Returns:
+    --------
+    None
+        Saves results to file and logs/prints confirmation
+    
+    Notes:
+    ------
+    - Automatically converts 'metrics' to 'test_metrics' in filename
+    - Creates output directory if it doesn't exist
+    - Handles both absolute and relative paths
+    - Uses project root detection for relative paths
+    
+    Example:
+    --------
+    >>> test_results = {'accuracy': 0.85, 'precision': 0.80}
+    >>> config = {'output': {'metrics_path': 'data/scores/AS_1_metrics.json'}}
+    >>> save_test_metrics(test_results, config)
+    Test metrics saved to: /path/to/project/data/scores/AS_1_test_metrics.json
+    """
     metrics_path = config.get('output', {}).get('metrics_path', 'data/scores/AS_1_metrics.json')
     
     # Modify path for test metrics

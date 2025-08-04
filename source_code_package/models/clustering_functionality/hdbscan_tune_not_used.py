@@ -386,14 +386,42 @@ class HDBSCANParameterOptimizer:
     
     def __init__(self, data_path: Optional[str] = None, config_path: Optional[str] = None):
         """
-        Initialize the optimizer.
+        Initialize the HDBSCAN Parameter Optimizer.
+        
+        Creates an optimizer instance for tuning HDBSCAN clustering parameters
+        through various optimization algorithms including grid search, random search,
+        and Bayesian optimization.
         
         Parameters:
         -----------
         data_path : str, optional
-            Path to data file
+            Path to the dataset file for optimization. If None, will attempt
+            to load path from configuration file or use default data location.
         config_path : str, optional
-            Path to configuration file
+            Path to configuration YAML file containing HDBSCAN parameters
+            and data settings. If None, uses default config_cluster.yaml.
+        
+        Attributes:
+        -----------
+        data : np.ndarray or None
+            Cached preprocessed data array for optimization
+        results : List[Dict]
+            List to store optimization results and parameter evaluations
+        
+        Notes:
+        ------
+        - Data is loaded lazily when first needed for optimization
+        - Configuration settings override default parameter ranges
+        - Results are accumulated across multiple optimization runs
+        - Supports various data preprocessing pipelines
+        
+        Example:
+        --------
+        >>> optimizer = HDBSCANParameterOptimizer(
+        ...     data_path='data/processed_data.csv',
+        ...     config_path='config/hdbscan_config.yaml'
+        ... )
+        >>> results = optimizer.grid_search()
         """
         self.data_path = data_path
         self.config_path = config_path
@@ -1179,7 +1207,44 @@ def optimize_hdbscan_parameters(
 
 def main():
     """
-    Main execution function for testing and demonstration.
+    Main execution function for HDBSCAN parameter optimization demonstration.
+    
+    This function provides a demonstration of the HDBSCAN parameter optimization
+    capabilities, running a quick grid search example to showcase the functionality.
+    It serves as both a test runner and an example implementation.
+    
+    Demonstration Features:
+    -----------------------
+    - Quick grid search parameter optimization
+    - Multi-worker parallel processing
+    - Result saving and output generation
+    - Comprehensive progress reporting
+    - Error handling and graceful degradation
+    
+    Expected Output:
+    ----------------
+    - Console progress information
+    - Optimization results summary
+    - Best parameter configuration display
+    - Composite score reporting
+    - Saved results in 'tuning_results' directory
+    
+    Notes:
+    ------
+    - Uses limited worker count (2) for demonstration purposes
+    - Performs 'quick' search to reduce execution time
+    - Automatically handles missing dependencies
+    - Designed for testing and educational purposes
+    - Results are saved for later analysis
+    
+    Example Usage:
+    --------------
+    >>> # Run from command line
+    >>> python hdbscan_tune_not_used.py
+    >>> 
+    >>> # Or import and call directly
+    >>> from hdbscan_tune_not_used import main
+    >>> main()
     """
     print("HDBSCAN Parameter Optimization Module")
     print("=" * 50)

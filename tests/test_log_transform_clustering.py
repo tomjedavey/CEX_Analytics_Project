@@ -10,7 +10,34 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'source_code_package'))
 from source_code_package.data.preprocess_cluster import log_transform_features_from_config, log_transform_features
 
 def test_log_transformation():
-    """Test the log transformation functions"""
+    """
+    Test log transformation functionality for clustering preprocessing.
+    
+    This test function validates the log transformation functions used in the
+    clustering pipeline, ensuring they correctly transform numerical columns
+    while respecting exclusion rules defined in the configuration.
+    
+    Tests:
+    ------
+    - log_transform_features_from_config(): Config-driven transformation
+    - Proper handling of excluded columns (TX_PER_MONTH, ACTIVE_DURATION_DAYS)
+    - Data integrity and shape preservation
+    - Console output validation and error handling
+    
+    Expected Behavior:
+    ------------------
+    - Loads data and configuration successfully
+    - Applies log transformation to appropriate columns only
+    - Excludes specified columns from transformation
+    - Maintains original data structure and index
+    - Provides detailed progress information
+    
+    Notes:
+    ------
+    - Requires valid config_cluster.yaml with log transformation settings
+    - Requires source dataset at configured path
+    - Prints detailed test progress and sample outputs
+    """
     
     print("Testing log transformation functionality...")
     print("=" * 50)

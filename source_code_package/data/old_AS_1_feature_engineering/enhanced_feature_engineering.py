@@ -286,7 +286,26 @@ class EnhancedFeatureEngineer:
         return results
     
     def _print_batch_summary(self, results: Dict[str, Dict]):
-        """Print summary of batch processing results."""
+        """
+        Print a formatted summary of batch processing results.
+        
+        Parameters:
+        -----------
+        results : Dict[str, Dict]
+            Dictionary containing processing results for each dataset,
+            where each result dict contains a 'success' boolean key
+        
+        Returns:
+        --------
+        None
+            Prints summary information to console
+        
+        Notes:
+        ------
+        - Displays total success/failure counts
+        - Lists failed datasets if any
+        - Used internally for batch processing feedback
+        """
         print("\n" + "=" * 50)
         print("BATCH PROCESSING SUMMARY")
         print("=" * 50)

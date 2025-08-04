@@ -30,7 +30,31 @@ class AS1ComparativeAnalyzer:
     """Comprehensive comparative analysis for AS_1 models."""
     
     def __init__(self, config_paths: List[str]):
-        """Initialize analyzer with multiple configuration paths."""
+        """
+        Initialize the AS1 Comparative Analyzer with multiple model configurations.
+        
+        Parameters:
+        -----------
+        config_paths : List[str]
+            List of file paths to AS_1 configuration YAML files for comparison.
+            Each configuration should correspond to a different dataset or
+            model variant (e.g., full dataset, cluster-specific models)
+        
+        Notes:
+        ------
+        - Automatically loads all configurations during initialization
+        - Initializes empty containers for model results and comparisons
+        - Configuration paths are used to derive dataset/model names
+        
+        Example:
+        --------
+        >>> config_paths = [
+        ...     'config/config_AS_1_full_dataset.yaml',
+        ...     'config/config_AS_1_cluster_0.yaml',
+        ...     'config/config_AS_1_cluster_1.yaml'
+        ... ]
+        >>> analyzer = AS1ComparativeAnalyzer(config_paths)
+        """
         self.config_paths = config_paths
         self.configs = self._load_configs()
         self.model_results = {}

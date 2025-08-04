@@ -986,9 +986,46 @@ def _print_quality_summary(metrics: Dict[str, Any]) -> None:
 
 def run_umap_pipeline_example(config_path: Optional[str] = None):
     """
-    Example function demonstrating the complete UMAP pipeline.
-    This function orchestrates the entire workflow from configuration validation
-    through to quality evaluation and result saving.
+    Execute a complete UMAP dimensionality reduction pipeline with quality evaluation.
+    
+    This function demonstrates the full UMAP workflow by orchestrating data loading,
+    preprocessing, dimensionality reduction, and quality assessment. It serves as
+    both an example implementation and a convenient wrapper for the complete pipeline.
+    
+    Parameters:
+    -----------
+    config_path : str, optional
+        Path to the configuration YAML file. If None, uses default config_cluster.yaml.
+        Configuration should include data paths, preprocessing settings, and UMAP parameters.
+    
+    Returns:
+    --------
+    tuple
+        Four-element tuple containing:
+        - reduced_data (np.ndarray or None): UMAP-reduced feature matrix
+        - umap_model (umap.UMAP or None): Fitted UMAP model instance  
+        - preprocessed_data (pd.DataFrame or None): Preprocessed input data
+        - preprocessing_info (dict or None): Information about preprocessing steps
+        
+        Returns (None, None, None, None) if pipeline fails.
+    
+    Notes:
+    ------
+    - Automatically handles missing dependencies with informative error messages
+    - Includes comprehensive quality evaluation with multiple metrics
+    - Prints detailed progress information and quality metrics
+    - Designed for demonstration and testing purposes
+    - Can be used as a template for custom UMAP implementations
+    
+    Example:
+    --------
+    >>> # Run with default configuration
+    >>> reduced_data, model, preprocessed, info = run_umap_pipeline_example()
+    >>> 
+    >>> # Run with custom configuration
+    >>> result = run_umap_pipeline_example('path/to/custom_config.yaml')
+    >>> if result[0] is not None:
+    ...     print(f"Reduced data shape: {result[0].shape}")
     """
     
     try:
