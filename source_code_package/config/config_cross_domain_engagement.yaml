@@ -1,0 +1,94 @@
+# Configuration for Cross Domain Engagement Score Feature Engineering  
+# This configuration controls the calculation of CROSS_DOMAIN_ENGAGEMENT_SCORE using Shannon entropy
+
+# Legacy configuration structure (maintained for backwards compatibility)
+data:
+  # Input data paths
+  input_path: "data/raw_data/new_raw_data_polygon.csv"
+  
+  # Output path for processed data with cross domain engagement features
+  output_path: "data/processed_data/cross_domain_engagement_features.csv"
+
+features:
+  # Shannon entropy calculation settings
+  filter_zeros: true            # Filter out zero proportions before entropy calculation
+  normalize_entropy: true       # Normalize entropy to [0,1] scale using max possible entropy
+  
+  # Advanced options
+  include_zero_activity_wallets: true  # Include wallets with no events (engagement score = 0)
+
+# Metadata for documentation purposes
+metadata:
+  description: "Cross Domain Engagement Score feature engineering using Shannon entropy for crypto wallet analysis"
+  version: "2.0"
+  author: "Tom Davey"
+  created_date: "2025-08-05"
+  updated_date: "2025-08-05"
+  
+  # Business rationale for cross domain engagement score
+  business_rationale:
+    purpose: "Measure wallet engagement diversity across different blockchain event types and domains"
+    formula: "H(X) = -Σ(pi × log₂(pi)) normalized by max entropy"
+    interpretation:
+      high_engagement: "Wallet engages across many different domains and activity types (generalist)"
+      low_engagement: "Wallet focuses on specific domains or activity types (specialist)"
+      zero_engagement: "Wallet has no recorded activity or only one activity type"
+    
+    use_cases:
+      - "User segmentation based on cross-domain engagement patterns"
+      - "Risk assessment (diverse engagement may indicate sophistication)"
+      - "Product recommendations (specialists vs generalists need different platforms)"
+      - "Cross-selling opportunities (identify domains for expansion)"
+
+# Expected event types in Polygon blockchain data
+cross_domain_engagement:
+  # Use hardcoded event columns
+  event_columns:
+    - "DEX_EVENTS"      # Decentralized Exchange activities
+    - "GAMES_EVENTS"    # Gaming and metaverse activities
+    - "CEX_EVENTS"      # Centralized Exchange activities  
+    - "DAPP_EVENTS"     # Decentralized Application interactions
+    - "CHADMIN_EVENTS"  # Chain administration activities
+    - "DEFI_EVENTS"     # Decentralized Finance activities
+    - "BRIDGE_EVENTS"   # Cross-chain bridge activities
+    - "NFT_EVENTS"      # Non-Fungible Token activities
+    - "TOKEN_EVENTS"    # Token-related activities
+    - "FLOTSAM_EVENTS"  # Miscellaneous/other activities
+  
+  feature_names:
+    engagement_score: "CROSS_DOMAIN_ENGAGEMENT_SCORE"
+    total_events: "TOTAL_EVENTS"
+    proportion_suffix: "_PROPORTION"
+  
+  input_file: "data/raw_data/new_raw_data_polygon.csv"
+  output_file: "data/processed_data/cross_domain_engagement_features.csv"
+  
+  engagement_categories:
+    specialist: 0.2      # Low engagement (≤ 0.2)
+    focused: 0.4         # Focused engagement (0.2-0.4)  
+    moderate: 0.6        # Moderate engagement (0.4-0.6)
+    diverse: 0.8         # High engagement (0.6-0.8)
+    generalist: 1.0      # Maximum engagement (> 0.8)
+
+# Quality assurance settings
+quality_checks:
+  enabled: true
+  
+  # Data validation checks
+  min_expected_rows: 1000
+  min_event_columns: 5
+  
+  # Output validation
+  output_checks:
+    verify_diversity_score_range: [0.0, 1.0]  # Should be between 0 and 1
+    verify_proportions_sum_to_one: true       # Each wallet's proportions should sum to 1
+    check_entropy_calculation: true           # Verify entropy calculations are mathematically correct
+    
+# Shannon entropy interpretation guide
+entropy_interpretation:
+  score_ranges:
+    very_low: [0.0, 0.2]      # "Specialist: Focuses on 1-2 domains/activity types"
+    low: [0.2, 0.4]           # "Somewhat focused: Limited cross-domain engagement"
+    medium: [0.4, 0.6]        # "Moderate: Balanced engagement across several domains"
+    high: [0.6, 0.8]          # "Diverse: Engages across many different domains"
+    very_high: [0.8, 1.0]     # "Generalist: Highly diverse cross-domain engagement portfolio"

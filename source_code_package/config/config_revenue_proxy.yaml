@@ -1,0 +1,65 @@
+# Configuration for Revenue Proxy Feature Engineering
+# This configuration controls the calculation of REVENUE_SCORE_PROXY feature
+
+data:
+  # Input data paths
+  input_path: "data/raw_data/new_raw_data_polygon.csv"
+  
+  # Output path for processed data with revenue proxy features
+  output_path: "data/processed_data/revenue_proxy_features.csv"
+
+features:
+  # Formula weights for REVENUE_SCORE_PROXY calculation
+  # Formula: w1 * AVG_TRANSFER_USD * TX_PER_MONTH + 
+  #          w2 * (DEX_EVENTS + DEFI_EVENTS) * AVG_TRANSFER_USD + 
+  #          w3 * BRIDGE_TOTAL_VOLUME_USD
+  weights:
+    transaction_activity: 0.4    # Weight for transaction volume component
+    dex_defi_activity: 0.35      # Weight for DEX/DeFi engagement component  
+    bridge_activity: 0.25        # Weight for bridge activity component
+  
+  # Missing value handling
+  handle_missing_values: true
+  fill_method: "zero"            # Options: "zero", "mean", "median"
+
+# Metadata for documentation purposes
+metadata:
+  description: "Revenue proxy feature engineering for crypto wallet analysis"
+  version: "1.0"
+  author: "Tom Davey"
+  created_date: "2025-08-04"
+  
+  # Business rationale for the revenue proxy formula
+  business_rationale:
+    purpose: "Estimate potential revenue contribution of crypto wallets for CEX analytics"
+    components:
+      transaction_activity:
+        description: "Measures consistent transaction behavior and value"
+        weight_rationale: "40% weight as base revenue driver from trading fees"
+      dex_defi_activity: 
+        description: "Captures sophisticated DeFi users who generate higher fees"
+        weight_rationale: "35% weight as these users typically have higher value per transaction"
+      bridge_activity:
+        description: "Direct measure of cross-chain value transfer volume"
+        weight_rationale: "25% weight as bridge transactions often involve substantial amounts"
+
+# Quality assurance settings
+quality_checks:
+  enabled: true
+  
+  # Data validation checks
+  min_expected_rows: 1000
+  required_columns:
+    - "WALLET"
+    - "AVG_TRANSFER_USD"
+    - "TX_PER_MONTH"
+    - "DEX_EVENTS" 
+    - "DEFI_EVENTS"
+    - "BRIDGE_TOTAL_VOLUME_USD"
+  
+  # Output validation
+  output_checks:
+    verify_no_infinite_values: true
+    verify_no_negative_scores: false  # Allow negative scores for edge cases
+    log_extreme_values: true
+    extreme_value_threshold: 3  # Standard deviations from mean
