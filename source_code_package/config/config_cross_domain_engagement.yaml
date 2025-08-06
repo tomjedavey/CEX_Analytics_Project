@@ -54,7 +54,7 @@ cross_domain_engagement:
     - "NFT_EVENTS"      # Non-Fungible Token activities
     - "TOKEN_EVENTS"    # Token-related activities
     - "FLOTSAM_EVENTS"  # Miscellaneous/other activities
-  
+
   feature_names:
     engagement_score: "CROSS_DOMAIN_ENGAGEMENT_SCORE"
     total_events: "TOTAL_EVENTS"

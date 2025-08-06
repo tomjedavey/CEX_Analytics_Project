@@ -90,3 +90,5 @@ Data sourced from Flipside Crypto's 'Polygon.core' schema.
 
 Note on Metrics and Business KPIs:
 This project uses only onchain public data. However, the TLADS canvases include references to business metrics and KPIs that would typically be available within a centralized exchange (e.g., revenue per user, session frequency). These are included to develop and demonstrate the business-aligned thinking behind the modeling, even though they are not computed or used directly in the final models.
+
+# **ONE THING TO POTENTIALLY THINK ABOUT WHEN COMING TO THE END / PROJECT OUTPUT - IS THE REVENUE CONTRIBUTION SCORE USELESS IF A CEX CAN ACTUALLY TRACK REVENUE GAINED PER USER?? - MAYBE CHANGE THIS FUNCTIONALITY BACK TO SOMETHING PREDICTIVE USING TIME-SERIES DATA FROM SNOWFLAKE WHERE POSSIBLE. NEED TO EVALUATE THIS TO A LARGE EXTENT**
