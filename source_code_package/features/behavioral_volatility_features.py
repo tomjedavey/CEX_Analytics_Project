@@ -408,23 +408,34 @@ def calculate_behavioral_volatility_score(df: pd.DataFrame, config: Dict) -> pd.
     )
     
     # Apply improved normalization if configured
-    use_improved_normalization = config.get('improved_normalization', {}).get('enable', False)
+    normalization_method = config['features'].get('normalization_method', 'none')
+    use_improved_normalization = (normalization_method == 'improved' and 
+                                 'improved_normalization' in config['features'])
     
     if use_improved_normalization:
         print("  Applying improved component normalization...")
-        improved_config = config['improved_normalization']
-        method = improved_config.get('method', 'robust_scaler')
-        percentile_cap = improved_config.get('percentile_cap', None)
+        improved_config = config['features']['improved_normalization']
         
-        # Apply improved normalization to each component
+        # Apply component-specific normalization
+        financial_config = improved_config.get('financial_volatility', {})
+        activity_config = improved_config.get('activity_volatility', {})
+        exploration_config = improved_config.get('exploration_volatility', {})
+        
+        # Apply improved normalization to each component with component-specific settings
         df_result['FINANCIAL_VOLATILITY'] = improved_component_normalization(
-            financial_volatility_raw, method, percentile_cap
+            financial_volatility_raw, 
+            financial_config.get('method', 'robust_scaler'),
+            financial_config.get('percentile_cap', None) if financial_config.get('apply_percentile_cap', False) else None
         )
         df_result['ACTIVITY_VOLATILITY'] = improved_component_normalization(
-            activity_volatility_raw, method, percentile_cap
+            activity_volatility_raw,
+            activity_config.get('method', 'zscore'),
+            None  # Z-score method doesn't use percentile capping
         )
         df_result['EXPLORATION_VOLATILITY'] = improved_component_normalization(
-            exploration_volatility_raw, method, percentile_cap
+            exploration_volatility_raw,
+            exploration_config.get('method', 'log_zscore'),
+            None  # Log z-score method doesn't use percentile capping
         )
     else:
         # Use original normalization
@@ -442,8 +453,12 @@ def calculate_behavioral_volatility_score(df: pd.DataFrame, config: Dict) -> pd.
     
     # Apply final transformation if using improved normalization
     if use_improved_normalization:
-        print("  5. Applying final square root transformation...")
-        df_result['BEHAVIORAL_VOLATILITY_SCORE'] = np.sqrt(df_result['BEHAVIORAL_VOLATILITY_SCORE_RAW'])
+        final_config = config['features']['improved_normalization'].get('final_transformation', {})
+        if final_config.get('apply_sqrt', True):
+            print("  5. Applying final square root transformation...")
+            df_result['BEHAVIORAL_VOLATILITY_SCORE'] = np.sqrt(df_result['BEHAVIORAL_VOLATILITY_SCORE_RAW'])
+        else:
+            df_result['BEHAVIORAL_VOLATILITY_SCORE'] = df_result['BEHAVIORAL_VOLATILITY_SCORE_RAW']
     else:
         # 5. Apply normalization if specified (original method)
         if config['features']['normalize_score']:

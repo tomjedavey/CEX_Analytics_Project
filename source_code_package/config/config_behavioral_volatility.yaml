@@ -29,7 +29,7 @@ features:
   improved_normalization:
     financial_volatility:
       method: "robust_scaler"         # Use robust scaling for financial volatility
-      apply_percentile_cap: true     # Apply 95th percentile capping (configurable)
+      apply_percentile_cap: false     # Apply 95th percentile capping (configurable)
       percentile_cap: 95             # Percentile threshold for capping outliers
     activity_volatility:
       method: "zscore"               # Use z-score normalization
