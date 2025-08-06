@@ -21,7 +21,8 @@ import numpy as np
 import os
 import yaml
 from typing import Optional, Dict, Tuple, List
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
+from sklearn.preprocessing import MinMaxScaler, StandardScaler, RobustScaler
+from scipy.stats import zscore
 
 
 def load_config(config_path: Optional[str] = None) -> Dict:
@@ -51,6 +52,73 @@ def load_config(config_path: Optional[str] = None) -> Dict:
         raise FileNotFoundError(f"Configuration file not found: {config_path}")
     except yaml.YAMLError as e:
         raise ValueError(f"Error parsing YAML configuration: {e}")
+
+
+def improved_component_normalization(
+    values: pd.Series, 
+    method: str = 'robust_scaler',
+    percentile_cap: Optional[float] = None
+) -> pd.Series:
+    """
+    Apply improved normalization to behavioral volatility components.
+    
+    Parameters:
+    -----------
+    values : pd.Series
+        Raw component values to normalize
+    method : str
+        Normalization method ('robust_scaler', 'zscore', 'log_zscore')
+    percentile_cap : float, optional
+        Percentile value (0-100) to cap outliers at before normalization
+        
+    Returns:
+    --------
+    pd.Series
+        Normalized values in range [0, 1]
+    """
+    # Remove any infinite or missing values
+    clean_values = values.replace([np.inf, -np.inf], np.nan).dropna()
+    
+    if len(clean_values) == 0:
+        return pd.Series(index=values.index, data=0.0)
+    
+    # Apply percentile capping if specified
+    if percentile_cap is not None:
+        cap_value = np.percentile(clean_values, percentile_cap)
+        clean_values = clean_values.clip(upper=cap_value)
+    
+    # Apply the specified normalization method
+    if method == 'robust_scaler':
+        # Use RobustScaler (median and IQR-based scaling)
+        scaler = RobustScaler()
+        normalized = scaler.fit_transform(clean_values.values.reshape(-1, 1)).flatten()
+        # Clip to ensure positive values and apply sqrt transformation
+        normalized = np.clip(normalized, 0, None)
+        normalized = np.sqrt(normalized) / np.sqrt(normalized.max()) if normalized.max() > 0 else normalized
+        
+    elif method == 'zscore':
+        # Z-score normalization with capping at ±3
+        normalized = zscore(clean_values)
+        normalized = np.clip(normalized, -3, 3)
+        # Shift to [0, 6] and normalize to [0, 1]
+        normalized = (normalized + 3) / 6
+        
+    elif method == 'log_zscore':
+        # Log transformation followed by z-score
+        log_values = np.log1p(clean_values)  # log(1 + x) to handle zeros
+        normalized = zscore(log_values)
+        normalized = np.clip(normalized, -3, 3)
+        # Shift to [0, 6] and normalize to [0, 1]
+        normalized = (normalized + 3) / 6
+        
+    else:
+        raise ValueError(f"Unknown normalization method: {method}")
+    
+    # Create result series with original index
+    result = pd.Series(index=values.index, data=0.0)
+    result.loc[clean_values.index] = normalized
+    
+    return result
 
 
 def calculate_financial_volatility(df: pd.DataFrame, 
@@ -314,7 +382,7 @@ def calculate_behavioral_volatility_score(df: pd.DataFrame, config: Dict) -> pd.
     
     # 1. Financial Volatility (35%)
     print("  1. Calculating Financial Volatility component...")
-    df_result['FINANCIAL_VOLATILITY'] = calculate_financial_volatility(
+    financial_volatility_raw = calculate_financial_volatility(
         df_result,
         financial_config['numerator_column'],
         financial_config['denominator_column'],
@@ -323,7 +391,7 @@ def calculate_behavioral_volatility_score(df: pd.DataFrame, config: Dict) -> pd.
     
     # 2. Activity Volatility (40%)
     print("  2. Calculating Activity Volatility component...")
-    df_result['ACTIVITY_VOLATILITY'] = calculate_activity_volatility(
+    activity_volatility_raw = calculate_activity_volatility(
         df_result,
         event_columns,
         activity_weights
@@ -331,13 +399,38 @@ def calculate_behavioral_volatility_score(df: pd.DataFrame, config: Dict) -> pd.
     
     # 3. Exploration Volatility (25%)
     print("  3. Calculating Exploration Volatility component...")
-    df_result['EXPLORATION_VOLATILITY'] = calculate_exploration_volatility(
+    exploration_volatility_raw = calculate_exploration_volatility(
         df_result,
         exploration_config['diversity_columns'],
         exploration_config['activity_rate_column'],
         exploration_config['apply_sqrt_transform'],
         epsilon
     )
+    
+    # Apply improved normalization if configured
+    use_improved_normalization = config.get('improved_normalization', {}).get('enable', False)
+    
+    if use_improved_normalization:
+        print("  Applying improved component normalization...")
+        improved_config = config['improved_normalization']
+        method = improved_config.get('method', 'robust_scaler')
+        percentile_cap = improved_config.get('percentile_cap', None)
+        
+        # Apply improved normalization to each component
+        df_result['FINANCIAL_VOLATILITY'] = improved_component_normalization(
+            financial_volatility_raw, method, percentile_cap
+        )
+        df_result['ACTIVITY_VOLATILITY'] = improved_component_normalization(
+            activity_volatility_raw, method, percentile_cap
+        )
+        df_result['EXPLORATION_VOLATILITY'] = improved_component_normalization(
+            exploration_volatility_raw, method, percentile_cap
+        )
+    else:
+        # Use original normalization
+        df_result['FINANCIAL_VOLATILITY'] = financial_volatility_raw
+        df_result['ACTIVITY_VOLATILITY'] = activity_volatility_raw
+        df_result['EXPLORATION_VOLATILITY'] = exploration_volatility_raw
     
     # 4. Calculate composite score
     print("  4. Computing composite Behavioral Volatility Score...")
@@ -347,25 +440,30 @@ def calculate_behavioral_volatility_score(df: pd.DataFrame, config: Dict) -> pd.
         component_weights['exploration_volatility'] * df_result['EXPLORATION_VOLATILITY']
     )
     
-    # 5. Apply normalization if specified
-    if config['features']['normalize_score']:
-        print("  5. Applying score normalization...")
-        normalization_method = config['features']['normalization_method']
-        
-        if normalization_method == "min_max":
-            scaler = MinMaxScaler()
-            df_result['BEHAVIORAL_VOLATILITY_SCORE'] = scaler.fit_transform(
-                df_result[['BEHAVIORAL_VOLATILITY_SCORE_RAW']]
-            ).flatten()
-        elif normalization_method == "z_score":
-            scaler = StandardScaler()
-            df_result['BEHAVIORAL_VOLATILITY_SCORE'] = scaler.fit_transform(
-                df_result[['BEHAVIORAL_VOLATILITY_SCORE_RAW']]
-            ).flatten()
+    # Apply final transformation if using improved normalization
+    if use_improved_normalization:
+        print("  5. Applying final square root transformation...")
+        df_result['BEHAVIORAL_VOLATILITY_SCORE'] = np.sqrt(df_result['BEHAVIORAL_VOLATILITY_SCORE_RAW'])
+    else:
+        # 5. Apply normalization if specified (original method)
+        if config['features']['normalize_score']:
+            print("  5. Applying score normalization...")
+            normalization_method = config['features']['normalization_method']
+            
+            if normalization_method == "min_max":
+                scaler = MinMaxScaler()
+                df_result['BEHAVIORAL_VOLATILITY_SCORE'] = scaler.fit_transform(
+                    df_result[['BEHAVIORAL_VOLATILITY_SCORE_RAW']]
+                ).flatten()
+            elif normalization_method == "z_score":
+                scaler = StandardScaler()
+                df_result['BEHAVIORAL_VOLATILITY_SCORE'] = scaler.fit_transform(
+                    df_result[['BEHAVIORAL_VOLATILITY_SCORE_RAW']]
+                ).flatten()
+            else:
+                df_result['BEHAVIORAL_VOLATILITY_SCORE'] = df_result['BEHAVIORAL_VOLATILITY_SCORE_RAW']
         else:
             df_result['BEHAVIORAL_VOLATILITY_SCORE'] = df_result['BEHAVIORAL_VOLATILITY_SCORE_RAW']
-    else:
-        df_result['BEHAVIORAL_VOLATILITY_SCORE'] = df_result['BEHAVIORAL_VOLATILITY_SCORE_RAW']
     
     print("Behavioral Volatility Score calculation completed!")
     

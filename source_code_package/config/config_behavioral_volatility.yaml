@@ -23,7 +23,22 @@ features:
   
   # Score normalization settings
   normalize_score: true             # Normalize final score to [0,1] scale
-  normalization_method: "min_max"   # Method: "min_max", "z_score", or "none"
+  normalization_method: "improved"   # Method: "min_max", "z_score", "improved", or "none"
+  
+  # Improved normalization settings
+  improved_normalization:
+    financial_volatility:
+      method: "robust_scaler"         # Use robust scaling for financial volatility
+      apply_percentile_cap: true     # Apply 95th percentile capping (configurable)
+      percentile_cap: 95             # Percentile threshold for capping outliers
+    activity_volatility:
+      method: "zscore"               # Use z-score normalization
+      cap_std_devs: 3                # Cap extreme z-scores at ±3 standard deviations
+    exploration_volatility:
+      method: "log_zscore"           # Use log transformation + z-score normalization
+      cap_std_devs: 3                # Cap extreme z-scores at ±3 standard deviations
+    final_transformation:
+      apply_sqrt: true               # Apply square root to reduce compression
   
   # Advanced options
   include_zero_activity_wallets: true  # Include wallets with no events
