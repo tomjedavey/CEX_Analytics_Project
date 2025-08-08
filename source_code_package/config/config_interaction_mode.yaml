@@ -1,0 +1,148 @@
+# Configuration for Interaction Mode Score HDBSCAN Clustering Pipeline
+# This pipeline runs HDBSCAN clustering on three different datasets to produce
+# interaction mode scores
+
+# Data Configuration - Will be overridden by the execution script for each dataset
+#**THIS MEANS THAT YOU CAN'T RUN DIFFERENT CONFIGS FOR DIFFERENT DATASETS AT THE SAME TIME - IF NEEDED MAKE SURE TO CHANGE**
+data:
+  raw_data_path: "data/raw_data/new_raw_data_polygon.csv"  # Default path - will be modified per dataset 
+
+# Preprocessing Configuration
+preprocessing:
+  log_transformation:
+    enabled: true
+    exclude_columns:
+      - "TX_PER_MONTH"
+      - "ACTIVE_DURATION_DAYS"
+    method: "log1p"  # Use log1p for handling zero/negative values
+  
+  scaling:
+    enabled: true
+    method: "standard"  # StandardScaler
+    exclude_columns: []  # Add any columns to exclude from scaling
+
+# UMAP Dimensionality Reduction Configuration
+umap:
+  # Enable/disable UMAP dimensionality reduction
+  enabled: true            # Set to false to skip UMAP and run HDBSCAN directly on preprocessed features
+  
+  # Core UMAP parameters
+  n_neighbors: 20          # Number of neighbors to consider for manifold approximation (2-100)
+  n_components: 2          # Number of dimensions to reduce to
+  metric: "cosine"         # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
+  
+  # Advanced UMAP parameters
+  min_dist: 0.05           # Minimum distance between points in low-dimensional space (0.0-1.0)
+  spread: 1.5             # How spread out the embedded points should be (>0.0)
+  
+  # Learning parameters
+  learning_rate: 0.75      # Learning rate for optimization (>0.0)
+  n_epochs: null          # Number of training epochs (null for auto)
+  init: "spectral"        # Initialization method ("spectral", "random", "pca")
+  
+  # Reproducibility
+  random_state: 42        # Random seed for reproducibility
+  
+  # Performance parameters
+  verbose: true           # Whether to print progress information
+  low_memory: false       # Use low memory mode (slower but uses less RAM)
+  
+  # Advanced metric parameters (for specific metrics)
+  metric_kwds: null       # Additional keyword arguments for the metric
+  
+  # Embedding parameters
+  output_metric: "euclidean"     # Metric for the output space
+  output_metric_kwds: null       # Additional arguments for output metric
+
+  # Negative sampling parameters
+  negative_sample_rate: 5        # Number of negative samples per positive sample
+  
+  # Transform parameters (for new data)
+  transform_queue_size: 4.0      # Queue size for approximate nearest neighbor search
+
+  # Specialized parameters
+  angular_rp_forest: true
+
+  # Features to be included in UMAP - optimized for interaction mode detection
+  include_columns:
+    # - "TX_PER_MONTH"
+    # - "TOKEN_DIVERSITY"
+    # - "PROTOCOL_DIVERSITY"
+    # - "TOTAL_TRANSFER_USD"
+    # - "INTERACTION_DIVERSITY"
+    # - "ACTIVE_DURATION_DAYS"
+    # - "AVG_TRANSFER_USD"
+    # - "USD_TRANSFER_STDDEV"
+     - "DEX_EVENTS"
+     - "GAMES_EVENTS"
+     - "CEX_EVENTS"
+    # - "DAPP_EVENTS"
+    # - "CHADMIN_EVENTS"
+     - "DEFI_EVENTS"
+     - "BRIDGE_EVENTS"
+    # - "NFT_EVENTS"
+    # - "TOKEN_EVENTS"
+    # - "FLOTSAM_EVENTS"
+    # - "BRIDGE_OUTFLOW_COUNT"
+    # - "BRIDGE_INFLOW_COUNT"
+    # - "BRIDGE_TOTAL_VOLUME_USD"
+
+# HDBSCAN Clustering Configuration - Tuned for interaction mode detection
+hdbscan:
+  # Core HDBSCAN parameters - optimized for interaction patterns
+  min_cluster_size: 75          # Minimum number of points required to form a cluster
+  min_samples: 15                # Number of samples in a neighborhood for a point to be considered a core point
+  cluster_selection_epsilon: 0.3 # Distance threshold for cluster selection (0.0 for auto)
+  
+  # Distance metric
+  metric: "cosine"            # Distance metric ("euclidean", "manhattan", "cosine", "minkowski")
+  
+  # Algorithm parameters
+  alpha: 1.0                     # Strength of regularization for soft clustering (>0.0)
+  algorithm: "best"              # Algorithm to use ("best", "generic", "prims_kdtree", "prims_balltree", "boruvka_kdtree", "boruvka_balltree")
+  leaf_size: 40                  # Leaf size for tree-based algorithms (10-100)
+  
+  # Cluster selection method
+  cluster_selection_method: "eom"  # Method for selecting clusters ("eom" or "leaf")
+  allow_single_cluster: false    # Allow single cluster result
+  
+  # Advanced parameters
+  max_cluster_size: 0            # Maximum cluster size (0 for no limit)
+  
+  # Prediction parameters
+  prediction_data: true          # Whether to generate data for predicting cluster membership
+  
+  # Performance parameters
+  core_dist_n_jobs: -1          # Number of parallel jobs for core distance computation (-1 for all cores)
+  
+  # Output parameters
+  gen_min_span_tree: false      # Generate minimum spanning tree
+  
+  # Additional parameters
+  approx_min_span_tree: true    # Use approximation for minimum spanning tree
+  match_reference_implementation: false  # Match reference implementation exactly
+
+# Output Configuration
+output:
+  save_preprocessing_info: true
+  preprocessing_info_path: "data/processed_data/preprocessing_info_interaction_mode.yaml"
+
+# Interaction Mode Specific Configuration
+interaction_mode:
+  # Dataset identifiers for the three clustering runs
+  datasets:
+    main: "new_raw_data_polygon.csv"
+    cluster_0: "new_raw_data_polygon_cluster_0.csv"
+    cluster_1: "new_raw_data_polygon_cluster_1.csv"
+  
+  # Output directories for each dataset
+  output_directories:
+    main: "interaction_mode_results/main_dataset"
+    cluster_0: "interaction_mode_results/cluster_0_dataset"
+    cluster_1: "interaction_mode_results/cluster_1_dataset"
+  
+  # Feature engineering settings for interaction mode detection
+  feature_engineering:
+    create_interaction_features: true
+    normalize_by_activity: true
+    include_temporal_features: true
