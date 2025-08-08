@@ -1,6 +1,6 @@
 Interaction Mode Score Clustering Pipeline Summary
 ============================================================
-Last Updated: 2025-08-08 10:23:19
+Last Updated: 2025-08-08 10:28:17
 
 Dataset Validation Results:
 ------------------------------
@@ -10,9 +10,27 @@ main:
   📋 Columns: 22
   💾 Memory: 5.1 MB
 
+cluster_0:
+  ✅ Valid dataset
+  📊 Rows: 11,369
+  📋 Columns: 22
+  💾 Memory: 2.9 MB
+
+cluster_1:
+  ✅ Valid dataset
+  📊 Rows: 8,647
+  📋 Columns: 22
+  💾 Memory: 2.2 MB
+
 Clustering Results Summary:
 ------------------------------
 main:
+  ❌ Clustering failed: Pipeline execution failed: UMAP + HDBSCAN pipeline failed: Unrecognized metric 'cosine'
+
+cluster_0:
+  ❌ Clustering failed: Pipeline execution failed: UMAP + HDBSCAN pipeline failed: Unrecognized metric 'cosine'
+
+cluster_1:
   ❌ Clustering failed: Pipeline execution failed: UMAP + HDBSCAN pipeline failed: Unrecognized metric 'cosine'
 
 Configuration Summary:

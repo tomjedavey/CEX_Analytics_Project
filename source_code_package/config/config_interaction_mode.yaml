@@ -95,7 +95,7 @@ hdbscan:
   cluster_selection_epsilon: 0.3 # Distance threshold for cluster selection (0.0 for auto)
   
   # Distance metric
-  metric: "cosine"            # Distance metric ("euclidean", "manhattan", "cosine", "minkowski")
+  metric: "euclidean"            # Distance metric ("euclidean", "manhattan", "cosine", "minkowski")
   
   # Algorithm parameters
   alpha: 1.0                     # Strength of regularization for soft clustering (>0.0)
