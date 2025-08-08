@@ -1,6 +1,6 @@
 Interaction Mode Score Clustering Pipeline Summary
 ============================================================
-Last Updated: 2025-08-08 10:28:17
+Last Updated: 2025-08-08 10:59:31
 
 Dataset Validation Results:
 ------------------------------
@@ -25,18 +25,33 @@ cluster_1:
 Clustering Results Summary:
 ------------------------------
 main:
-  ❌ Clustering failed: Pipeline execution failed: UMAP + HDBSCAN pipeline failed: Unrecognized metric 'cosine'
+  ✅ Clustering successful
+  🎯 Clusters: 17
+  📊 Data points: 20,174
+  🔍 Noise points: 415
+  📉 Noise percentage: 2.1%
+  🔄 UMAP: Enabled
 
 cluster_0:
-  ❌ Clustering failed: Pipeline execution failed: UMAP + HDBSCAN pipeline failed: Unrecognized metric 'cosine'
+  ✅ Clustering successful
+  🎯 Clusters: 13
+  📊 Data points: 11,369
+  🔍 Noise points: 1,385
+  📉 Noise percentage: 12.2%
+  🔄 UMAP: Enabled
 
 cluster_1:
-  ❌ Clustering failed: Pipeline execution failed: UMAP + HDBSCAN pipeline failed: Unrecognized metric 'cosine'
+  ✅ Clustering successful
+  🎯 Clusters: 3
+  📊 Data points: 8,647
+  🔍 Noise points: 351
+  📉 Noise percentage: 4.1%
+  🔄 UMAP: Enabled
 
 Configuration Summary:
 --------------------
 Config file: /Users/tomdavey/Documents/GitHub/MLProject1/scripts/clustering/../../source_code_package/config/config_interaction_mode.yaml
 Output directory: /Users/tomdavey/Documents/GitHub/MLProject1/scripts/clustering/../../data/raw_data/interaction_mode_results
-UMAP enabled: True
-Min cluster size: 75
-Min samples: 15
+UMAP enabled: False
+Min cluster size: 200
+Min samples: 25

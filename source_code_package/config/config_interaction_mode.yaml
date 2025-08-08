@@ -24,16 +24,16 @@ preprocessing:
 # UMAP Dimensionality Reduction Configuration
 umap:
   # Enable/disable UMAP dimensionality reduction
-  enabled: true            # Set to false to skip UMAP and run HDBSCAN directly on preprocessed features
+  enabled: false            # Set to false to skip UMAP and run HDBSCAN directly on preprocessed features
   
   # Core UMAP parameters
-  n_neighbors: 20          # Number of neighbors to consider for manifold approximation (2-100)
+  n_neighbors: 50          # Number of neighbors to consider for manifold approximation (2-100)
   n_components: 2          # Number of dimensions to reduce to
   metric: "cosine"         # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
   
   # Advanced UMAP parameters
-  min_dist: 0.05           # Minimum distance between points in low-dimensional space (0.0-1.0)
-  spread: 1.5             # How spread out the embedded points should be (>0.0)
+  min_dist: 0.1           # Minimum distance between points in low-dimensional space (0.0-1.0)
+  spread: 1.0             # How spread out the embedded points should be (>0.0)
   
   # Learning parameters
   learning_rate: 0.75      # Learning rate for optimization (>0.0)
@@ -74,12 +74,12 @@ umap:
     # - "AVG_TRANSFER_USD"
     # - "USD_TRANSFER_STDDEV"
      - "DEX_EVENTS"
-     - "GAMES_EVENTS"
+    # - "GAMES_EVENTS"
      - "CEX_EVENTS"
     # - "DAPP_EVENTS"
     # - "CHADMIN_EVENTS"
-     - "DEFI_EVENTS"
-     - "BRIDGE_EVENTS"
+    # - "DEFI_EVENTS"
+    # - "BRIDGE_EVENTS"
     # - "NFT_EVENTS"
     # - "TOKEN_EVENTS"
     # - "FLOTSAM_EVENTS"
@@ -90,10 +90,10 @@ umap:
 # HDBSCAN Clustering Configuration - Tuned for interaction mode detection
 hdbscan:
   # Core HDBSCAN parameters - optimized for interaction patterns
-  min_cluster_size: 75          # Minimum number of points required to form a cluster
-  min_samples: 15                # Number of samples in a neighborhood for a point to be considered a core point
-  cluster_selection_epsilon: 0.3 # Distance threshold for cluster selection (0.0 for auto)
-  
+  min_cluster_size: 200          # Minimum number of points required to form a cluster
+  min_samples: 25                # Number of samples in a neighborhood for a point to be considered a core point
+  cluster_selection_epsilon: 0.5  # Distance threshold for cluster selection (0.0 for auto)
+
   # Distance metric
   metric: "euclidean"            # Distance metric ("euclidean", "manhattan", "cosine", "minkowski")
   
