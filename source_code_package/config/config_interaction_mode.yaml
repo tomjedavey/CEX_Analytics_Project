@@ -75,22 +75,22 @@ umap:
     # - "USD_TRANSFER_STDDEV"
      - "DEX_EVENTS"
     # - "GAMES_EVENTS"
-     - "CEX_EVENTS"
+    # - "CEX_EVENTS"
     # - "DAPP_EVENTS"
     # - "CHADMIN_EVENTS"
     # - "DEFI_EVENTS"
-    # - "BRIDGE_EVENTS"
+     - "BRIDGE_EVENTS"
     # - "NFT_EVENTS"
     # - "TOKEN_EVENTS"
     # - "FLOTSAM_EVENTS"
     # - "BRIDGE_OUTFLOW_COUNT"
     # - "BRIDGE_INFLOW_COUNT"
-    # - "BRIDGE_TOTAL_VOLUME_USD"
+    # - "BRIDGE_TOTAL_VOLUME_USD" 
 
 # HDBSCAN Clustering Configuration - Tuned for interaction mode detection
 hdbscan:
   # Core HDBSCAN parameters - optimized for interaction patterns
-  min_cluster_size: 200          # Minimum number of points required to form a cluster
+  min_cluster_size: 300          # Minimum number of points required to form a cluster
   min_samples: 25                # Number of samples in a neighborhood for a point to be considered a core point
   cluster_selection_epsilon: 0.5  # Distance threshold for cluster selection (0.0 for auto)
 

@@ -32,10 +32,10 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
 
 def load_hdbscan_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     """
-    Load HDBSCAN configuration from YAML file.
+    Load full clustering configuration from YAML file.
     
-    This function reads the clustering configuration file and extracts HDBSCAN-specific
-    parameters that control the clustering algorithm's behavior.
+    This function reads the clustering configuration file and returns the complete
+    configuration including HDBSCAN, UMAP, and preprocessing parameters.
     
     Parameters:
     -----------
@@ -45,17 +45,17 @@ def load_hdbscan_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     Returns:
     --------
     dict
-        Dictionary containing HDBSCAN configuration parameters including:
-        - min_cluster_size: Minimum number of samples in a cluster
-        - min_samples: Number of samples in neighborhood for core point
-        - metric: Distance metric to use
-        - cluster_selection_method: Method for selecting clusters
-        - Additional algorithm parameters
+        Dictionary containing the complete configuration including:
+        - hdbscan: HDBSCAN-specific parameters
+        - umap: UMAP configuration (including enabled flag and include_columns)
+        - preprocessing: Preprocessing configuration
+        - data: Data paths and settings
         
     Example:
     --------
     >>> config = load_hdbscan_config()
-    >>> min_cluster_size = config['min_cluster_size']
+    >>> hdbscan_params = config['hdbscan']
+    >>> umap_enabled = config.get('umap', {}).get('enabled', True)
     """
     if config_path is None:
         config_path = os.path.join(os.path.dirname(__file__), '../../config/config_cluster.yaml')
@@ -63,7 +63,7 @@ def load_hdbscan_config(config_path: Optional[str] = None) -> Dict[str, Any]:
     with open(config_path, 'r') as f:
         config = yaml.safe_load(f)
     
-    return config.get('hdbscan', {})
+    return config
 
 
 def validate_hdbscan_config(config: Dict[str, Any]) -> Dict[str, Any]:
@@ -76,7 +76,7 @@ def validate_hdbscan_config(config: Dict[str, Any]) -> Dict[str, Any]:
     Parameters:
     -----------
     config : dict
-        HDBSCAN configuration dictionary
+        Full configuration dictionary (should contain 'hdbscan' section)
         
     Returns:
     --------
@@ -96,8 +96,11 @@ def validate_hdbscan_config(config: Dict[str, Any]) -> Dict[str, Any]:
         'errors': []
     }
     
+    # Extract HDBSCAN section from full config
+    hdbscan_config = config.get('hdbscan', {})
+    
     # Check min_cluster_size
-    min_cluster_size = config.get('min_cluster_size', 15)
+    min_cluster_size = hdbscan_config.get('min_cluster_size', 15)
     if min_cluster_size < 5:
         validation_results['warnings'].append(
             f"min_cluster_size ({min_cluster_size}) is very small. Consider values >= 5 for stable clusters."
@@ -108,7 +111,7 @@ def validate_hdbscan_config(config: Dict[str, Any]) -> Dict[str, Any]:
         )
     
     # Check min_samples
-    min_samples = config.get('min_samples', 5)
+    min_samples = hdbscan_config.get('min_samples', 5)
     if min_samples > min_cluster_size:
         validation_results['errors'].append(
             f"min_samples ({min_samples}) should not be larger than min_cluster_size ({min_cluster_size})"
@@ -117,7 +120,7 @@ def validate_hdbscan_config(config: Dict[str, Any]) -> Dict[str, Any]:
     
     # Check metric
     valid_metrics = ['euclidean', 'manhattan', 'cosine', 'minkowski']
-    metric = config.get('metric', 'euclidean')
+    metric = hdbscan_config.get('metric', 'euclidean')
     if metric not in valid_metrics:
         validation_results['warnings'].append(
             f"Metric '{metric}' may not be supported. Consider using: {valid_metrics}"
@@ -125,7 +128,7 @@ def validate_hdbscan_config(config: Dict[str, Any]) -> Dict[str, Any]:
     
     # Check cluster_selection_method
     valid_methods = ['eom', 'leaf']
-    method = config.get('cluster_selection_method', 'eom')
+    method = hdbscan_config.get('cluster_selection_method', 'eom')
     if method not in valid_methods:
         validation_results['errors'].append(
             f"cluster_selection_method '{method}' is invalid. Use one of: {valid_methods}"
@@ -199,22 +202,25 @@ def apply_hdbscan_clustering(data: np.ndarray, config_path: Optional[str] = None
         for rec in validation['recommendations']:
             print(f"RECOMMENDATION: {rec}")
     
+    # Extract HDBSCAN section from full config
+    hdbscan_config = config.get('hdbscan', {})
+    
     # Prepare HDBSCAN parameters
     hdbscan_params = {
-        'min_cluster_size': config.get('min_cluster_size', 15),
-        'min_samples': config.get('min_samples', 5),
-        'cluster_selection_epsilon': config.get('cluster_selection_epsilon', 0.0),
-        'metric': config.get('metric', 'euclidean'),
-        'alpha': config.get('alpha', 1.0),
-        'algorithm': config.get('algorithm', 'best'),
-        'leaf_size': config.get('leaf_size', 40),
-        'cluster_selection_method': config.get('cluster_selection_method', 'eom'),
-        'allow_single_cluster': config.get('allow_single_cluster', False),
-        'max_cluster_size': config.get('max_cluster_size', 0),
-        'prediction_data': config.get('prediction_data', True),
-        'core_dist_n_jobs': config.get('core_dist_n_jobs', -1),
-        'gen_min_span_tree': config.get('gen_min_span_tree', False),
-        'approx_min_span_tree': config.get('approx_min_span_tree', True),
+        'min_cluster_size': hdbscan_config.get('min_cluster_size', 15),
+        'min_samples': hdbscan_config.get('min_samples', 5),
+        'cluster_selection_epsilon': hdbscan_config.get('cluster_selection_epsilon', 0.0),
+        'metric': hdbscan_config.get('metric', 'euclidean'),
+        'alpha': hdbscan_config.get('alpha', 1.0),
+        'algorithm': hdbscan_config.get('algorithm', 'best'),
+        'leaf_size': hdbscan_config.get('leaf_size', 40),
+        'cluster_selection_method': hdbscan_config.get('cluster_selection_method', 'eom'),
+        'allow_single_cluster': hdbscan_config.get('allow_single_cluster', False),
+        'max_cluster_size': hdbscan_config.get('max_cluster_size', 0),
+        'prediction_data': hdbscan_config.get('prediction_data', True),
+        'core_dist_n_jobs': hdbscan_config.get('core_dist_n_jobs', -1),
+        'gen_min_span_tree': hdbscan_config.get('gen_min_span_tree', False),
+        'approx_min_span_tree': hdbscan_config.get('approx_min_span_tree', True),
         'match_reference_implementation': config.get('match_reference_implementation', False)
     }
     

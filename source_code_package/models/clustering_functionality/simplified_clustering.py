@@ -211,6 +211,30 @@ def _run_direct_hdbscan_pipeline(config_path: str,
             apply_scaling=True
         )
         
+        # Step 1.5: Apply column selection if specified (similar to UMAP logic)
+        config = load_hdbscan_config(config_path)
+        include_columns = config.get('umap', {}).get('include_columns', [])
+        
+        if include_columns:
+            print(f"  🔍 Selecting specified columns: {include_columns}")
+            # Validate that all specified columns exist
+            missing_cols = [col for col in include_columns if col not in preprocessed_data.columns]
+            if missing_cols:
+                print(f"⚠️  WARNING: Missing columns: {missing_cols}")
+                available_cols = [col for col in include_columns if col in preprocessed_data.columns]
+                if available_cols:
+                    include_columns = available_cols
+                    print(f"  ✅ Using available columns: {include_columns}")
+                else:
+                    print("  ❌ No valid columns found, using all preprocessed data")
+                    include_columns = []
+            
+            if include_columns:
+                preprocessed_data = preprocessed_data[include_columns]
+                print(f"  📊 Data shape after column selection: {preprocessed_data.shape}")
+        else:
+            print("  📊 Using all preprocessed columns")
+        
         n_original_features = preprocessing_info.get('original_shape', (0, 0))[1]
         
         # Step 2: HDBSCAN clustering on preprocessed data

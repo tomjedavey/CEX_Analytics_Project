@@ -1,6 +1,6 @@
 Interaction Mode Score Clustering Pipeline Summary
 ============================================================
-Last Updated: 2025-08-08 10:59:31
+Last Updated: 2025-08-09 09:56:42
 
 Dataset Validation Results:
 ------------------------------
@@ -26,32 +26,32 @@ Clustering Results Summary:
 ------------------------------
 main:
   ✅ Clustering successful
-  🎯 Clusters: 17
+  🎯 Clusters: 2
   📊 Data points: 20,174
-  🔍 Noise points: 415
-  📉 Noise percentage: 2.1%
-  🔄 UMAP: Enabled
+  🔍 Noise points: 103
+  📉 Noise percentage: 0.5%
+  🔄 UMAP: Disabled (direct HDBSCAN)
 
 cluster_0:
   ✅ Clustering successful
-  🎯 Clusters: 13
+  🎯 Clusters: 2
   📊 Data points: 11,369
-  🔍 Noise points: 1,385
-  📉 Noise percentage: 12.2%
-  🔄 UMAP: Enabled
+  🔍 Noise points: 94
+  📉 Noise percentage: 0.8%
+  🔄 UMAP: Disabled (direct HDBSCAN)
 
 cluster_1:
   ✅ Clustering successful
   🎯 Clusters: 3
   📊 Data points: 8,647
-  🔍 Noise points: 351
-  📉 Noise percentage: 4.1%
-  🔄 UMAP: Enabled
+  🔍 Noise points: 54
+  📉 Noise percentage: 0.6%
+  🔄 UMAP: Disabled (direct HDBSCAN)
 
 Configuration Summary:
 --------------------
 Config file: /Users/tomdavey/Documents/GitHub/MLProject1/scripts/clustering/../../source_code_package/config/config_interaction_mode.yaml
 Output directory: /Users/tomdavey/Documents/GitHub/MLProject1/scripts/clustering/../../data/raw_data/interaction_mode_results
 UMAP enabled: False
-Min cluster size: 200
+Min cluster size: 300
 Min samples: 25
