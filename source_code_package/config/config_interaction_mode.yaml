@@ -24,7 +24,7 @@ preprocessing:
 # UMAP Dimensionality Reduction Configuration
 umap:
   # Enable/disable UMAP dimensionality reduction
-  enabled: false            # Set to false to skip UMAP and run HDBSCAN directly on preprocessed features
+  enabled: true            # Set to false to skip UMAP and run HDBSCAN directly on preprocessed features
   
   # Core UMAP parameters
   n_neighbors: 50          # Number of neighbors to consider for manifold approximation (2-100)
@@ -90,9 +90,9 @@ umap:
 # HDBSCAN Clustering Configuration - Tuned for interaction mode detection
 hdbscan:
   # Core HDBSCAN parameters - optimized for interaction patterns
-  min_cluster_size: 300          # Minimum number of points required to form a cluster
+  min_cluster_size: 200           # Minimum number of points required to form a cluster
   min_samples: 25                # Number of samples in a neighborhood for a point to be considered a core point
-  cluster_selection_epsilon: 0.5  # Distance threshold for cluster selection (0.0 for auto)
+  cluster_selection_epsilon: 0.3  # Distance threshold for cluster selection (0.0 for auto)
 
   # Distance metric
   metric: "euclidean"            # Distance metric ("euclidean", "manhattan", "cosine", "minkowski")

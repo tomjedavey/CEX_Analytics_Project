@@ -1,16 +1,45 @@
 HDBSCAN Clustering Summary
 ==============================
 
-Number of clusters: 2
-Number of noise points: 103
+Number of clusters: 31
+Number of noise points: 2817
 Total points: 20174
-Noise percentage: 0.5%
+Noise percentage: 14.0%
 
 Cluster sizes:
-  Cluster 0: 9591 points
-  Cluster 1: 10480 points
+  Cluster 0: 738 points
+  Cluster 1: 5768 points
+  Cluster 2: 205 points
+  Cluster 3: 410 points
+  Cluster 4: 455 points
+  Cluster 5: 530 points
+  Cluster 6: 1039 points
+  Cluster 7: 312 points
+  Cluster 8: 498 points
+  Cluster 9: 223 points
+  Cluster 10: 321 points
+  Cluster 11: 266 points
+  Cluster 12: 309 points
+  Cluster 13: 238 points
+  Cluster 14: 222 points
+  Cluster 15: 827 points
+  Cluster 16: 204 points
+  Cluster 17: 516 points
+  Cluster 18: 354 points
+  Cluster 19: 204 points
+  Cluster 20: 621 points
+  Cluster 21: 340 points
+  Cluster 22: 365 points
+  Cluster 23: 210 points
+  Cluster 24: 253 points
+  Cluster 25: 319 points
+  Cluster 26: 231 points
+  Cluster 27: 218 points
+  Cluster 28: 318 points
+  Cluster 29: 387 points
+  Cluster 30: 456 points
 
 Quality Metrics:
-  Silhouette Score: 0.364
-  Calinski-Harabasz Score: 8791.27
-  Davies-Bouldin Score: 1.283
+  Silhouette Score: 0.807
+  Calinski-Harabasz Score: 98489.34
+  Davies-Bouldin Score: 0.446

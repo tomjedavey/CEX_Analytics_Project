@@ -467,6 +467,12 @@ def plot_clustering_results(data: np.ndarray, cluster_labels: np.ndarray,
     ...                        title="Customer Segmentation Results",
     ...                        save_path="clustering_results.png")
     """
+    # Ensure data is numpy array, not pandas DataFrame
+    if hasattr(data, 'values'):  # Check if it's a pandas DataFrame/Series
+        data = data.values
+    if hasattr(cluster_labels, 'values'):
+        cluster_labels = cluster_labels.values
+        
     # Create figure with subplots
     fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=figsize)
     fig.suptitle(title, fontsize=16)
@@ -563,8 +569,14 @@ def plot_clustering_results(data: np.ndarray, cluster_labels: np.ndarray,
     if save_path:
         plt.savefig(save_path, dpi=300, bbox_inches='tight')
         print(f"Plot saved to: {save_path}")
-    
-    plt.show()
+        plt.close()  # Close the figure to free memory
+    else:
+        # Only show if we have a display (not headless)
+        try:
+            plt.show()
+        except:
+            print("Display not available, plot created but not shown")
+            plt.close()
 
 
 # ================================
@@ -656,7 +668,13 @@ def hdbscan_clustering_pipeline(umap_data: np.ndarray, config_path: Optional[str
             if umap_data.shape[1] >= 2:
                 # For visualization, use first 2 dimensions if more than 2D
                 print(f"  Data shape for visualization: {umap_data.shape}")
-                viz_data = umap_data[:, :2] if umap_data.shape[1] > 2 else umap_data
+                
+                # Ensure we have numpy arrays for slicing
+                if hasattr(umap_data, 'values'):  # Check if it's a pandas DataFrame
+                    viz_data = umap_data.values[:, :2] if umap_data.shape[1] > 2 else umap_data.values
+                else:
+                    viz_data = umap_data[:, :2] if umap_data.shape[1] > 2 else umap_data
+                
                 print(f"  Visualization data shape: {viz_data.shape}")
                 
                 if save_results:
