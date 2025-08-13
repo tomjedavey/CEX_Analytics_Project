@@ -90,7 +90,7 @@ umap:
 # HDBSCAN Clustering Configuration - Tuned for interaction mode detection
 hdbscan:
   # Core HDBSCAN parameters - optimized for interaction patterns
-  min_cluster_size: 250           # Minimum number of points required to form a cluster
+  min_cluster_size: 300           # Minimum number of points required to form a cluster
   min_samples: 25                 # Number of samples in a neighborhood for a point to be considered a core point
   cluster_selection_epsilon: 0.5  # Distance threshold for cluster selection (0.0 for auto)
 
