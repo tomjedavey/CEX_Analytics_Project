@@ -1,0 +1,293 @@
+{
+  "target_features": [
+    "DEX_EVENTS",
+    "CEX_EVENTS",
+    "DEFI_EVENTS",
+    "BRIDGE_EVENTS"
+  ],
+  "selection_parameters": {
+    "min_activity_threshold": 0.1,
+    "min_cluster_size": 50,
+    "algorithm_version": "v2_activity_required"
+  },
+  "datasets": {
+    "main": {
+      "total_points": 20174,
+      "valid_clusters": 25,
+      "noise_points": 2476,
+      "feature_selections": {
+        "DEX_EVENTS": {
+          "selected_cluster": 17,
+          "median_value": 1.0,
+          "cluster_size": 296,
+          "selection_score": 857.0769116456615,
+          "feature_stats": {
+            "mean": 0.777027027027027,
+            "median": 1.0,
+            "std": 0.7739067786059524,
+            "variance": 0.5989317019722425,
+            "min": 0.0,
+            "max": 2.0,
+            "intensity": 0.5749417584136495,
+            "non_zero_proportion": 0.5641891891891891,
+            "activity_count": 167
+          },
+          "meets_activity_threshold": true
+        },
+        "CEX_EVENTS": {
+          "selected_cluster": 6,
+          "median_value": 0.0,
+          "cluster_size": 321,
+          "selection_score": 1045.600849669995,
+          "feature_stats": {
+            "mean": 0.411214953271028,
+            "median": 0.0,
+            "std": 0.49205407779768906,
+            "variance": 0.24211721547733425,
+            "min": 0.0,
+            "max": 1.0,
+            "intensity": 0.3444510023530182,
+            "non_zero_proportion": 0.411214953271028,
+            "activity_count": 132
+          },
+          "meets_activity_threshold": true
+        },
+        "DEFI_EVENTS": {
+          "selected_cluster": 7,
+          "median_value": 3.0,
+          "cluster_size": 390,
+          "selection_score": 3027666884.6858406,
+          "feature_stats": {
+            "mean": 3.0,
+            "median": 3.0,
+            "std": 0.0,
+            "variance": 0.0,
+            "min": 3.0,
+            "max": 3.0,
+            "intensity": 1.3862943611198906,
+            "non_zero_proportion": 1.0,
+            "activity_count": 390
+          },
+          "meets_activity_threshold": true
+        },
+        "BRIDGE_EVENTS": {
+          "selected_cluster": 15,
+          "median_value": 6.0,
+          "cluster_size": 474,
+          "selection_score": 5165223899.652424,
+          "feature_stats": {
+            "mean": 6.0,
+            "median": 6.0,
+            "std": 0.0,
+            "variance": 0.0,
+            "min": 6.0,
+            "max": 6.0,
+            "intensity": 1.9459101490553132,
+            "non_zero_proportion": 1.0,
+            "activity_count": 474
+          },
+          "meets_activity_threshold": true
+        }
+      }
+    },
+    "cluster_0": {
+      "total_points": 11369,
+      "valid_clusters": 13,
+      "noise_points": 1932,
+      "feature_selections": {
+        "DEX_EVENTS": {
+          "selected_cluster": 4,
+          "median_value": 1.0,
+          "cluster_size": 271,
+          "selection_score": 3470.455128746521,
+          "feature_stats": {
+            "mean": 0.8265682656826568,
+            "median": 1.0,
+            "std": 0.4498819381292449,
+            "variance": 0.20239375825492573,
+            "min": 0.0,
+            "max": 2.0,
+            "intensity": 0.6024389416889894,
+            "non_zero_proportion": 0.7970479704797048,
+            "activity_count": 216
+          },
+          "meets_activity_threshold": true
+        },
+        "CEX_EVENTS": {
+          "selected_cluster": 7,
+          "median_value": 1.0,
+          "cluster_size": 308,
+          "selection_score": 479.02459816208005,
+          "feature_stats": {
+            "mean": 1.422077922077922,
+            "median": 1.0,
+            "std": 1.5130706180568212,
+            "variance": 2.289382695226851,
+            "min": 0.0,
+            "max": 7.0,
+            "intensity": 0.8846258172301865,
+            "non_zero_proportion": 0.75,
+            "activity_count": 231
+          },
+          "meets_activity_threshold": true
+        },
+        "DEFI_EVENTS": {
+          "selected_cluster": 0,
+          "median_value": 3.0,
+          "cluster_size": 358,
+          "selection_score": 2779242935.1731567,
+          "feature_stats": {
+            "mean": 3.0,
+            "median": 3.0,
+            "std": 0.0,
+            "variance": 0.0,
+            "min": 3.0,
+            "max": 3.0,
+            "intensity": 1.3862943611198906,
+            "non_zero_proportion": 1.0,
+            "activity_count": 358
+          },
+          "meets_activity_threshold": true
+        },
+        "BRIDGE_EVENTS": {
+          "selected_cluster": 12,
+          "median_value": 1.0,
+          "cluster_size": 433,
+          "selection_score": 1680743283.4217553,
+          "feature_stats": {
+            "mean": 1.0,
+            "median": 1.0,
+            "std": 0.0,
+            "variance": 0.0,
+            "min": 1.0,
+            "max": 1.0,
+            "intensity": 0.6931471805599453,
+            "non_zero_proportion": 1.0,
+            "activity_count": 433
+          },
+          "meets_activity_threshold": true
+        }
+      }
+    },
+    "cluster_1": {
+      "total_points": 8647,
+      "valid_clusters": 11,
+      "noise_points": 1133,
+      "feature_selections": {
+        "DEX_EVENTS": {
+          "selected_cluster": 0,
+          "median_value": 6.0,
+          "cluster_size": 252,
+          "selection_score": 110.1896742030887,
+          "feature_stats": {
+            "mean": 7.214285714285714,
+            "median": 6.0,
+            "std": 5.193260502663628,
+            "variance": 26.969954648526073,
+            "min": 1.0,
+            "max": 23.0,
+            "intensity": 2.1058747987479918,
+            "non_zero_proportion": 1.0,
+            "activity_count": 252
+          },
+          "meets_activity_threshold": true
+        },
+        "CEX_EVENTS": {
+          "selected_cluster": 9,
+          "median_value": 2.0,
+          "cluster_size": 265,
+          "selection_score": 4.469004276844537,
+          "feature_stats": {
+            "mean": 9.350943396226414,
+            "median": 2.0,
+            "std": 27.85788477959198,
+            "variance": 776.0617443930225,
+            "min": 1.0,
+            "max": 275.0,
+            "intensity": 2.337077664951381,
+            "non_zero_proportion": 1.0,
+            "activity_count": 265
+          },
+          "meets_activity_threshold": true
+        },
+        "DEFI_EVENTS": {
+          "selected_cluster": 7,
+          "median_value": 0.0,
+          "cluster_size": 479,
+          "selection_score": 5.004965747129304,
+          "feature_stats": {
+            "mean": 5.246346555323591,
+            "median": 0.0,
+            "std": 21.009836204532323,
+            "variance": 441.4132173412771,
+            "min": 0.0,
+            "max": 397.0,
+            "intensity": 1.8319967416834526,
+            "non_zero_proportion": 0.4613778705636743,
+            "activity_count": 221
+          },
+          "meets_activity_threshold": true
+        },
+        "BRIDGE_EVENTS": {
+          "selected_cluster": 4,
+          "median_value": 8.0,
+          "cluster_size": 257,
+          "selection_score": 3162245611.7022867,
+          "feature_stats": {
+            "mean": 8.0,
+            "median": 8.0,
+            "std": 0.0,
+            "variance": 0.0,
+            "min": 8.0,
+            "max": 8.0,
+            "intensity": 2.1972245773362196,
+            "non_zero_proportion": 1.0,
+            "activity_count": 257
+          },
+          "meets_activity_threshold": true
+        }
+      }
+    }
+  },
+  "summary": {
+    "features_analyzed": 4,
+    "successful_selections": 12,
+    "activity_threshold_met": 12,
+    "fallback_selections": 0,
+    "median_value_ranges": {
+      "DEX_EVENTS": {
+        "min": 1.0,
+        "max": 6.0,
+        "mean": 2.6666666666666665,
+        "datasets_with_selections": 3,
+        "avg_activity_rate": 0.7870790532229647,
+        "threshold_compliance": "3/3"
+      },
+      "CEX_EVENTS": {
+        "min": 0.0,
+        "max": 2.0,
+        "mean": 1.0,
+        "datasets_with_selections": 3,
+        "avg_activity_rate": 0.7204049844236761,
+        "threshold_compliance": "3/3"
+      },
+      "DEFI_EVENTS": {
+        "min": 0.0,
+        "max": 3.0,
+        "mean": 2.0,
+        "datasets_with_selections": 3,
+        "avg_activity_rate": 0.8204592901878914,
+        "threshold_compliance": "3/3"
+      },
+      "BRIDGE_EVENTS": {
+        "min": 1.0,
+        "max": 8.0,
+        "mean": 5.0,
+        "datasets_with_selections": 3,
+        "avg_activity_rate": 1.0,
+        "threshold_compliance": "3/3"
+      }
+    },
+    "total_datasets_processed": 3
+  }
+}

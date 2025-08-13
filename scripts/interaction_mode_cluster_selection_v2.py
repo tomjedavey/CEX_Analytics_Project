@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""
+Enhanced Interaction Mode Cluster Selection Script - Version 2
+
+This enhanced version addresses the sparse data problem by requiring minimum activity 
+thresholds for cluster selection, ensuring selected clusters represent meaningful 
+activity levels rather than just large groups of inactive wallets.
+
+Key Improvements:
+- Minimum activity threshold requirement (default 10%)
+- Fallback strategy for sparse features  
+- Enhanced scoring with activity bonuses
+- Detailed reporting of activity compliance
+"""
+
+import argparse
+import sys
+import os
+
+# Add the source code package to path
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'source_code_package'))
+
+from source_code_package.features.interaction_mode_features_v2 import (
+    calculate_median_feature_values_for_clusters_v2
+)
+
+def main():
+    parser = argparse.ArgumentParser(
+        description='Enhanced Interaction Mode Cluster Selection with Activity Requirements',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Standard usage with 10% activity threshold
+  python3 %(prog)s --threshold 0.1
+  
+  # Strict selection requiring 25% activity
+  python3 %(prog)s --threshold 0.25 --min-size 100
+  
+  # Lenient selection for sparse features
+  python3 %(prog)s --threshold 0.05 --min-size 20
+  
+  # Custom paths
+  python3 %(prog)s --results-dir /path/to/results --output /path/to/output.yaml
+        """
+    )
+    
+    parser.add_argument(
+        '--results-dir', 
+        type=str,
+        default='data/raw_data/interaction_mode_results',
+        help='Directory containing interaction mode clustering results'
+    )
+    
+    parser.add_argument(
+        '--output', 
+        type=str,
+        default='data/processed_data/interaction_mode_cluster_selections_v2.yaml',
+        help='Output file path for cluster selections'
+    )
+    
+    parser.add_argument(
+        '--threshold', 
+        type=float,
+        default=0.1,
+        help='Minimum activity threshold (0.0-1.0). Default: 0.1 (10%% of wallets must be active)'
+    )
+    
+    parser.add_argument(
+        '--min-size', 
+        type=int,
+        default=50,
+        help='Minimum cluster size to consider. Default: 50'
+    )
+    
+    parser.add_argument(
+        '--force', 
+        action='store_true',
+        help='Overwrite existing output files'
+    )
+    
+    parser.add_argument(
+        '--verbose', 
+        action='store_true',
+        help='Enable verbose logging'
+    )
+
+    args = parser.parse_args()
+    
+    # Validate arguments
+    if not 0.0 <= args.threshold <= 1.0:
+        parser.error("Activity threshold must be between 0.0 and 1.0")
+    
+    if args.min_size < 1:
+        parser.error("Minimum cluster size must be at least 1")
+    
+    # Check if results directory exists
+    if not os.path.exists(args.results_dir):
+        print(f"❌ Results directory not found: {args.results_dir}")
+        print("Make sure you've run the interaction mode clustering pipeline first.")
+        return 1
+    
+    # Check if output file exists (unless force)
+    if os.path.exists(args.output) and not args.force:
+        response = input(f"Output file {args.output} exists. Overwrite? (y/N): ")
+        if response.lower() not in ['y', 'yes']:
+            print("Cancelled.")
+            return 0
+    
+    print(f"🚀 Starting Enhanced Cluster Selection (V2)")
+    print(f"📁 Results Directory: {args.results_dir}")
+    print(f"🎯 Activity Threshold: {args.threshold*100:.1f}%")
+    print(f"👥 Minimum Cluster Size: {args.min_size}")
+    print(f"💾 Output: {args.output}")
+    print()
+    
+    try:
+        # Run the enhanced cluster selection
+        results = calculate_median_feature_values_for_clusters_v2(
+            results_dir=args.results_dir,
+            min_activity_threshold=args.threshold,
+            min_cluster_size=args.min_size,
+            output_path=args.output
+        )
+        
+        print(f"\n✅ Enhanced cluster selection completed successfully!")
+        
+        # Provide interpretation guidance
+        print(f"\n💡 INTERPRETATION:")
+        print(f"   The enhanced algorithm now requires clusters to have at least {args.threshold*100:.1f}% active wallets.")
+        print(f"   This ensures selected clusters represent meaningful activity levels.")
+        print(f"   If no clusters meet the threshold, the algorithm falls back to the most active cluster.")
+        
+        # Show compliance summary
+        summary = results.get('summary', {})
+        if 'activity_threshold_met' in summary:
+            compliance_rate = summary['activity_threshold_met'] / max(summary['successful_selections'], 1) * 100
+            print(f"   Threshold Compliance: {compliance_rate:.1f}% of selections met the activity requirement")
+        
+        return 0
+        
+    except Exception as e:
+        print(f"❌ Error during cluster selection: {e}")
+        if args.verbose:
+            import traceback
+            traceback.print_exc()
+        return 1
+
+if __name__ == "__main__":
+    sys.exit(main())

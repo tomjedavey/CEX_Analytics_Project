@@ -1,0 +1,252 @@
+datasets:
+  cluster_0:
+    feature_selections:
+      BRIDGE_EVENTS:
+        cluster_size: 433
+        feature_stats:
+          activity_count: 433
+          intensity: 0.6931471805599453
+          max: 1.0
+          mean: 1.0
+          median: 1.0
+          min: 1.0
+          non_zero_proportion: 1.0
+          std: 0.0
+          variance: 0.0
+        median_value: 1.0
+        meets_activity_threshold: true
+        selected_cluster: 12
+        selection_score: 1680743283.4217553
+      CEX_EVENTS:
+        cluster_size: 308
+        feature_stats:
+          activity_count: 231
+          intensity: 0.8846258172301865
+          max: 7.0
+          mean: 1.422077922077922
+          median: 1.0
+          min: 0.0
+          non_zero_proportion: 0.75
+          std: 1.5130706180568212
+          variance: 2.289382695226851
+        median_value: 1.0
+        meets_activity_threshold: true
+        selected_cluster: 7
+        selection_score: 479.02459816208005
+      DEFI_EVENTS:
+        cluster_size: 358
+        feature_stats:
+          activity_count: 358
+          intensity: 1.3862943611198906
+          max: 3.0
+          mean: 3.0
+          median: 3.0
+          min: 3.0
+          non_zero_proportion: 1.0
+          std: 0.0
+          variance: 0.0
+        median_value: 3.0
+        meets_activity_threshold: true
+        selected_cluster: 0
+        selection_score: 2779242935.1731567
+      DEX_EVENTS:
+        cluster_size: 271
+        feature_stats:
+          activity_count: 216
+          intensity: 0.6024389416889894
+          max: 2.0
+          mean: 0.8265682656826568
+          median: 1.0
+          min: 0.0
+          non_zero_proportion: 0.7970479704797048
+          std: 0.4498819381292449
+          variance: 0.20239375825492573
+        median_value: 1.0
+        meets_activity_threshold: true
+        selected_cluster: 4
+        selection_score: 3470.455128746521
+    noise_points: 1932
+    total_points: 11369
+    valid_clusters: 13
+  cluster_1:
+    feature_selections:
+      BRIDGE_EVENTS:
+        cluster_size: 257
+        feature_stats:
+          activity_count: 257
+          intensity: 2.1972245773362196
+          max: 8.0
+          mean: 8.0
+          median: 8.0
+          min: 8.0
+          non_zero_proportion: 1.0
+          std: 0.0
+          variance: 0.0
+        median_value: 8.0
+        meets_activity_threshold: true
+        selected_cluster: 4
+        selection_score: 3162245611.7022867
+      CEX_EVENTS:
+        cluster_size: 265
+        feature_stats:
+          activity_count: 265
+          intensity: 2.337077664951381
+          max: 275.0
+          mean: 9.350943396226414
+          median: 2.0
+          min: 1.0
+          non_zero_proportion: 1.0
+          std: 27.85788477959198
+          variance: 776.0617443930225
+        median_value: 2.0
+        meets_activity_threshold: true
+        selected_cluster: 9
+        selection_score: 4.469004276844537
+      DEFI_EVENTS:
+        cluster_size: 479
+        feature_stats:
+          activity_count: 221
+          intensity: 1.8319967416834526
+          max: 397.0
+          mean: 5.246346555323591
+          median: 0.0
+          min: 0.0
+          non_zero_proportion: 0.4613778705636743
+          std: 21.009836204532323
+          variance: 441.4132173412771
+        median_value: 0.0
+        meets_activity_threshold: true
+        selected_cluster: 7
+        selection_score: 5.004965747129304
+      DEX_EVENTS:
+        cluster_size: 252
+        feature_stats:
+          activity_count: 252
+          intensity: 2.1058747987479918
+          max: 23.0
+          mean: 7.214285714285714
+          median: 6.0
+          min: 1.0
+          non_zero_proportion: 1.0
+          std: 5.193260502663628
+          variance: 26.969954648526073
+        median_value: 6.0
+        meets_activity_threshold: true
+        selected_cluster: 0
+        selection_score: 110.1896742030887
+    noise_points: 1133
+    total_points: 8647
+    valid_clusters: 11
+  main:
+    feature_selections:
+      BRIDGE_EVENTS:
+        cluster_size: 474
+        feature_stats:
+          activity_count: 474
+          intensity: 1.9459101490553132
+          max: 6.0
+          mean: 6.0
+          median: 6.0
+          min: 6.0
+          non_zero_proportion: 1.0
+          std: 0.0
+          variance: 0.0
+        median_value: 6.0
+        meets_activity_threshold: true
+        selected_cluster: 15
+        selection_score: 5165223899.652424
+      CEX_EVENTS:
+        cluster_size: 321
+        feature_stats:
+          activity_count: 132
+          intensity: 0.3444510023530182
+          max: 1.0
+          mean: 0.411214953271028
+          median: 0.0
+          min: 0.0
+          non_zero_proportion: 0.411214953271028
+          std: 0.49205407779768906
+          variance: 0.24211721547733425
+        median_value: 0.0
+        meets_activity_threshold: true
+        selected_cluster: 6
+        selection_score: 1045.600849669995
+      DEFI_EVENTS:
+        cluster_size: 390
+        feature_stats:
+          activity_count: 390
+          intensity: 1.3862943611198906
+          max: 3.0
+          mean: 3.0
+          median: 3.0
+          min: 3.0
+          non_zero_proportion: 1.0
+          std: 0.0
+          variance: 0.0
+        median_value: 3.0
+        meets_activity_threshold: true
+        selected_cluster: 7
+        selection_score: 3027666884.6858406
+      DEX_EVENTS:
+        cluster_size: 296
+        feature_stats:
+          activity_count: 167
+          intensity: 0.5749417584136495
+          max: 2.0
+          mean: 0.777027027027027
+          median: 1.0
+          min: 0.0
+          non_zero_proportion: 0.5641891891891891
+          std: 0.7739067786059524
+          variance: 0.5989317019722425
+        median_value: 1.0
+        meets_activity_threshold: true
+        selected_cluster: 17
+        selection_score: 857.0769116456615
+    noise_points: 2476
+    total_points: 20174
+    valid_clusters: 25
+selection_parameters:
+  algorithm_version: v2_activity_required
+  min_activity_threshold: 0.1
+  min_cluster_size: 50
+summary:
+  activity_threshold_met: 12
+  fallback_selections: 0
+  features_analyzed: 4
+  median_value_ranges:
+    BRIDGE_EVENTS:
+      avg_activity_rate: 1.0
+      datasets_with_selections: 3
+      max: 8.0
+      mean: 5.0
+      min: 1.0
+      threshold_compliance: 3/3
+    CEX_EVENTS:
+      avg_activity_rate: 0.7204049844236761
+      datasets_with_selections: 3
+      max: 2.0
+      mean: 1.0
+      min: 0.0
+      threshold_compliance: 3/3
+    DEFI_EVENTS:
+      avg_activity_rate: 0.8204592901878914
+      datasets_with_selections: 3
+      max: 3.0
+      mean: 2.0
+      min: 0.0
+      threshold_compliance: 3/3
+    DEX_EVENTS:
+      avg_activity_rate: 0.7870790532229647
+      datasets_with_selections: 3
+      max: 6.0
+      mean: 2.6666666666666665
+      min: 1.0
+      threshold_compliance: 3/3
+  successful_selections: 12
+  total_datasets_processed: 3
+target_features:
+- DEX_EVENTS
+- CEX_EVENTS
+- DEFI_EVENTS
+- BRIDGE_EVENTS
