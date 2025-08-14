@@ -14,15 +14,23 @@ Key Improvements:
 """
 
 import argparse
+
 import sys
 import os
+# Dynamically add the absolute path to source_code_package to sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+source_code_path = os.path.join(project_root, 'source_code_package')
+if source_code_path not in sys.path:
+    sys.path.insert(0, source_code_path)
 
-# Add the source code package to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'source_code_package'))
 
-from source_code_package.features.interaction_mode_features_v2 import (
-    calculate_median_feature_values_for_clusters_v2
-)
+# Dynamically import the features.interaction_mode_features_v2 module
+import importlib.util
+features_path = os.path.join(source_code_path, 'features', 'interaction_mode_features_v2.py')
+spec = importlib.util.spec_from_file_location('interaction_mode_features_v2', features_path)
+interaction_mode_features_v2 = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(interaction_mode_features_v2)
+calculate_median_feature_values_for_clusters_v2 = interaction_mode_features_v2.calculate_median_feature_values_for_clusters_v2
 
 def main():
     parser = argparse.ArgumentParser(

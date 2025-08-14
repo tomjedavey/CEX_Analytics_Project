@@ -57,6 +57,8 @@ def calculate_cluster_density(df: pd.DataFrame, cluster_id: int) -> float:
     """Calculate cluster density (placeholder - returns 1.0 for now)."""
     return 1.0
 
+#**NEED TO CHANGE THIS TO THE ACTUAL VALUE UTILISING THE PROBABILITIES PRODUCED FROM THE CLUSTERING RESULTS AT ONE POINT**
+
 def calculate_enhanced_selection_score(
     cluster_size: int,
     density: float,
@@ -411,26 +413,27 @@ def print_cluster_selection_summary_v2(results: Dict[str, Any]) -> None:
     print(f"\n{'='*80}")
     print("ENHANCED CLUSTER SELECTION SUMMARY (V2)")
     print(f"{'='*80}")
-    
     print(f"🎯 Algorithm Version: {results['selection_parameters']['algorithm_version']}")
     print(f"📋 Activity Threshold: {results['selection_parameters']['min_activity_threshold']*100:.1f}%")
     print(f"👥 Minimum Cluster Size: {results['selection_parameters']['min_cluster_size']}")
     print()
-    
-    summary = results['summary']
     print(f"📊 Processing Results:")
-    print(f"   • Datasets Processed: {summary['total_datasets_processed']}")
-    print(f"   • Successful Selections: {summary['successful_selections']}")
-    print(f"   • Activity Threshold Met: {summary['activity_threshold_met']}")
-    print(f"   • Fallback Selections: {summary.get('fallback_selections', 0)}")
+    print(f"   • Datasets Processed: {results['summary']['total_datasets_processed']}")
+    print(f"   • Successful Selections: {results['summary']['successful_selections']}")
+    print(f"   • Activity Threshold Met: {results['summary']['activity_threshold_met']}")
+    print(f"   • Fallback Selections: {results['summary'].get('fallback_selections', 0)}")
     print()
-    
-    print("🔍 Feature Analysis:")
-    for feature, stats in summary['median_value_ranges'].items():
-        print(f"   {feature}:")
-        print(f"     Median Range: {stats['min']:.1f} - {stats['max']:.1f}")
-        print(f"     Avg Activity Rate: {stats['avg_activity_rate']*100:.1f}%")
-        print(f"     Threshold Compliance: {stats['threshold_compliance']}")
+    print("🔍 Feature Analysis (per dataset):")
+    for dataset_name, dataset_data in results['datasets'].items():
+        print(f"\n  Dataset: {dataset_name}")
+        for feature, selection in dataset_data['feature_selections'].items():
+            print(f"    Feature: {feature}")
+            print(f"      Selected Cluster: {selection['selected_cluster']}")
+            print(f"      Median Value: {selection['median_value']:.1f}")
+            print(f"      Cluster Size: {selection['cluster_size']}")
+            print(f"      Activity Rate: {selection['feature_stats']['non_zero_proportion']*100:.1f}%")
+            print(f"      Meets Activity Threshold: {selection['meets_activity_threshold']}")
+            print(f"      Selection Score: {selection['selection_score']:.3f}")
 
 if __name__ == "__main__":
     # Test the enhanced version
