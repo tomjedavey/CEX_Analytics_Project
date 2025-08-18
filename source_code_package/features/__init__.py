@@ -34,7 +34,7 @@ from .cross_domain_engagement_features import (
     cross_domain_engagement_pipeline
 )
 
-from .interaction_mode_features_v2 import (
+from .interaction_mode_target_features_v2 import (
     calculate_median_feature_values_for_clusters_v2,
     print_cluster_selection_summary_v2,
     save_cluster_selection_results

@@ -234,7 +234,6 @@ def calculate_median_feature_values_for_clusters_v2(
     
     for dataset_name in dataset_names:
         print(f"\n🔍 Processing {dataset_name} dataset...")
-        
         # Construct file paths - updated for actual directory structure
         if dataset_name == 'main':
             base_data_path = "data/raw_data/new_raw_data_polygon.csv"
@@ -242,26 +241,26 @@ def calculate_median_feature_values_for_clusters_v2(
         else:
             base_data_path = None  # Will be handled in load_dataset_and_clusters
             clusters_path = os.path.join(results_dir, f"{dataset_name}_clustering/hdbscan_results/cluster_labels.csv")
-        
+
         if not os.path.exists(clusters_path):
             print(f"⚠️  Skipping {dataset_name} - cluster labels not found: {clusters_path}")
             continue
-        
+
         if dataset_name == 'main' and not os.path.exists(base_data_path):
             print(f"⚠️  Skipping {dataset_name} - base data not found: {base_data_path}")
             continue
-        
+
         try:
             # Load data with corrected logic
             df = load_dataset_and_clusters(dataset_name, base_data_path, clusters_path)
-            
+
             # Dataset statistics
             total_points = len(df)
             noise_points = len(df[df['cluster'] == -1])
             valid_clusters = len(df[df['cluster'] != -1]['cluster'].unique())
-            
+
             print(f"   📊 {total_points:,} wallets, {valid_clusters} clusters, {noise_points:,} noise points")
-            
+
             # Initialize dataset results
             dataset_results = {
                 'total_points': total_points,
@@ -269,22 +268,25 @@ def calculate_median_feature_values_for_clusters_v2(
                 'noise_points': noise_points,
                 'feature_selections': {}
             }
-            
+
+            # For outputting medians to CSV
+            feature_medians = []
+
             # Process each target feature
             for feature in target_features:
                 print(f"   🎯 Analyzing {feature}...")
-                
+
                 try:
                     selected_cluster, stats = select_strongest_cluster_for_feature(
-                        df, feature, 
+                        df, feature,
                         min_activity_threshold=min_activity_threshold,
                         min_cluster_size=min_cluster_size
                     )
-                    
+
                     # Extract median value from selected cluster
                     cluster_data = df[df['cluster'] == selected_cluster]
                     median_value = np.median(cluster_data[feature].values)
-                    
+
                     # Enhanced feature statistics
                     feature_values = cluster_data[feature].values
                     feature_stats = {
@@ -298,7 +300,7 @@ def calculate_median_feature_values_for_clusters_v2(
                         'non_zero_proportion': float(stats['non_zero_proportion']),
                         'activity_count': int(stats['activity_count'])
                     }
-                    
+
                     dataset_results['feature_selections'][feature] = {
                         'selected_cluster': selected_cluster,
                         'median_value': float(median_value),
@@ -307,18 +309,29 @@ def calculate_median_feature_values_for_clusters_v2(
                         'feature_stats': feature_stats,
                         'meets_activity_threshold': stats['non_zero_proportion'] >= min_activity_threshold
                     }
-                    
+
+                    # Add to medians list for CSV output
+                    feature_medians.append({'feature': feature, 'median': float(median_value)})
+
                     print(f"      ✅ Cluster {selected_cluster}: median={median_value:.1f}, "
                           f"activity={stats['non_zero_proportion']*100:.1f}%, "
                           f"size={stats['cluster_size']:,}")
-                    
+
                 except Exception as e:
                     print(f"      ❌ Error processing {feature}: {e}")
                     continue
-            
+
+            # Output feature medians to CSV for this dataset
+            if feature_medians:
+                csv_name = f"{dataset_name}_clustering_feature_medians.csv" if dataset_name != 'main' else "main_clustering_feature_medians.csv"
+                csv_path = os.path.join(results_dir, csv_name)
+                import pandas as pd
+                pd.DataFrame(feature_medians).to_csv(csv_path, index=False)
+                print(f"      💾 Feature medians saved to: {csv_path}")
+
             results['datasets'][dataset_name] = dataset_results
             total_datasets += 1
-            
+
         except Exception as e:
             print(f"❌ Error processing {dataset_name}: {e}")
             continue

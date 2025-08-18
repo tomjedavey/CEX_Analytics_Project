@@ -24,13 +24,13 @@ if source_code_path not in sys.path:
     sys.path.insert(0, source_code_path)
 
 
-# Dynamically import the features.interaction_mode_features_v2 module
+ # Dynamically import the features.interaction_mode_target_features_v2 module
 import importlib.util
-features_path = os.path.join(source_code_path, 'features', 'interaction_mode_features_v2.py')
-spec = importlib.util.spec_from_file_location('interaction_mode_features_v2', features_path)
-interaction_mode_features_v2 = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(interaction_mode_features_v2)
-calculate_median_feature_values_for_clusters_v2 = interaction_mode_features_v2.calculate_median_feature_values_for_clusters_v2
+features_path = os.path.join(source_code_path, 'features', 'interaction_mode_target_features_v2.py')
+spec = importlib.util.spec_from_file_location('interaction_mode_target_features_v2', features_path)
+interaction_mode_target_features_v2 = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(interaction_mode_target_features_v2)
+calculate_median_feature_values_for_clusters_v2 = interaction_mode_target_features_v2.calculate_median_feature_values_for_clusters_v2
 
 def main():
     parser = argparse.ArgumentParser(
