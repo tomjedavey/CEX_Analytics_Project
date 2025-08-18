@@ -237,10 +237,10 @@ def calculate_median_feature_values_for_clusters_v2(
         # Construct file paths - updated for actual directory structure
         if dataset_name == 'main':
             base_data_path = "data/raw_data/new_raw_data_polygon.csv"
-            clusters_path = os.path.join(results_dir, "main_clustering/hdbscan_results/cluster_labels.csv")
+            clusters_path = os.path.join(results_dir, "main_clustering/cluster_labels.csv")
         else:
             base_data_path = None  # Will be handled in load_dataset_and_clusters
-            clusters_path = os.path.join(results_dir, f"{dataset_name}_clustering/hdbscan_results/cluster_labels.csv")
+            clusters_path = os.path.join(results_dir, f"{dataset_name}_clustering/cluster_labels.csv")
 
         if not os.path.exists(clusters_path):
             print(f"⚠️  Skipping {dataset_name} - cluster labels not found: {clusters_path}")
@@ -270,7 +270,8 @@ def calculate_median_feature_values_for_clusters_v2(
             }
 
             # For outputting medians to CSV
-            feature_medians = []
+
+            feature_medians = []  # For backward compatibility, but will use dict for wide format
 
             # Process each target feature
             for feature in target_features:
@@ -310,8 +311,9 @@ def calculate_median_feature_values_for_clusters_v2(
                         'meets_activity_threshold': stats['non_zero_proportion'] >= min_activity_threshold
                     }
 
-                    # Add to medians list for CSV output
-                    feature_medians.append({'feature': feature, 'median': float(median_value)})
+
+                    # Add to medians list for CSV output (wide format)
+                    feature_medians.append((feature, float(median_value)))
 
                     print(f"      ✅ Cluster {selected_cluster}: median={median_value:.1f}, "
                           f"activity={stats['non_zero_proportion']*100:.1f}%, "
@@ -321,13 +323,16 @@ def calculate_median_feature_values_for_clusters_v2(
                     print(f"      ❌ Error processing {feature}: {e}")
                     continue
 
-            # Output feature medians to CSV for this dataset
+
+            # Output feature medians to CSV for this dataset (wide format)
             if feature_medians:
                 csv_name = f"{dataset_name}_clustering_feature_medians.csv" if dataset_name != 'main' else "main_clustering_feature_medians.csv"
                 csv_path = os.path.join(results_dir, csv_name)
                 import pandas as pd
-                pd.DataFrame(feature_medians).to_csv(csv_path, index=False)
-                print(f"      💾 Feature medians saved to: {csv_path}")
+                # Convert list of tuples to dict for wide format
+                feature_medians_dict = {feature: median for feature, median in feature_medians}
+                pd.DataFrame([feature_medians_dict]).to_csv(csv_path, index=False)
+                print(f"      💾 Feature medians saved to: {csv_path} (wide format)")
 
             results['datasets'][dataset_name] = dataset_results
             total_datasets += 1

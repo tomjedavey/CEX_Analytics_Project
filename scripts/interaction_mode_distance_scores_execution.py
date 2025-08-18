@@ -1,3 +1,4 @@
+
 """
 Script to compute and save interaction mode distance scores for each wallet in each dataset.
 """
@@ -15,7 +16,8 @@ from source_code_package.features.interaction_mode_distance_scores import (
     compute_final_scores
 )
 
-PROCESSED_DATA_DIR = "data/processed_data/interaction_mode_results"
+
+PROCESSED_DATA_DIR = "data/raw_data/interaction_mode_results"
 DATASETS = [
     "main_clustering",
     "cluster_0_clustering",
@@ -24,7 +26,7 @@ DATASETS = [
 
 
 def load_wallet_data(dataset_name):
-    data_path = os.path.join(PROCESSED_DATA_DIR, f"{dataset_name}.csv")
+    data_path = os.path.join(PROCESSED_DATA_DIR, f"{dataset_name}_feature_medians.csv")
     return pd.read_csv(data_path)
 
 

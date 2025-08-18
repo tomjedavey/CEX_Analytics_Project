@@ -30,7 +30,8 @@ from .HBDSCAN_cluster import (
 def run_clustering_pipeline(config_path: Optional[str] = None,
                           data_path: Optional[str] = None, 
                           output_dir: str = "clustering_results",
-                          force_umap: Optional[bool] = None) -> Dict[str, Any]:
+                          force_umap: Optional[bool] = None,
+                          nest_hdbscan_results: bool = True) -> Dict[str, Any]:
     """
     Unified clustering pipeline that automatically determines whether to use UMAP
     based on configuration, with optional override.
@@ -120,10 +121,10 @@ def run_clustering_pipeline(config_path: Optional[str] = None,
         # Step 4: Run the appropriate pipeline
         if use_umap:
             print("🔄 Running UMAP + HDBSCAN pipeline...")
-            return _run_umap_hdbscan_pipeline(config_path, data_path, output_dir)
+            return _run_umap_hdbscan_pipeline(config_path, data_path, output_dir, nest_hdbscan_results)
         else:
             print("🎯 Running direct HDBSCAN pipeline...")
-            return _run_direct_hdbscan_pipeline(config_path, data_path, output_dir)
+            return _run_direct_hdbscan_pipeline(config_path, data_path, output_dir, nest_hdbscan_results)
             
     except Exception as e:
         error_msg = f"Pipeline execution failed: {str(e)}"
@@ -135,7 +136,8 @@ def run_clustering_pipeline(config_path: Optional[str] = None,
 
 def _run_umap_hdbscan_pipeline(config_path: str, 
                               data_path: Optional[str],
-                              output_dir: str) -> Dict[str, Any]:
+                              output_dir: str,
+                              nest_hdbscan_results: bool = True) -> Dict[str, Any]:
     """Run UMAP + HDBSCAN pipeline."""
     try:
         # Import UMAP functionality
@@ -156,7 +158,10 @@ def _run_umap_hdbscan_pipeline(config_path: str,
         
         # Step 2: HDBSCAN clustering on reduced data
         print("  🎯 Applying HDBSCAN clustering...")
-        hdbscan_output_dir = os.path.join(output_dir, "hdbscan_results")
+        if nest_hdbscan_results:
+            hdbscan_output_dir = os.path.join(output_dir, "hdbscan_results")
+        else:
+            hdbscan_output_dir = output_dir
         hdbscan_results = hdbscan_clustering_pipeline(
             umap_data=reduced_data,
             config_path=config_path,
@@ -190,7 +195,8 @@ def _run_umap_hdbscan_pipeline(config_path: str,
 
 def _run_direct_hdbscan_pipeline(config_path: str,
                                 data_path: Optional[str], 
-                                output_dir: str) -> Dict[str, Any]:
+                                output_dir: str,
+                                nest_hdbscan_results: bool = True) -> Dict[str, Any]:
     """Run direct HDBSCAN pipeline without UMAP."""
     try:
         # Import preprocessing functionality  
@@ -239,7 +245,10 @@ def _run_direct_hdbscan_pipeline(config_path: str,
         
         # Step 2: HDBSCAN clustering on preprocessed data
         print("  🎯 Applying HDBSCAN clustering...")
-        hdbscan_output_dir = os.path.join(output_dir, "hdbscan_results")
+        if nest_hdbscan_results:
+            hdbscan_output_dir = os.path.join(output_dir, "hdbscan_results")
+        else:
+            hdbscan_output_dir = output_dir
         hdbscan_results = hdbscan_clustering_pipeline(
             umap_data=preprocessed_data,  # Use preprocessed data directly
             config_path=config_path,

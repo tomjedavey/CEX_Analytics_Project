@@ -238,7 +238,8 @@ def run_clustering_for_dataset(config: Dict[str, Any], dataset_name: str, datase
             config_path=temp_config_path,
             data_path=dataset_path,
             output_dir=output_dir,
-            force_umap=force_umap
+            force_umap=force_umap,
+            nest_hdbscan_results=False
         )
         
         if results.get('success', True):

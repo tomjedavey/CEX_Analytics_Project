@@ -19,8 +19,8 @@ def load_reference_medians(dataset_name: str) -> Dict[str, float]:
     Load the reference medians for each feature from the cluster results.
     """
     median_path = os.path.join(RAW_RESULTS_DIR, f"{dataset_name}_feature_medians.csv")
-    medians = pd.read_csv(median_path, index_col=0)
-    return medians["median"].to_dict()
+    medians = pd.read_csv(median_path)
+    return medians.iloc[0].to_dict()
 
 
 def preprocess_features(df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
