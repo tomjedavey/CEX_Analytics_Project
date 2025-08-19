@@ -701,10 +701,34 @@ def hdbscan_clustering_pipeline(umap_data: np.ndarray, config_path: Optional[str
         pd.DataFrame({'cluster_label': cluster_labels}).to_csv(labels_path, index=False)
         results['file_paths']['cluster_labels'] = labels_path
         
-        # Save clustered data with labels (without UMAP dimensions to prevent CSV storage)
+        # Save clustered data with all original/preprocessed features and cluster label
+        # Try to use the original/preprocessed DataFrame if available in the pipeline
         clustered_data_path = os.path.join(output_dir, "clustered_data.csv")
-        # Only save cluster labels, not UMAP dimensions
-        clustered_df = pd.DataFrame({'cluster_label': cluster_labels})
+        # Try to get the original/preprocessed DataFrame from the config or context
+        # If not available, fallback to umap_data as before
+        preprocessed_df = None
+        if 'preprocessed_data' in locals():
+            preprocessed_df = preprocessed_data
+        elif 'preprocessed_data' in globals():
+            preprocessed_df = globals()['preprocessed_data']
+        # If not found, try to get from config_path (by re-running preprocessing)
+        if preprocessed_df is None and config_path is not None:
+            try:
+                from source_code_package.data.preprocess_cluster import preprocess_for_clustering
+                preprocessed_df, _ = preprocess_for_clustering(
+                    data_path=None, config_path=config_path, apply_log_transform=True, apply_scaling=True
+                )
+            except Exception as e:
+                print(f"Warning: Could not reload preprocessed data for saving clustered_data.csv: {e}")
+        # If still not found, fallback to umap_data
+        if preprocessed_df is not None and len(preprocessed_df) == len(cluster_labels):
+            clustered_df = preprocessed_df.copy()
+        else:
+            if isinstance(umap_data, pd.DataFrame):
+                clustered_df = umap_data.copy()
+            else:
+                clustered_df = pd.DataFrame(umap_data)
+        clustered_df['cluster_label'] = cluster_labels
         clustered_df.to_csv(clustered_data_path, index=False)
         results['file_paths']['clustered_data'] = clustered_data_path
         
