@@ -1,6 +1,6 @@
 Interaction Mode Score Clustering Pipeline Summary
 ============================================================
-Last Updated: 2025-08-19 10:11:16
+Last Updated: 2025-08-19 11:10:43
 
 Dataset Validation Results:
 ------------------------------
@@ -25,28 +25,13 @@ cluster_1:
 Clustering Results Summary:
 ------------------------------
 main:
-  ✅ Clustering successful
-  🎯 Clusters: 21
-  📊 Data points: 20,174
-  🔍 Noise points: 3,022
-  📉 Noise percentage: 15.0%
-  🔄 UMAP: Enabled
+  ❌ Clustering failed: Pipeline execution failed: UMAP + HDBSCAN pipeline failed: local variable 'pd' referenced before assignment
 
 cluster_0:
-  ✅ Clustering successful
-  🎯 Clusters: 11
-  📊 Data points: 11,369
-  🔍 Noise points: 2,457
-  📉 Noise percentage: 21.6%
-  🔄 UMAP: Enabled
+  ❌ Clustering failed: Pipeline execution failed: UMAP + HDBSCAN pipeline failed: local variable 'pd' referenced before assignment
 
 cluster_1:
-  ✅ Clustering successful
-  🎯 Clusters: 8
-  📊 Data points: 8,647
-  🔍 Noise points: 1,294
-  📉 Noise percentage: 15.0%
-  🔄 UMAP: Enabled
+  ❌ Clustering failed: Pipeline execution failed: UMAP + HDBSCAN pipeline failed: local variable 'pd' referenced before assignment
 
 Configuration Summary:
 --------------------

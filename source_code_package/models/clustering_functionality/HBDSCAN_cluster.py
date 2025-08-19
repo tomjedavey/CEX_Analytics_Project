@@ -701,28 +701,27 @@ def hdbscan_clustering_pipeline(umap_data: np.ndarray, config_path: Optional[str
         pd.DataFrame({'cluster_label': cluster_labels}).to_csv(labels_path, index=False)
         results['file_paths']['cluster_labels'] = labels_path
         
-        # Save clustered data with all original/preprocessed features and cluster label
-        # Try to use the original/preprocessed DataFrame if available in the pipeline
+        # Save clustered data with all raw/original features and cluster label
         clustered_data_path = os.path.join(output_dir, "clustered_data.csv")
-        # Try to get the original/preprocessed DataFrame from the config or context
-        # If not available, fallback to umap_data as before
-        preprocessed_df = None
-        if 'preprocessed_data' in locals():
-            preprocessed_df = preprocessed_data
-        elif 'preprocessed_data' in globals():
-            preprocessed_df = globals()['preprocessed_data']
-        # If not found, try to get from config_path (by re-running preprocessing)
-        if preprocessed_df is None and config_path is not None:
+        raw_df = None
+        # Try to get the raw/original DataFrame from the config_path (by reloading the original data)
+        if config_path is not None:
             try:
-                from source_code_package.data.preprocess_cluster import preprocess_for_clustering
-                preprocessed_df, _ = preprocess_for_clustering(
-                    data_path=None, config_path=config_path, apply_log_transform=True, apply_scaling=True
-                )
+                import yaml
+                with open(config_path, 'r') as f:
+                    config = yaml.safe_load(f)
+                # Try to get the raw data path from config
+                data_path = None
+                if 'data' in config and 'raw_data_path' in config['data']:
+                    data_path = config['data']['raw_data_path']
+                if data_path is not None:
+                    import pandas as pd
+                    raw_df = pd.read_csv(data_path)
             except Exception as e:
-                print(f"Warning: Could not reload preprocessed data for saving clustered_data.csv: {e}")
+                print(f"Warning: Could not reload raw/original data for saving clustered_data.csv: {e}")
         # If still not found, fallback to umap_data
-        if preprocessed_df is not None and len(preprocessed_df) == len(cluster_labels):
-            clustered_df = preprocessed_df.copy()
+        if raw_df is not None and len(raw_df) == len(cluster_labels):
+            clustered_df = raw_df.copy()
         else:
             if isinstance(umap_data, pd.DataFrame):
                 clustered_df = umap_data.copy()
