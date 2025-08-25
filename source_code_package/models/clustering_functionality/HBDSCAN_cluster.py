@@ -1,6 +1,3 @@
-#File to produce the functionality of clustering using HBDSCAN algorithm - to be executed in the scripts folder in logic integrating both UMAP and HBDSCAN on processed data.
-#HBDSCAN clusters the output of the UMAP dimensionality reduction, making use of configurations specified in the config_cluster.yaml file.
-
 import pandas as pd
 import numpy as np
 import yaml
@@ -715,7 +712,6 @@ def hdbscan_clustering_pipeline(umap_data: np.ndarray, config_path: Optional[str
                 if 'data' in config and 'raw_data_path' in config['data']:
                     data_path = config['data']['raw_data_path']
                 if data_path is not None:
-                    import pandas as pd
                     raw_df = pd.read_csv(data_path)
             except Exception as e:
                 print(f"Warning: Could not reload raw/original data for saving clustered_data.csv: {e}")

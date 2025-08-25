@@ -23,10 +23,11 @@ def preprocess_features(df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
 
 def compute_absolute_distances(wallet_df: pd.DataFrame, median_df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
     """
-    Compute absolute distances from the median for each feature and wallet.
+    Compute signed distances from the median for each feature and wallet.
+    For each wallet and feature, subtract the feature value from the median value (median - value).
     """
-    abs_dist = wallet_df[features].subtract(median_df.iloc[0][features], axis=1).abs()
-    return abs_dist
+    dist = median_df.iloc[0][features] - wallet_df[features]
+    return dist
 
 def compute_mad(df: pd.DataFrame, features: List[str], median_df: pd.DataFrame) -> Dict[str, float]:
     """

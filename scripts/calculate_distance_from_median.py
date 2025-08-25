@@ -24,7 +24,7 @@ FEATURES = EVENT_FEATURES  # Extend as needed
 for cluster in CLUSTERS:
     print(f"Processing {cluster}...")
     median_path = os.path.join(BASE_PATH, MEDIAN_FILES[cluster])
-    clustering_data_path = os.path.join(BASE_PATH, cluster, "clustered_data.csv") #**THE FEATURE VALUES IN THIS "clustered_data.csv" files are already preprocessed - need to change this code logic from source to reflect this**
+    clustering_data_path = os.path.join(BASE_PATH, cluster, "clustered_data.csv")
 
     # Load medians and wallet data
     medians_df = load_medians(median_path, FEATURES)
@@ -35,14 +35,14 @@ for cluster in CLUSTERS:
     medians_proc = preprocess_features(medians_df, FEATURES)
     wallet_proc = preprocess_features(wallet_df, FEATURES)
 
-    # Compute absolute distances
-    abs_dist = compute_absolute_distances(wallet_proc, medians_proc, FEATURES)
+    # Compute signed distances
+    dist = compute_absolute_distances(wallet_proc, medians_proc, FEATURES)
 
     # Compute MAD
     mad = compute_mad(wallet_proc, FEATURES, medians_proc)
 
     # Normalize distances
-    norm_dist = normalize_distances(abs_dist, mad, FEATURES)
+    norm_dist = normalize_distances(dist, mad, FEATURES)
 
     # Compute proportionality weights
     weights = compute_proportionality_weights(wallet_proc, EVENT_FEATURES)
@@ -52,7 +52,7 @@ for cluster in CLUSTERS:
 
     # Save outputs
     out_dir = os.path.join(BASE_PATH, cluster)
-    abs_dist.to_csv(os.path.join(out_dir, "absolute_distances.csv"), index=False)
+    dist.to_csv(os.path.join(out_dir, "distances.csv"), index=False)
     norm_dist.to_csv(os.path.join(out_dir, "normalized_distances.csv"), index=False)
     weighted_dist.to_csv(os.path.join(out_dir, "weighted_distances.csv"), index=False)
     print(f"Finished {cluster}. Outputs saved to {out_dir}.")
