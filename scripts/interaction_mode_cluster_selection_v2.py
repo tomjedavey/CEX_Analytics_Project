@@ -69,8 +69,8 @@ Examples:
     parser.add_argument(
         '--threshold', 
         type=float,
-        default=0.1,
-        help='Minimum activity threshold (0.0-1.0). Default: 0.1 (10%% of wallets must be active)'
+        default=0.3,
+        help='Minimum activity threshold (0.0-1.0). Default: 0.3 (30%% of wallets must be active)'
     )
     
     parser.add_argument(

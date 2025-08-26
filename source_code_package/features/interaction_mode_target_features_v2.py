@@ -62,51 +62,32 @@ def calculate_cluster_density(df: pd.DataFrame, cluster_id: int) -> float:
 def calculate_enhanced_selection_score(
     cluster_size: int,
     density: float,
-    mean_value: float,
-    variance: float,
+    median_nonzero_value: float,
     non_zero_proportion: float,
-    min_activity_threshold: float = 0.1  # NEW: Minimum 10% activity required
+    min_activity_threshold: float = 0.3  # NEW: Minimum 30% activity required
 ) -> float:
     """
     Enhanced selection score with activity threshold requirement.
-    
     Args:
         cluster_size: Number of wallets in cluster
         density: Cluster density (currently 1.0)
-        mean_value: Mean feature value in cluster
-        variance: Feature variance in cluster
+        median_nonzero_value: Median of non-zero feature values in cluster
         non_zero_proportion: Proportion of wallets with non-zero values
         min_activity_threshold: Minimum activity rate required for consideration
-    
     Returns:
         Selection score (0 if below activity threshold)
     """
-    # CRITICAL CHANGE: Reject clusters with insufficient activity
+    # Reject clusters with insufficient activity
     if non_zero_proportion < min_activity_threshold:
-        return 0.0  # Completely exclude low-activity clusters
-    
-    # Calculate feature intensity (reward higher activity)
-    if mean_value > 0:
-        intensity = np.log(1 + mean_value) * (1 + non_zero_proportion)  # Enhanced with activity rate
-    else:
-        intensity = 0.001  # Minimal for zero-mean clusters
-    
-    # Handle zero variance (perfect consistency) 
-    if variance < 1e-10:
-        variance = 1e-6  # Small non-zero value to avoid division by zero
-    
-    # Calculate selection score
-    score = (cluster_size * density * intensity) / variance
-    
-    # Additional bonus for high activity rates
-    activity_bonus = 1 + (non_zero_proportion - min_activity_threshold) * 2
-    
-    return score * activity_bonus
+        return 0.0
+    # New scoring: score = (non-zero proportion) * (median non-zero value)
+    score = non_zero_proportion * median_nonzero_value
+    return score
 
 def select_strongest_cluster_for_feature(
     df: pd.DataFrame, 
     feature: str,
-    min_activity_threshold: float = 0.1,
+    min_activity_threshold: float = 0.3,
     min_cluster_size: int = 50,  # NEW: Minimum cluster size
     prefer_high_activity: bool = True  # NEW: Preference for active clusters
 ) -> Tuple[int, Dict[str, Any]]:
@@ -129,34 +110,26 @@ def select_strongest_cluster_for_feature(
     
     for cluster_id in valid_df['cluster'].unique():
         cluster_data = valid_df[valid_df['cluster'] == cluster_id]
-        
         # Skip small clusters
         if len(cluster_data) < min_cluster_size:
             continue
-            
         feature_values = cluster_data[feature].values
-        
-        # Calculate statistics
+        non_zero_values = feature_values[feature_values > 0]
+        non_zero_count = len(non_zero_values)
+        non_zero_proportion = non_zero_count / len(feature_values)
+        median_nonzero_value = float(np.median(non_zero_values)) if non_zero_count > 0 else 0.0
         mean_val = np.mean(feature_values)
         median_val = np.median(feature_values)
         std_val = np.std(feature_values)
         variance = np.var(feature_values)
-        non_zero_count = np.sum(feature_values > 0)
-        non_zero_proportion = non_zero_count / len(feature_values)
-        
-        # Calculate density and score
         density = calculate_cluster_density(cluster_data, cluster_id)
-        
-        # Use enhanced scoring with activity threshold
         score = calculate_enhanced_selection_score(
             cluster_size=len(cluster_data),
             density=density,
-            mean_value=mean_val,
-            variance=variance,
+            median_nonzero_value=median_nonzero_value,
             non_zero_proportion=non_zero_proportion,
             min_activity_threshold=min_activity_threshold
         )
-        
         stats = {
             'cluster_id': cluster_id,
             'cluster_size': len(cluster_data),
@@ -166,12 +139,10 @@ def select_strongest_cluster_for_feature(
             'variance': variance,
             'non_zero_proportion': non_zero_proportion,
             'activity_count': non_zero_count,
+            'median_nonzero_value': median_nonzero_value,
             'score': score
         }
-        
         candidate_clusters.append(stats)
-        
-        # Track the best scoring cluster
         if score > best_score:
             best_score = score
             best_cluster = cluster_id
@@ -199,7 +170,7 @@ def select_strongest_cluster_for_feature(
 
 def calculate_median_feature_values_for_clusters_v2(
     results_dir: str = "data/raw_data/interaction_mode_results",
-    min_activity_threshold: float = 0.1,  # Require 10% activity minimum
+    min_activity_threshold: float = 0.3,  # Require 30% activity minimum
     min_cluster_size: int = 50,
     output_path: str = "data/processed_data/interaction_mode_cluster_selections_v2.yaml"
 ) -> Dict[str, Any]:
@@ -284,38 +255,34 @@ def calculate_median_feature_values_for_clusters_v2(
                         min_cluster_size=min_cluster_size
                     )
 
-                    # Extract median value from selected cluster
+                    # Extract median non-zero value from selected cluster
                     cluster_data = df[df['cluster'] == selected_cluster]
-                    median_value = np.median(cluster_data[feature].values)
-
-                    # Enhanced feature statistics
                     feature_values = cluster_data[feature].values
+                    non_zero_values = feature_values[feature_values > 0]
+                    median_nonzero_value = float(np.median(non_zero_values)) if len(non_zero_values) > 0 else 0.0
+                    # Enhanced feature statistics
                     feature_stats = {
                         'mean': float(np.mean(feature_values)),
-                        'median': float(median_value),
+                        'median': float(np.median(feature_values)),
+                        'median_nonzero': median_nonzero_value,
                         'std': float(np.std(feature_values)),
                         'variance': float(np.var(feature_values)),
                         'min': float(np.min(feature_values)),
                         'max': float(np.max(feature_values)),
-                        'intensity': float(np.log(1 + np.mean(feature_values)) if np.mean(feature_values) > 0 else 0.001),
                         'non_zero_proportion': float(stats['non_zero_proportion']),
                         'activity_count': int(stats['activity_count'])
                     }
-
                     dataset_results['feature_selections'][feature] = {
                         'selected_cluster': selected_cluster,
-                        'median_value': float(median_value),
+                        'median_nonzero_value': median_nonzero_value,
                         'cluster_size': stats['cluster_size'],
                         'selection_score': float(stats['score']),
                         'feature_stats': feature_stats,
                         'meets_activity_threshold': stats['non_zero_proportion'] >= min_activity_threshold
                     }
-
-
                     # Add to medians list for CSV output (wide format)
-                    feature_medians.append((feature, float(median_value)))
-
-                    print(f"      ✅ Cluster {selected_cluster}: median={median_value:.1f}, "
+                    feature_medians.append((feature, median_nonzero_value))
+                    print(f"      ✅ Cluster {selected_cluster}: median_nonzero={median_nonzero_value:.1f}, "
                           f"activity={stats['non_zero_proportion']*100:.1f}%, "
                           f"size={stats['cluster_size']:,}")
 
@@ -368,16 +335,14 @@ def generate_summary_statistics_v2(results: Dict[str, Any], target_features: Lis
         medians = []
         activity_rates = []
         threshold_met = 0
-        
         for dataset_name, dataset_data in results['datasets'].items():
             if feature in dataset_data['feature_selections']:
                 selection = dataset_data['feature_selections'][feature]
-                medians.append(selection['median_value'])
+                # Use the new key for median of non-zero values
+                medians.append(selection['median_nonzero_value'])
                 activity_rates.append(selection['feature_stats']['non_zero_proportion'])
-                
                 if selection.get('meets_activity_threshold', False):
                     threshold_met += 1
-        
         if medians:
             summary['median_value_ranges'][feature] = {
                 'min': float(np.min(medians)),
@@ -447,7 +412,7 @@ def print_cluster_selection_summary_v2(results: Dict[str, Any]) -> None:
         for feature, selection in dataset_data['feature_selections'].items():
             print(f"    Feature: {feature}")
             print(f"      Selected Cluster: {selection['selected_cluster']}")
-            print(f"      Median Value: {selection['median_value']:.1f}")
+            print(f"      Median Non-Zero Value: {selection['median_nonzero_value']:.1f}")
             print(f"      Cluster Size: {selection['cluster_size']}")
             print(f"      Activity Rate: {selection['feature_stats']['non_zero_proportion']*100:.1f}%")
             print(f"      Meets Activity Threshold: {selection['meets_activity_threshold']}")
