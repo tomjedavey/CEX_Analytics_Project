@@ -8,7 +8,7 @@ in source_code_package.features.cross_domain_engagement_features module.
 The script calculates CROSS_DOMAIN_ENGAGEMENT_SCORE using Shannon entropy based on 
 event count proportions:
 
-H(X) = -Σ(i=1 to n) pi × log₂(pi)
+H(X) = -Σ(i=1 to n) pi * log₂(pi)
 
 Where pi is the proportion of each event type, and the result is normalized 
 to [0,1] scale by dividing by the maximum possible entropy.
