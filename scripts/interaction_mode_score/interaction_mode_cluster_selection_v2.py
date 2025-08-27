@@ -18,7 +18,7 @@ import argparse
 import sys
 import os
 # Dynamically add the absolute path to source_code_package to sys.path
-project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
 source_code_path = os.path.join(project_root, 'source_code_package')
 if source_code_path not in sys.path:
     sys.path.insert(0, source_code_path)
@@ -55,15 +55,15 @@ Examples:
     parser.add_argument(
         '--results-dir', 
         type=str,
-        default='data/raw_data/interaction_mode_results',
-        help='Directory containing interaction mode clustering results'
+        default='data/processed_data/interaction_mode_results',
+        help='Directory containing interaction mode clustering results (should be data/processed_data/interaction_mode_results)'
     )
-    
+
     parser.add_argument(
         '--output', 
         type=str,
         default='data/processed_data/interaction_mode_cluster_selections_v2.yaml',
-        help='Output file path for cluster selections'
+        help='Output file path for cluster selections (should be in data/processed_data)'
     )
     
     parser.add_argument(

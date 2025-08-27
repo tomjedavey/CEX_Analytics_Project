@@ -48,7 +48,7 @@ def get_default_paths() -> Dict[str, str]:
     script_dir = os.path.dirname(__file__)
     return {
         'config_path': os.path.join(script_dir, '../../source_code_package/config/config_interaction_mode.yaml'),
-        'output_dir': os.path.join(script_dir, '../../data/raw_data/interaction_mode_results')
+        'output_dir': os.path.join(script_dir, '../../data/processed_data/interaction_mode_results')
     }
 
 

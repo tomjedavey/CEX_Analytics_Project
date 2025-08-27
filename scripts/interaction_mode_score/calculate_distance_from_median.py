@@ -10,7 +10,7 @@ from source_code_package.features.distance_from_median import (
 )
 
 # Define paths and features
-BASE_PATH = "data/raw_data/interaction_mode_results/"
+BASE_PATH = "data/processed_data/interaction_mode_results/"
 CLUSTERS = ["cluster_0_clustering", "cluster_1_clustering", "main_clustering"]
 MEDIAN_FILES = {
     "cluster_0_clustering": "cluster_0_clustering_feature_medians.csv",
@@ -28,8 +28,8 @@ for cluster in CLUSTERS:
 
     # Load medians and wallet data
     medians_df = load_medians(median_path, FEATURES)
-    wallet_df = pd.read_csv(clustering_data_path)
-    wallet_df = wallet_df[FEATURES]
+    wallet_full_df = pd.read_csv(clustering_data_path)
+    wallet_df = wallet_full_df[FEATURES]
 
     # Preprocess
     medians_proc = preprocess_features(medians_df, FEATURES)
@@ -50,9 +50,46 @@ for cluster in CLUSTERS:
     # Apply proportionality weighting
     weighted_dist = apply_proportionality_weighting(norm_dist, weights, EVENT_FEATURES)
 
-    # Save outputs
-    out_dir = os.path.join(BASE_PATH, cluster)
-    dist.to_csv(os.path.join(out_dir, "distances.csv"), index=False)
-    norm_dist.to_csv(os.path.join(out_dir, "normalized_distances.csv"), index=False)
-    weighted_dist.to_csv(os.path.join(out_dir, "weighted_distances.csv"), index=False)
-    print(f"Finished {cluster}. Outputs saved to {out_dir}.")
+    # Save to processed_data/interaction_mode_results/<cluster>/
+    out_dir = os.path.join("data/processed_data/interaction_mode_results", cluster)
+    os.makedirs(out_dir, exist_ok=True)
+
+    # --- Full output for absolute distances ---
+    abs_output = wallet_full_df.copy()
+    for feat in FEATURES:
+        abs_output[f"{feat}_MEDIAN"] = medians_df.iloc[0][feat]
+    for feat in FEATURES:
+        abs_output[f"{feat}_ABS_DIST"] = dist[feat].values
+    abs_output.to_csv(os.path.join(out_dir, "full_absolute_distances.csv"), index=False)
+
+    # --- Full output for raw (signed) distances (same as absolute here, but can be changed if needed) ---
+    raw_output = wallet_full_df.copy()
+    for feat in FEATURES:
+        raw_output[f"{feat}_MEDIAN"] = medians_df.iloc[0][feat]
+    for feat in FEATURES:
+        raw_output[f"{feat}_RAW_DIST"] = dist[feat].values
+    raw_output.to_csv(os.path.join(out_dir, "full_raw_distances.csv"), index=False)
+
+    # --- Full output for normalized distances ---
+    norm_output = wallet_full_df.copy()
+    for feat in FEATURES:
+        norm_output[f"{feat}_MEDIAN"] = medians_df.iloc[0][feat]
+    for feat in FEATURES:
+        norm_output[f"{feat}_NORM_DIST"] = norm_dist[feat].values
+    norm_output.to_csv(os.path.join(out_dir, "full_normalized_distances.csv"), index=False)
+
+    # --- Full output for weighted distances ---
+    weighted_output = wallet_full_df.copy()
+    for feat in FEATURES:
+        weighted_output[f"{feat}_MEDIAN"] = medians_df.iloc[0][feat]
+    for feat in FEATURES:
+        weighted_output[f"{feat}_WEIGHTED_DIST"] = weighted_dist[feat].values
+    weighted_output.to_csv(os.path.join(out_dir, "full_weighted_distances.csv"), index=False)
+
+    # Delete old single-score CSVs if they exist
+    for fname in ["absolute_distances.csv", "distances.csv", "normalized_distances.csv", "weighted_distances.csv"]:
+        fpath = os.path.join(out_dir, fname)
+        if os.path.exists(fpath):
+            os.remove(fpath)
+
+    print(f"Finished {cluster}. Full outputs saved to {out_dir}.")
