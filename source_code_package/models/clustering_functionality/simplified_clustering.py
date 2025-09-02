@@ -29,7 +29,7 @@ from .HBDSCAN_cluster import (
 
 def run_clustering_pipeline(config_path: Optional[str] = None,
                           data_path: Optional[str] = None, 
-                          output_dir: str = "clustering_results",
+                                                      output_dir: str = "data/processed_data/HDBSCAN_clustering_results_activity",
                           force_umap: Optional[bool] = None,
                           nest_hdbscan_results: bool = True) -> Dict[str, Any]:
     """
@@ -136,16 +136,16 @@ def run_clustering_pipeline(config_path: Optional[str] = None,
 
 def _run_umap_hdbscan_pipeline(config_path: str, 
                               data_path: Optional[str],
-                              output_dir: str,
+                                                         output_dir: str,
                               nest_hdbscan_results: bool = True) -> Dict[str, Any]:
-    """Run UMAP + HDBSCAN pipeline."""
+    """Run UMAP + HDBSCAN pipeline. Full wrapper + execution pipeline functionality."""
     try:
         # Import UMAP functionality
         try:
             from .UMAP_dim_reduction import umap_with_preprocessing
         except ImportError:
             from UMAP_dim_reduction import umap_with_preprocessing
-        
+
         # Step 1: UMAP dimensionality reduction
         print("  📉 Applying UMAP dimensionality reduction...")
         umap_output_dir = os.path.join(output_dir, "umap_results")
@@ -155,13 +155,10 @@ def _run_umap_hdbscan_pipeline(config_path: str,
             save_results=True,
             output_dir=umap_output_dir
         )
-        
+
         # Step 2: HDBSCAN clustering on reduced data
         print("  🎯 Applying HDBSCAN clustering...")
-        if nest_hdbscan_results:
-            hdbscan_output_dir = os.path.join(output_dir, "hdbscan_results")
-        else:
-            hdbscan_output_dir = output_dir
+        hdbscan_output_dir = output_dir
         hdbscan_results = hdbscan_clustering_pipeline(
             umap_data=reduced_data,
             config_path=config_path,
@@ -170,7 +167,7 @@ def _run_umap_hdbscan_pipeline(config_path: str,
             save_results=True,
             output_dir=hdbscan_output_dir
         )
-        
+
         # Step 3: Combine results in standardized format
         return _create_standardized_result(
             umap_enabled=True,
@@ -188,16 +185,16 @@ def _run_umap_hdbscan_pipeline(config_path: str,
                 'main_output_dir': output_dir
             }
         )
-        
+
     except Exception as e:
         raise Exception(f"UMAP + HDBSCAN pipeline failed: {str(e)}")
 
 
 def _run_direct_hdbscan_pipeline(config_path: str,
                                 data_path: Optional[str], 
-                                output_dir: str,
+                                                             output_dir: str,
                                 nest_hdbscan_results: bool = True) -> Dict[str, Any]:
-    """Run direct HDBSCAN pipeline without UMAP."""
+    """Run direct HDBSCAN pipeline without UMAP. Full wrapper + execution pipeline functionality without UMAP."""
     try:
         # Import preprocessing functionality  
         try:
@@ -205,10 +202,10 @@ def _run_direct_hdbscan_pipeline(config_path: str,
         except ImportError:
             sys.path.append(os.path.join(os.path.dirname(__file__), '../../data'))
             from preprocess_cluster import preprocess_for_clustering
-        
+
         # Step 1: Load and preprocess data
         print("  📊 Loading and preprocessing data...")
-        
+
         # Use the preprocessing function with config_path
         preprocessed_data, preprocessing_info = preprocess_for_clustering(
             data_path=data_path,
@@ -216,11 +213,11 @@ def _run_direct_hdbscan_pipeline(config_path: str,
             apply_log_transform=True,
             apply_scaling=True
         )
-        
+
         # Step 1.5: Apply column selection if specified (similar to UMAP logic)
         config = load_hdbscan_config(config_path)
         include_columns = config.get('umap', {}).get('include_columns', [])
-        
+
         if include_columns:
             print(f"  🔍 Selecting specified columns: {include_columns}")
             # Validate that all specified columns exist
@@ -234,21 +231,18 @@ def _run_direct_hdbscan_pipeline(config_path: str,
                 else:
                     print("  ❌ No valid columns found, using all preprocessed data")
                     include_columns = []
-            
+
             if include_columns:
                 preprocessed_data = preprocessed_data[include_columns]
                 print(f"  📊 Data shape after column selection: {preprocessed_data.shape}")
         else:
             print("  📊 Using all preprocessed columns")
-        
+
         n_original_features = preprocessing_info.get('original_shape', (0, 0))[1]
-        
+
         # Step 2: HDBSCAN clustering on preprocessed data
         print("  🎯 Applying HDBSCAN clustering...")
-        if nest_hdbscan_results:
-            hdbscan_output_dir = os.path.join(output_dir, "hdbscan_results")
-        else:
-            hdbscan_output_dir = output_dir
+        hdbscan_output_dir = output_dir
         hdbscan_results = hdbscan_clustering_pipeline(
             umap_data=preprocessed_data,  # Use preprocessed data directly
             config_path=config_path,
@@ -257,7 +251,7 @@ def _run_direct_hdbscan_pipeline(config_path: str,
             save_results=True,
             output_dir=hdbscan_output_dir
         )
-        
+
         # Step 3: Create standardized results
         return _create_standardized_result(
             umap_enabled=False,
@@ -273,7 +267,7 @@ def _run_direct_hdbscan_pipeline(config_path: str,
                 'main_output_dir': output_dir
             }
         )
-        
+
     except Exception as e:
         raise Exception(f"Direct HDBSCAN pipeline failed: {str(e)}")
 

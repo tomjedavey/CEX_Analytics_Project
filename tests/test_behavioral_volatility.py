@@ -20,7 +20,7 @@ project_root = os.path.dirname(current_dir)
 source_package_path = os.path.join(project_root, 'source_code_package')
 sys.path.insert(0, source_package_path)
 
-from features.behavioral_volatility_features import (
+from source_code_package.features.behavioral_volatility_features import (
     calculate_financial_volatility,
     calculate_coefficient_of_variance,
     calculate_variance_ratio_from_uniform,
@@ -40,15 +40,17 @@ def test_financial_volatility():
         'AVG_TRANSFER_USD': [50, 100, 25, 50]
     })
     
+    # Type and schema checks
+    assert isinstance(test_data, pd.DataFrame), "Input must be a pandas DataFrame"
+    required_cols = {'USD_TRANSFER_STDDEV', 'AVG_TRANSFER_USD'}
+    assert required_cols.issubset(test_data.columns), f"Missing required columns: {required_cols - set(test_data.columns)}"
     result = calculate_financial_volatility(test_data)
-    
+    assert isinstance(result, pd.Series), "Output must be a pandas Series"
     # Expected: [2.0, 0.0, 2.0, 0.0]
     expected = [2.0, 0.0, 2.0, 0.0]
-    
     print(f"  Input: {test_data.values.tolist()}")
     print(f"  Result: {result.tolist()}")
     print(f"  Expected: {expected}")
-    
     assert np.allclose(result, expected, atol=1e-6), "Financial volatility test failed"
     print("  ✅ Financial volatility test passed!")
 
@@ -59,28 +61,28 @@ def test_activity_volatility_components():
     
     # Test coefficient of variance
     activity_counts = [10, 20, 30, 40]
+    # Type checks
+    assert isinstance(activity_counts, list), "Input must be a list"
     cv = calculate_coefficient_of_variance(activity_counts)
     expected_cv = np.std(activity_counts) / np.mean(activity_counts)
     print(f"  CV test: {cv:.6f} (expected: {expected_cv:.6f})")
+    assert isinstance(cv, float), "CV output must be a float"
     assert abs(cv - expected_cv) < 1e-6, "CV test failed"
-    
     # Test variance ratio from uniform
     vr = calculate_variance_ratio_from_uniform(activity_counts)
     print(f"  Variance ratio: {vr:.6f}")
-    
+    assert isinstance(vr, float), "Variance ratio output must be a float"
     # Test Gini coefficient
     gini = calculate_gini_coefficient(activity_counts)
     print(f"  Gini coefficient: {gini:.6f}")
-    
+    assert isinstance(gini, float), "Gini coefficient output must be a float"
     # Test edge cases
     empty_counts = []
     zero_counts = [0, 0, 0, 0]
     uniform_counts = [25, 25, 25, 25]
-    
     print(f"  Empty array CV: {calculate_coefficient_of_variance(empty_counts)}")
     print(f"  Zero counts CV: {calculate_coefficient_of_variance(zero_counts)}")
     print(f"  Uniform counts Gini: {calculate_gini_coefficient(uniform_counts):.6f}")
-    
     print("  ✅ Activity volatility components test passed!")
 
 
@@ -95,18 +97,20 @@ def test_exploration_volatility():
         'TOKEN_DIVERSITY': [2, 6, 6],
         'TX_PER_MONTH': [10, 5, 2]
     })
-    
     diversity_cols = ['PROTOCOL_DIVERSITY', 'INTERACTION_DIVERSITY', 'TOKEN_DIVERSITY']
+    # Type and schema checks
+    assert isinstance(test_data, pd.DataFrame), "Input must be a pandas DataFrame"
+    assert all(col in test_data.columns for col in diversity_cols), "Missing diversity columns"
+    assert 'TX_PER_MONTH' in test_data.columns, "Missing TX_PER_MONTH column"
     result = calculate_exploration_volatility(test_data, diversity_cols)
-    
+    assert isinstance(result, pd.Series), "Output must be a pandas Series"
     print(f"  Input diversity averages: {test_data[diversity_cols].mean(axis=1).tolist()}")
     print(f"  TX per month: {test_data['TX_PER_MONTH'].tolist()}")
     print(f"  Result (with sqrt): {result.tolist()}")
-    
     # Test without sqrt transformation
     result_no_sqrt = calculate_exploration_volatility(test_data, diversity_cols, apply_sqrt_transform=False)
+    assert isinstance(result_no_sqrt, pd.Series), "Output (no sqrt) must be a pandas Series"
     print(f"  Result (without sqrt): {result_no_sqrt.tolist()}")
-    
     print("  ✅ Exploration volatility test passed!")
 
 
@@ -133,22 +137,24 @@ def test_edge_cases():
         'TOKEN_DIVERSITY': [0],
         'TX_PER_MONTH': [0]
     })
-    
     event_columns = ['DEX_EVENTS', 'GAMES_EVENTS', 'CEX_EVENTS', 'DAPP_EVENTS', 
                     'CHADMIN_EVENTS', 'DEFI_EVENTS', 'BRIDGE_EVENTS', 'NFT_EVENTS', 
                     'TOKEN_EVENTS', 'FLOTSAM_EVENTS']
-    
     weights = {'coefficient_of_variance': 0.4, 'variance_ratio': 0.3, 'gini_coefficient': 0.3}
-    
+    # Type and schema checks
+    assert isinstance(test_data, pd.DataFrame), "Input must be a pandas DataFrame"
+    for col in ['USD_TRANSFER_STDDEV', 'AVG_TRANSFER_USD'] + event_columns + ['PROTOCOL_DIVERSITY', 'INTERACTION_DIVERSITY', 'TOKEN_DIVERSITY', 'TX_PER_MONTH']:
+        assert col in test_data.columns, f"Missing required column: {col}"
     fin_vol = calculate_financial_volatility(test_data)
     act_vol = calculate_activity_volatility(test_data, event_columns, weights)
     exp_vol = calculate_exploration_volatility(test_data, ['PROTOCOL_DIVERSITY', 'INTERACTION_DIVERSITY', 'TOKEN_DIVERSITY'])
-    
+    assert isinstance(fin_vol, pd.Series), "Financial volatility output must be a pandas Series"
+    assert isinstance(act_vol, pd.Series), "Activity volatility output must be a pandas Series"
+    assert isinstance(exp_vol, pd.Series), "Exploration volatility output must be a pandas Series"
     print(f"  Zero activity case:")
     print(f"    Financial volatility: {fin_vol.iloc[0]}")
     print(f"    Activity volatility: {act_vol.iloc[0]}")
     print(f"    Exploration volatility: {exp_vol.iloc[0]}")
-    
     print("  ✅ Edge cases test passed!")
 
 

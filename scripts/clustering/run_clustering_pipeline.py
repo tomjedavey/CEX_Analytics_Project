@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+ #!/usr/bin/env python3
 """
 Simplified HDBSCAN Clustering Script
 
@@ -20,7 +20,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../../source_code_packa
 
 # Import the simplified clustering pipeline
 try:
-    from models.clustering_functionality.simplified_clustering import (
+    from source_code_package.models.clustering_functionality.simplified_clustering import (
         run_clustering_pipeline,
         load_hdbscan_config,
         validate_hdbscan_config
@@ -132,8 +132,8 @@ Examples:
     )
     
     parser.add_argument('--output-dir', '-o', 
-                       default='clustering_results',
-                       help='Output directory for results (default: clustering_results)')
+                       default='data/processed_data/clustering_results',
+                       help='Output directory for results (default: data/processed_data/clustering_results)')
     
     parser.add_argument('--config-path', '-c',
                        help='Path to configuration file (default: auto-detect)')
@@ -154,7 +154,6 @@ Examples:
                        help='Suppress detailed progress output')
     
     args = parser.parse_args()
-    
     # Validate mutually exclusive arguments
     if args.force_umap and args.no_umap:
         print("❌ Error: --force-umap and --no-umap cannot be used together.")

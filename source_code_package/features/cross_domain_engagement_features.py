@@ -7,7 +7,7 @@ cross-domain engagement based on event count proportions. Shannon entropy measur
 diversity across different blockchain event types and domains.
 
 The entropy calculation:
-H(X) = -Σ(i=1 to n) pi × log₂(pi)
+H(X) = -Σ(i=1 to n) pi * log₂(pi)
 
 Where pi is the proportion of each event type, and the result is normalized to [0,1] scale
 by dividing by the maximum possible entropy (log₂(number_of_categories)).
@@ -188,10 +188,13 @@ def calculate_cross_domain_engagement_score(df: pd.DataFrame,
     print(f"\nActivity diversity calculation complete:")
     print(f"  Wallets processed: {len(df_result)}")
     print(f"  Wallets with zero activity: {zero_activity_count}")
-    print(f"  Mean diversity score: {np.mean(entropy_scores):.4f}")
-    print(f"  Median diversity score: {np.median(entropy_scores):.4f}")
-    print(f"  Min diversity score: {np.min(entropy_scores):.4f}")
-    print(f"  Max diversity score: {np.max(entropy_scores):.4f}")
+    if len(entropy_scores) > 0:
+        print(f"  Mean diversity score: {np.mean(entropy_scores):.4f}")
+        print(f"  Median diversity score: {np.median(entropy_scores):.4f}")
+        print(f"  Min diversity score: {np.min(entropy_scores):.4f}")
+        print(f"  Max diversity score: {np.max(entropy_scores):.4f}")
+    else:
+        print("  No diversity scores to summarize (empty input).");
     
     return df_result
 

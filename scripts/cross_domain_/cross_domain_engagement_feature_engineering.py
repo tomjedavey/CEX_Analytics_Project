@@ -28,7 +28,7 @@ source_package_path = os.path.join(project_root, 'source_code_package')
 sys.path.insert(0, source_package_path)
 
 try:
-    from features.cross_domain_engagement_features import cross_domain_engagement_pipeline
+    from source_code_package.features.cross_domain_engagement_features import cross_domain_engagement_pipeline
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure source_code_package structure is correct")

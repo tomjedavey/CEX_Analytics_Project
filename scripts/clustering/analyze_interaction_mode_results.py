@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from typing import Dict, Any, List, Tuple
 
-def load_clustering_results(results_dir: str = "data/raw_data/interaction_mode_results") -> Dict[str, pd.DataFrame]:
+def load_clustering_results(results_dir: str = "data/processed_data/interaction_mode_results") -> Dict[str, pd.DataFrame]:
     """
     Load clustering results from all three datasets.
     
@@ -35,7 +35,7 @@ def load_clustering_results(results_dir: str = "data/raw_data/interaction_mode_r
     results = {}
     
     for dataset in datasets:
-        labels_path = os.path.join(results_dir, f"{dataset}_clustering", "hdbscan_results", "cluster_labels.csv")
+        labels_path = os.path.join(results_dir, f"{dataset}_clustering", "cluster_labels.csv")
         
         if os.path.exists(labels_path):
             df = pd.read_csv(labels_path)
@@ -262,7 +262,7 @@ def main():
     print("=" * 60)
     
     # Check if results exist
-    results_dir = "data/raw_data/interaction_mode_results"
+    results_dir = "data/processed_data/interaction_mode_results"
     if not os.path.exists(results_dir):
         print(f"❌ Results directory not found: {results_dir}")
         print("   Please run the interaction mode clustering pipeline first:")

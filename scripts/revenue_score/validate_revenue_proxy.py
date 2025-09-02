@@ -276,7 +276,7 @@ def main():
     # Load data
     current_dir = os.path.dirname(__file__)
     project_root = os.path.dirname(current_dir)
-    data_file = os.path.join(project_root, 'data', 'processed_data', 'revenue_proxy_features.csv')
+    data_file = os.path.join(project_root, '..', 'data', 'processed_data', 'revenue_proxy_features.csv')
     
     try:
         df = load_and_validate_data(data_file)
@@ -320,6 +320,7 @@ def main():
         print(f"• It weights sophisticated DeFi users (higher fee generators) appropriately")
         print(f"• It captures cross-chain activity (bridge volumes) indicating larger traders")
         print(f"• The segmentation aligns with expected user tiers in CEX business models")
+        #**KEY TO REMEMBER HERE - NEED TO CHANGE ABOVE AND ANYTHING ELSE LIKE IT IN OTHER ANALYTIC SCORES. IF INPUTS CHANGE THEN THESE "ANALYSIS" LINES WON'T**
         
         return True
         

@@ -14,17 +14,10 @@ import os
 import sys
 
 # Add source_code_package to path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'source_code_package'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'source_code_package', '..'))
 
-try:
-    from source_code_package.data.cluster_datasets import prepare_cluster_datasets
-except ImportError:
-    # Alternative import approach
-    current_dir = os.path.dirname(__file__)
-    source_package_path = os.path.join(current_dir, 'source_code_package')
-    sys.path.insert(0, source_package_path)
-    from data.cluster_datasets import prepare_cluster_datasets
-
+# Importing the neccessary function to prepare cluster datasets as csv files from cluster_datasets.py in source code package.
+from source_code_package.data.cluster_datasets import prepare_cluster_datasets
 
 def main():
     """
@@ -33,12 +26,16 @@ def main():
     print("CLUSTER DATASET PREPARATION")
     print("=" * 50)
     
-    # Define paths relative to project root
-    project_root = os.path.dirname(os.path.dirname(__file__))  # Go up two levels from scripts/
+    # Robustly resolve project root (parent of parent of this script)
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
+    print(f"[DEBUG] project_root: {project_root}")
     original_data_path = os.path.join(project_root, 'data/raw_data/new_raw_data_polygon.csv')
-    clustering_results_path = os.path.join(project_root, 'clustering_output/flexible_pipeline/hdbscan_results/cluster_labels.csv')
-    output_directory = os.path.join(project_root, 'data/raw_data/cluster_datasets')
-    
+    clustering_results_path = os.path.join(project_root, 'data/processed_data/clustering_results/cluster_labels.csv')
+    output_directory = os.path.join(project_root, 'data/processed_data/cluster_datasets')
+    print(f"[DEBUG] original_data_path: {original_data_path}")
+    print(f"[DEBUG] clustering_results_path: {clustering_results_path}")
+    print(f"[DEBUG] output_directory: {output_directory}")
+
     # Execute the preparation pipeline
     results = prepare_cluster_datasets(
         original_data_path=original_data_path,

@@ -9,7 +9,7 @@ import os
 # Add the source_code_package to the path
 sys.path.append(os.path.join(os.path.dirname(__file__), '../source_code_package'))
 
-from models.clustering_functionality.UMAP_dim_reduction import (
+from source_code_package.models.clustering_functionality.UMAP_dim_reduction import (
     validate_feature_consistency,
     load_umap_config,
     run_umap_pipeline_example
@@ -97,5 +97,3 @@ def run_full_pipeline_test():
 
 if __name__ == "__main__":
     main()
-
-#**MAY HAVE TO CHANGE SOME OF THE PATHS - MOVED INTO TEST FOLDER FROM SCRIPTS**

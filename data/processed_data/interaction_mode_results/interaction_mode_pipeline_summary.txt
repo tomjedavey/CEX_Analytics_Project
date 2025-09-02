@@ -1,6 +1,6 @@
 Interaction Mode Score Clustering Pipeline Summary
 ============================================================
-Last Updated: 2025-08-27 15:02:56
+Last Updated: 2025-09-01 18:04:34
 
 Dataset Validation Results:
 ------------------------------
@@ -10,15 +10,21 @@ main:
   📋 Columns: 22
   💾 Memory: 5.1 MB
 
-cluster_0:
+cluster_cluster_1:
   ✅ Valid dataset
-  📊 Rows: 11,369
+  📊 Rows: 11,388
   📋 Columns: 22
   💾 Memory: 2.9 MB
 
-cluster_1:
+cluster_cluster_0:
   ✅ Valid dataset
-  📊 Rows: 8,647
+  📊 Rows: 142
+  📋 Columns: 22
+  💾 Memory: 0.0 MB
+
+cluster_cluster_2:
+  ✅ Valid dataset
+  📊 Rows: 8,590
   📋 Columns: 22
   💾 Memory: 2.2 MB
 
@@ -32,26 +38,34 @@ main:
   📉 Noise percentage: 15.0%
   🔄 UMAP: Enabled
 
-cluster_0:
+cluster_cluster_1:
   ✅ Clustering successful
-  🎯 Clusters: 11
-  📊 Data points: 11,369
-  🔍 Noise points: 2,457
-  📉 Noise percentage: 21.6%
+  🎯 Clusters: 12
+  📊 Data points: 11,388
+  🔍 Noise points: 2,761
+  📉 Noise percentage: 24.2%
   🔄 UMAP: Enabled
 
-cluster_1:
+cluster_cluster_0:
   ✅ Clustering successful
-  🎯 Clusters: 8
-  📊 Data points: 8,647
-  🔍 Noise points: 1,294
-  📉 Noise percentage: 15.0%
+  🎯 Clusters: 0
+  📊 Data points: 142
+  🔍 Noise points: 142
+  📉 Noise percentage: 100.0%
+  🔄 UMAP: Enabled
+
+cluster_cluster_2:
+  ✅ Clustering successful
+  🎯 Clusters: 7
+  📊 Data points: 8,590
+  🔍 Noise points: 1,564
+  📉 Noise percentage: 18.2%
   🔄 UMAP: Enabled
 
 Configuration Summary:
 --------------------
-Config file: /Users/tomdavey/Documents/GitHub/MLProject1/scripts/clustering/../../source_code_package/config/config_interaction_mode.yaml
-Output directory: /Users/tomdavey/Documents/GitHub/MLProject1/scripts/clustering/../../data/processed_data/interaction_mode_results
+Config file: /Users/tomdavey/Documents/GitHub/MLProject1/source_code_package/config/config_interaction_mode.yaml
+Output directory: /Users/tomdavey/Documents/GitHub/MLProject1/data/processed_data/interaction_mode_results
 UMAP enabled: True
 Min cluster size: 300
 Min samples: 25

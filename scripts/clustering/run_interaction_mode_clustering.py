@@ -2,14 +2,15 @@
 """
 Interaction Mode Score HDBSCAN Clustering Pipeline
 
-This script runs HDBSCAN clustering on three different datasets to produce
-interaction mode scores. It utilizes the existing HDBSCAN clustering 
-functionality with a specialized configuration for interaction mode detection.
+This script runs HDBSCAN clustering on the main dataset and all cluster datasets
+produced by the initial clustering pipeline. It dynamically detects all valid
+cluster datasets in data/processed_data/cluster_datasets/ and processes each one
+separately, producing results for each. This allows the pipeline to scale to any
+number of clusters produced by the initial clustering step.
 
 The script processes:
 1. new_raw_data_polygon.csv (main dataset)
-2. new_raw_data_polygon_cluster_0.csv (cluster 0 subset)  
-3. new_raw_data_polygon_cluster_1.csv (cluster 1 subset)
+2. All files matching new_raw_data_polygon_cluster_*.csv in cluster_datasets/ (any number)
 
 Each dataset is clustered separately using the same HDBSCAN configuration,
 producing separate clustering results that can later be used to compute
@@ -32,7 +33,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '../../source_code_packa
 
 # Import the simplified clustering pipeline
 try:
-    from models.clustering_functionality.simplified_clustering import (
+    from source_code_package.models.clustering_functionality.simplified_clustering import (
         run_clustering_pipeline,
         load_hdbscan_config,
         validate_hdbscan_config
@@ -45,10 +46,11 @@ except ImportError:
 
 def get_default_paths() -> Dict[str, str]:
     """Get default paths for configuration and output directory."""
-    script_dir = os.path.dirname(__file__)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(script_dir, '../../'))
     return {
-        'config_path': os.path.join(script_dir, '../../source_code_package/config/config_interaction_mode.yaml'),
-        'output_dir': os.path.join(script_dir, '../../data/processed_data/interaction_mode_results')
+        'config_path': os.path.join(project_root, 'source_code_package/config/config_interaction_mode.yaml'),
+        'output_dir': os.path.join(project_root, 'data/processed_data/interaction_mode_results')
     }
 
 
@@ -64,22 +66,23 @@ def load_interaction_mode_config(config_path: str) -> Dict[str, Any]:
 
 
 def get_dataset_paths() -> Dict[str, str]:
-    """Get the full paths to all three datasets."""
-    script_dir = os.path.dirname(__file__)
-    base_data_dir = os.path.join(script_dir, '../../data/raw_data')
-    cluster_data_dir = os.path.join(base_data_dir, 'cluster_datasets')
-    
+    """Get the full paths to the main dataset and all cluster datasets."""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    project_root = os.path.abspath(os.path.join(script_dir, '../../'))
     datasets = {
-        'main': os.path.join(base_data_dir, 'new_raw_data_polygon.csv'),
-        'cluster_0': os.path.join(cluster_data_dir, 'new_raw_data_polygon_cluster_0.csv'),
-        'cluster_1': os.path.join(cluster_data_dir, 'new_raw_data_polygon_cluster_1.csv')
+        'main': os.path.join(project_root, 'data/raw_data/new_raw_data_polygon.csv')
     }
-    
+    # Dynamically find all cluster datasets
+    cluster_datasets_dir = os.path.join(project_root, 'data/processed_data/cluster_datasets')
+    if os.path.exists(cluster_datasets_dir):
+        for fname in os.listdir(cluster_datasets_dir):
+            if fname.startswith('new_raw_data_polygon_cluster_') and fname.endswith('.csv'):
+                cluster_name = fname.replace('new_raw_data_polygon_', '').replace('.csv', '')
+                datasets[f'cluster_{cluster_name}'] = os.path.join(cluster_datasets_dir, fname)
     # Verify all datasets exist
     for name, path in datasets.items():
         if not os.path.exists(path):
             raise FileNotFoundError(f"Dataset not found: {path}")
-    
     return datasets
 
 
@@ -418,9 +421,8 @@ Note: Each run updates the same output directory, overwriting previous results w
     parser.add_argument('--no-umap', action='store_true',
                        help='Force direct HDBSCAN pipeline for all datasets (no UMAP)')
     
-    parser.add_argument('--datasets', nargs='+', 
-                       choices=['main', 'cluster_0', 'cluster_1'],
-                       help='Specific datasets to process (default: all)')
+    parser.add_argument('--datasets', nargs='+',
+                       help='Specific datasets to process (default: all). Use names as detected (e.g., main, cluster_0, cluster_1, cluster_2, etc.)')
     
     parser.add_argument('--validate-only', action='store_true',
                        help='Only validate configuration and datasets, do not run clustering')

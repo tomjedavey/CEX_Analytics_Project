@@ -1,4 +1,4 @@
-#Configurations for relative clustering algortithms 
+#Configurations for relative clustering algorithms - activity based clustering in regular use
 
 data:
   raw_data_path: "data/raw_data/new_raw_data_polygon.csv"
@@ -86,8 +86,8 @@ umap:
 # HDBSCAN Clustering Configuration
 hdbscan:
   # Core HDBSCAN parameters
-  min_cluster_size: 150          # Minimum number of points required to form a cluster. Smaller values create more clusters but may include noise as clusters
-  min_samples: 40                 # Number of samples in a neighborhood for a point to be considered a core point. Higher values make clustering more conservative (fewer outliers become core points)
+  min_cluster_size: 55          # Minimum number of points required to form a cluster. Smaller values create more clusters but may include noise as clusters
+  min_samples: 10                # Number of samples in a neighborhood for a point to be considered a core point. Higher values make clustering more conservative (fewer outliers become core points)
   cluster_selection_epsilon: 0.0 # Distance threshold for cluster selection (0.0 for auto)
   
   # Distance metric
