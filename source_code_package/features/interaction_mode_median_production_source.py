@@ -207,8 +207,8 @@ def calculate_median_feature_values_for_clusters(
             if fname.endswith('_clustering') and os.path.isdir(os.path.join(results_dir, fname)):
                 if fname == 'main_clustering':
                     dataset_names.append('main')
-                else:
-                    # Extract cluster name from folder, e.g. cluster_cluster_0_clustering -> cluster_cluster_0
+                elif fname.startswith('cluster_'):
+                    # Extract cluster name from folder, e.g. cluster_0_clustering -> cluster_0
                     dataset_names.append(fname.replace('_clustering', ''))
     total_datasets = 0
 

@@ -77,8 +77,9 @@ def get_dataset_paths() -> Dict[str, str]:
     if os.path.exists(cluster_datasets_dir):
         for fname in os.listdir(cluster_datasets_dir):
             if fname.startswith('new_raw_data_polygon_cluster_') and fname.endswith('.csv'):
-                cluster_name = fname.replace('new_raw_data_polygon_', '').replace('.csv', '')
-                datasets[f'cluster_{cluster_name}'] = os.path.join(cluster_datasets_dir, fname)
+                # Extract just the number, e.g. new_raw_data_polygon_cluster_0.csv -> 0
+                cluster_num = fname.replace('new_raw_data_polygon_cluster_', '').replace('.csv', '')
+                datasets[f'cluster_{cluster_num}'] = os.path.join(cluster_datasets_dir, fname)
     # Verify all datasets exist
     for name, path in datasets.items():
         if not os.path.exists(path):
@@ -545,9 +546,14 @@ Note: Each run updates the same output directory, overwriting previous results w
         successful_runs = 0
         
         for dataset_name, dataset_path in dataset_paths.items():
-            # Create output directory for this dataset
-            dataset_output_dir = os.path.join(output_dir, f"{dataset_name}_clustering")
-            
+            # For main, keep folder as main_clustering; for clusters, use cluster_0_clustering, cluster_1_clustering, etc.
+            if dataset_name == 'main':
+                dataset_output_dir = os.path.join(output_dir, 'main_clustering')
+            elif dataset_name.startswith('cluster_'):
+                dataset_output_dir = os.path.join(output_dir, f'{dataset_name}_clustering')
+            else:
+                dataset_output_dir = os.path.join(output_dir, f'{dataset_name}_clustering')
+
             # Run clustering for this dataset
             results = run_clustering_for_dataset(
                 config=config,
@@ -556,7 +562,7 @@ Note: Each run updates the same output directory, overwriting previous results w
                 output_dir=dataset_output_dir,
                 force_umap=force_umap
             )
-            
+
             all_results[dataset_name] = results
             if results.get('success', True):
                 successful_runs += 1
