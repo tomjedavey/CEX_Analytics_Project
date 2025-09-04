@@ -1,0 +1,24 @@
+CLUSTER DATASETS CREATION SUMMARY
+==================================================
+
+Generated: 2025-09-03T18:00:47.641788
+Total records processed: 20,174
+
+CLUSTER DISTRIBUTION:
+------------------------------
+Cluster -1: 71 records (0.3%)
+Cluster 0: 8,713 records (43.2%)
+Cluster 1: 11,390 records (56.5%)
+Noise points: 71 records (0.3%)
+
+CREATED FILES:
+------------------------------
+new_raw_data_polygon_cluster_0.csv: 8,713 records
+new_raw_data_polygon_cluster_1.csv: 11,390 records
+
+NEXT STEPS:
+------------------------------
+- Run feature engineering on each cluster dataset
+- Train separate AS_1 models for each cluster
+- Compare cluster-specific model performance
+- Analyze feature importance differences between clusters
