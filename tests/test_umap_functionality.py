@@ -26,7 +26,11 @@ def test_config_loading():
     print(f"Include columns: {include_columns}")
     print(f"Number of columns to include: {len(include_columns)}")
     
-    return include_columns
+    # Rationale: Use assert to validate that include_columns is a list and not empty, so the test runner can detect failures.
+    assert isinstance(include_columns, list), "include_columns should be a list"
+    assert len(include_columns) > 0, "include_columns should not be empty"
+    
+    print("✅ test_config_loading passed!")
 
 def test_validation():
     """Test the feature consistency validation."""
@@ -49,27 +53,25 @@ def test_validation():
     for rec in validation_results['recommendations']:
         print(f"  - {rec}")
     
-    return validation_results
+    # Rationale: Use assert to validate the structure and keys of validation_results, so the test runner can detect failures.
+    assert isinstance(validation_results, dict), "validation_results should be a dict"
+    expected_keys = ['include_columns', 'include_all_columns', 'log_transform_excluded', 'log_exclude_no_columns', 'scaling_excluded', 'scale_exclude_no_columns', 'warnings', 'recommendations']
+    for key in expected_keys:
+        assert key in validation_results, f"Missing key in validation_results: {key}"
+    
+    print("✅ test_validation passed!")
 
 def main():
     """Run all tests."""
     try:
         # Test 1: Configuration loading
-        include_columns = test_config_loading()
+        test_config_loading()
         
         # Test 2: Validation
-        validation_results = test_validation()
+        test_validation()
         
         print("\n=== Summary ===")
-        if include_columns:
-            print(f"✅ Successfully loaded {len(include_columns)} include_columns from config")
-        else:
-            print("❌ No include_columns found in config")
-        
-        if not validation_results['warnings']:
-            print("✅ Configuration is consistent")
-        else:
-            print("⚠️  Configuration has potential issues")
+        print("✅ All UMAP configuration and validation tests passed!")
         
         print("\n=== NOTE ===")
         print("To test the full pipeline, ensure you have:")
