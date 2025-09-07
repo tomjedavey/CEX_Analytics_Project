@@ -1,6 +1,6 @@
 Interaction Mode Score Clustering Pipeline Summary
 ============================================================
-Last Updated: 2025-09-03 18:02:59
+Last Updated: 2025-09-07 19:51:22
 
 Dataset Validation Results:
 ------------------------------
@@ -18,9 +18,9 @@ cluster_1:
 
 cluster_0:
   ✅ Valid dataset
-  📊 Rows: 8,713
-  📋 Columns: 22
-  💾 Memory: 2.2 MB
+  📊 Rows: 60
+  📋 Columns: 4
+  💾 Memory: 0.0 MB
 
 Clustering Results Summary:
 ------------------------------
@@ -42,10 +42,10 @@ cluster_1:
 
 cluster_0:
   ✅ Clustering successful
-  🎯 Clusters: 8
-  📊 Data points: 8,713
-  🔍 Noise points: 791
-  📉 Noise percentage: 9.1%
+  🎯 Clusters: 0
+  📊 Data points: 60
+  🔍 Noise points: 60
+  📉 Noise percentage: 100.0%
   🔄 UMAP: Enabled
 
 Configuration Summary:
