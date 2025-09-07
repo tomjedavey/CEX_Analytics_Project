@@ -48,6 +48,7 @@ def test_cluster_selection_and_feature_medians():
             cluster_labels.to_csv(os.path.join(folder, "cluster_labels.csv"), index=False)
             # Create dummy data file for 'main' dataset
             if dataset_name == "main":
+                # Do not overwrite the real data/raw_data/new_raw_data_polygon.csv file in tests
                 df = pd.DataFrame({
                     "DEX_EVENTS": np.random.randint(0, 10, n),
                     "CEX_EVENTS": np.random.randint(0, 10, n),
@@ -56,9 +57,6 @@ def test_cluster_selection_and_feature_medians():
                 })
                 raw_data_path = os.path.join(temp_dir, "new_raw_data_polygon.csv")
                 df.to_csv(raw_data_path, index=False)
-                # Patch the expected path for the test
-                os.makedirs(os.path.dirname("data/raw_data/"), exist_ok=True)
-                df.to_csv("data/raw_data/new_raw_data_polygon.csv", index=False)
             else:
                 # For cluster datasets, create a dummy file in the expected location
                 df = pd.DataFrame({

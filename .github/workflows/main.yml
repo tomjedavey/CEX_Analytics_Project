@@ -19,15 +19,12 @@ jobs:
         with:
           python-version: "3.12.6"
 
-      - name: 📦 Install dependencies
+      - name: 📦 Install dependencies (from pyproject.toml)
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install .[dev]
 
-      - name: 🧪 Run tests (if any)
+      - name: 🧪 Run tests with pytest (using pyproject.toml config)
         run: |
-          if [ -d tests ]; then pytest tests || echo "No tests yet"; fi
+          if [ -d tests ]; then pytest --cov --cov-config=pyproject.toml tests; else echo "No tests yet"; fi
 
-      - name: 🚀 Run training script
-        run: |
-          if [ -f train.py ]; then python train.py || echo "train.py incomplete"; fi
