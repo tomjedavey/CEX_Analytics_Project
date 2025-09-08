@@ -6,11 +6,17 @@
     "BRIDGE_EVENTS"
   ],
   "selection_parameters": {
-    "min_activity_threshold": 0.3,
+    "min_activity_threshold": 0.1,
     "min_cluster_size": 50,
     "algorithm": "activity_required"
   },
   "datasets": {
+    "cluster_0": {
+      "total_points": 60,
+      "valid_clusters": 0,
+      "noise_points": 60,
+      "feature_selections": {}
+    },
     "main": {
       "total_points": 20174,
       "valid_clusters": 21,
@@ -209,6 +215,6 @@
         "threshold_compliance": "2/2"
       }
     },
-    "total_datasets_processed": 2
+    "total_datasets_processed": 3
   }
 }

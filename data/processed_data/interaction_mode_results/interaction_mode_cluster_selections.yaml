@@ -1,4 +1,9 @@
 datasets:
+  cluster_0:
+    feature_selections: {}
+    noise_points: 60
+    total_points: 60
+    valid_clusters: 0
   cluster_1:
     feature_selections:
       BRIDGE_EVENTS:
@@ -139,7 +144,7 @@ datasets:
     valid_clusters: 21
 selection_parameters:
   algorithm: activity_required
-  min_activity_threshold: 0.3
+  min_activity_threshold: 0.1
   min_cluster_size: 50
 summary:
   activity_threshold_met: 8
@@ -175,7 +180,7 @@ summary:
       min: 28.0
       threshold_compliance: 2/2
   successful_selections: 8
-  total_datasets_processed: 2
+  total_datasets_processed: 3
 target_features:
 - DEX_EVENTS
 - CEX_EVENTS
