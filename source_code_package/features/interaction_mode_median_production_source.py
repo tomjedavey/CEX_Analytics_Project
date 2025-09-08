@@ -216,7 +216,11 @@ def calculate_median_feature_values_for_clusters(
         print(f"\n🔍 Processing {dataset_name} dataset...")
         # Construct file paths - updated for actual directory structure
         if dataset_name == 'main':
-            base_data_path = "data/raw_data/new_raw_data_polygon.csv"
+            # Load base data path from config if available
+            base_data_path = config.get('main_base_data_path')
+            if not base_data_path:
+                # Fallback to old config structure if not present
+                base_data_path = config.get('data', {}).get('raw_data_path', "data/raw_data/new_raw_data_polygon.csv")
             clusters_path = os.path.join(results_dir, "main_clustering/cluster_labels.csv")
         else:
             base_data_path = None  # Will be handled in load_dataset_and_clusters

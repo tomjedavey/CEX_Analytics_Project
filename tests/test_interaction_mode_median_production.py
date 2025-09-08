@@ -63,12 +63,21 @@ def test_calculate_median_feature_values_for_clusters(tmp_path):
     })
     raw_data_dir = results_dir.parent / "raw_data"
     os.makedirs(raw_data_dir, exist_ok=True)
-    base_data.to_csv(raw_data_dir / "new_raw_data_polygon.csv", index=False)
+    base_data_path = raw_data_dir / "new_raw_data_polygon.csv"
+    base_data.to_csv(base_data_path, index=False)
     clusters = pd.DataFrame({'cluster_label': [0,0,1,1,1,1,1,1,1,1]})
     clusters.to_csv(results_dir / "main_clustering/cluster_labels.csv", index=False)
-    # Patch config loader to use a minimal config
+    # Write a config file with the correct base data path
+    config_path = tmp_path / "test_config.yaml"
+    config = {
+        'main_base_data_path': str(base_data_path)
+    }
+    import yaml
+    with open(config_path, 'w') as f:
+        yaml.dump(config, f)
+    # Patch config loader to use our test config
     orig_load_config = immp.load_config
-    immp.load_config = lambda: {}
+    immp.load_config = lambda: config
     try:
         results = immp.calculate_median_feature_values_for_clusters(
             results_dir=str(results_dir),

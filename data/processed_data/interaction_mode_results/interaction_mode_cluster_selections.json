@@ -12,10 +12,83 @@
   },
   "datasets": {
     "cluster_0": {
-      "total_points": 60,
-      "valid_clusters": 0,
-      "noise_points": 60,
-      "feature_selections": {}
+      "total_points": 8713,
+      "valid_clusters": 8,
+      "noise_points": 791,
+      "feature_selections": {
+        "DEX_EVENTS": {
+          "selected_cluster": 7,
+          "median_nonzero_value": 6.0,
+          "cluster_size": 1394,
+          "selection_score": 2.109038737446198,
+          "feature_stats": {
+            "mean": 17.26183644189383,
+            "median": 0.0,
+            "median_nonzero": 6.0,
+            "std": 82.24494258521649,
+            "variance": 6764.230580845558,
+            "min": 0.0,
+            "max": 2311.0,
+            "non_zero_proportion": 0.351506456241033,
+            "activity_count": 490
+          },
+          "meets_activity_threshold": true
+        },
+        "CEX_EVENTS": {
+          "selected_cluster": 7,
+          "median_nonzero_value": 2.0,
+          "cluster_size": 1394,
+          "selection_score": 0.38593974175035867,
+          "feature_stats": {
+            "mean": 1.7847919655667146,
+            "median": 0.0,
+            "median_nonzero": 2.0,
+            "std": 12.688222421910952,
+            "variance": 160.9909882278838,
+            "min": 0.0,
+            "max": 275.0,
+            "non_zero_proportion": 0.19296987087517933,
+            "activity_count": 269
+          },
+          "meets_activity_threshold": true
+        },
+        "DEFI_EVENTS": {
+          "selected_cluster": 7,
+          "median_nonzero_value": 2.0,
+          "cluster_size": 1394,
+          "selection_score": 0.6097560975609756,
+          "feature_stats": {
+            "mean": 3.0832137733142035,
+            "median": 0.0,
+            "median_nonzero": 2.0,
+            "std": 17.03992162911753,
+            "variance": 290.3589291264674,
+            "min": 0.0,
+            "max": 397.0,
+            "non_zero_proportion": 0.3048780487804878,
+            "activity_count": 425
+          },
+          "meets_activity_threshold": true
+        },
+        "BRIDGE_EVENTS": {
+          "selected_cluster": 1,
+          "median_nonzero_value": 26.0,
+          "cluster_size": 631,
+          "selection_score": 26.0,
+          "feature_stats": {
+            "mean": 28.602218700475436,
+            "median": 26.0,
+            "median_nonzero": 26.0,
+            "std": 10.602092674886261,
+            "variance": 112.40436908687693,
+            "min": 16.0,
+            "max": 55.0,
+            "non_zero_proportion": 1.0,
+            "activity_count": 631
+          },
+          "meets_activity_threshold": true
+        }
+      }
     },
     "main": {
       "total_points": 20174,
@@ -178,41 +251,41 @@
   },
   "summary": {
     "features_analyzed": 4,
-    "successful_selections": 8,
-    "activity_threshold_met": 8,
+    "successful_selections": 12,
+    "activity_threshold_met": 12,
     "fallback_selections": 0,
     "median_value_ranges": {
       "DEX_EVENTS": {
-        "min": 28.0,
+        "min": 6.0,
         "max": 29.0,
-        "mean": 28.5,
-        "datasets_with_selections": 2,
-        "avg_activity_rate": 0.9814970563498738,
-        "threshold_compliance": "2/2"
+        "mean": 21.0,
+        "datasets_with_selections": 3,
+        "avg_activity_rate": 0.7715001896469268,
+        "threshold_compliance": "3/3"
       },
       "CEX_EVENTS": {
         "min": 2.0,
         "max": 2.0,
         "mean": 2.0,
-        "datasets_with_selections": 2,
-        "avg_activity_rate": 0.9678111587982833,
-        "threshold_compliance": "2/2"
+        "datasets_with_selections": 3,
+        "avg_activity_rate": 0.709530729490582,
+        "threshold_compliance": "3/3"
       },
       "DEFI_EVENTS": {
-        "min": 12.0,
+        "min": 2.0,
         "max": 13.0,
-        "mean": 12.5,
-        "datasets_with_selections": 2,
-        "avg_activity_rate": 1.0,
-        "threshold_compliance": "2/2"
+        "mean": 9.0,
+        "datasets_with_selections": 3,
+        "avg_activity_rate": 0.7682926829268292,
+        "threshold_compliance": "3/3"
       },
       "BRIDGE_EVENTS": {
         "min": 19.0,
         "max": 29.0,
-        "mean": 24.0,
-        "datasets_with_selections": 2,
+        "mean": 24.666666666666668,
+        "datasets_with_selections": 3,
         "avg_activity_rate": 1.0,
-        "threshold_compliance": "2/2"
+        "threshold_compliance": "3/3"
       }
     },
     "total_datasets_processed": 3
