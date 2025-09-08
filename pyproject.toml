@@ -58,7 +58,7 @@ Repository = "https://github.com/yourusername/ml-project.git"
 Issues = "https://github.com/yourusername/ml-project/issues"
 
 [tool.hatch.build.targets.wheel]
-packages = ["Source_Code_Package"]
+packages = ["source_code_package"]
 
 [tool.hatch.envs.default]
 dependencies = [
