@@ -61,7 +61,9 @@ def test_calculate_median_feature_values_for_clusters(tmp_path):
         'DEFI_EVENTS': [1]*10,
         'BRIDGE_EVENTS': [0]*10
     })
-    base_data.to_csv(results_dir / "../raw_data/new_raw_data_polygon.csv", index=False)
+    raw_data_dir = results_dir.parent / "raw_data"
+    os.makedirs(raw_data_dir, exist_ok=True)
+    base_data.to_csv(raw_data_dir / "new_raw_data_polygon.csv", index=False)
     clusters = pd.DataFrame({'cluster_label': [0,0,1,1,1,1,1,1,1,1]})
     clusters.to_csv(results_dir / "main_clustering/cluster_labels.csv", index=False)
     # Patch config loader to use a minimal config
