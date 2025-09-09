@@ -7,7 +7,7 @@ Checks structure, required keys, and prints config for manual inspection.
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '../source_code_package'))
-from source_code_package.features.behavioral_volatility_features import load_config
+from source_code_package.features.behavioural_volatility_features import load_config
 
 CONFIG_PATH = os.path.join(os.path.dirname(__file__), '../source_code_package/config/config_behavioral_volatility.yaml')
 

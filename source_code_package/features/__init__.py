@@ -24,9 +24,9 @@ from .revenue_proxy_features import (
     revenue_proxy_feature_pipeline
 )
 
-from .behavioral_volatility_features import (
-    calculate_behavioral_volatility_score,
-    behavioral_volatility_pipeline
+from .behavioural_volatility_features import (
+    calculate_behavioural_volatility_score,
+    behavioural_volatility_pipeline
 )
 
 from .cross_domain_engagement_features import (
