@@ -3,8 +3,9 @@ Script to calculate distance from medians for each clustering dataset (cluster 0
 """
 import os
 import pandas as pd
+import numpy as np
 from source_code_package.features.interaction_mode_distance_source import (
-    load_medians, preprocess_features, compute_absolute_distances,
+    load_medians, preprocess_features, compute_distances,
     compute_mad, normalize_distances, compute_proportionality_weights,
     apply_proportionality_weighting
 )
@@ -39,11 +40,15 @@ for cluster in cluster_dirs:
     wallet_df = wallet_full_df[FEATURES]
 
     # Preprocess
-    medians_proc = preprocess_features(medians_df, FEATURES)
-    wallet_proc = preprocess_features(wallet_df, FEATURES)
+    #medians_proc = preprocess_features(medians_df, FEATURES)
+    #wallet_proc = preprocess_features(wallet_df, FEATURES)
+
+    medians_proc = medians_df
+    wallet_proc = wallet_df
 
     # Compute signed distances
-    dist = compute_absolute_distances(wallet_proc, medians_proc, FEATURES)
+    dist = compute_distances(wallet_proc, medians_proc, FEATURES)
+    abs_dist = np.abs(dist)
 
     # Compute MAD
     mad = compute_mad(wallet_proc, FEATURES, medians_proc)
@@ -61,21 +66,30 @@ for cluster in cluster_dirs:
     out_dir = os.path.join(BASE_PATH, cluster)
     os.makedirs(out_dir, exist_ok=True)
 
-    # --- Full output for absolute distances ---
+
+    # --- Full output for absolute (raw) distances ---
     abs_output = wallet_full_df.copy()
     for feat in FEATURES:
         abs_output[f"{feat}_MEDIAN"] = medians_df.iloc[0][feat]
     for feat in FEATURES:
-        abs_output[f"{feat}_ABS_DIST"] = dist[feat].values
+        abs_output[f"{feat}_ABS_DIST"] = abs_dist[feat].values
     abs_output.to_csv(os.path.join(out_dir, "full_absolute_distances.csv"), index=False)
 
-    # --- Full output for raw (signed) distances (same as absolute here, but can be changed if needed) ---
+    # --- Full output for raw (absolute) distances ---
     raw_output = wallet_full_df.copy()
     for feat in FEATURES:
         raw_output[f"{feat}_MEDIAN"] = medians_df.iloc[0][feat]
     for feat in FEATURES:
-        raw_output[f"{feat}_RAW_DIST"] = dist[feat].values
+        raw_output[f"{feat}_RAW_DIST"] = abs_dist[feat].values
     raw_output.to_csv(os.path.join(out_dir, "full_raw_distances.csv"), index=False)
+
+    # --- Optionally, output signed distances ---
+    signed_output = wallet_full_df.copy()
+    for feat in FEATURES:
+        signed_output[f"{feat}_MEDIAN"] = medians_df.iloc[0][feat]
+    for feat in FEATURES:
+        signed_output[f"{feat}_SIGNED_DIST"] = dist[feat].values
+    signed_output.to_csv(os.path.join(out_dir, "full_signed_distances.csv"), index=False)
 
     # --- Full output for normalized distances ---
     norm_output = wallet_full_df.copy()

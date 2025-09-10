@@ -19,9 +19,9 @@ def preprocess_features(df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
     df_proc = df.copy()
     for feat in features:
         df_proc[feat] = np.log1p(df_proc[feat])
-    return df_proc #**CAREFUL - NEED TO CHANGE THE ABOVE BECAUSE THE PRODUCED VALUES IN CLUSTERED_DATA.CSV AS IT STANDS ARE ALREADY PREPROCESSED - MAY BE WITH SCALING ALSO ADDITIONALLY TO THE LOG PROCESSING**
+    return df_proc  
 
-def compute_absolute_distances(wallet_df: pd.DataFrame, median_df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
+def compute_distances(wallet_df: pd.DataFrame, median_df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
     """
     Compute signed distances from the median for each feature and wallet.
     For each wallet and feature, subtract the feature value from the median value (median - value).
