@@ -7,7 +7,7 @@ def merge_analytic_scores(
 	volatility_path: str = "data/processed_data/behavioural_volatility_features.csv",
 	engagement_path: str = "data/processed_data/cross_domain_engagement_features.csv",
 	revenue_path: str = "data/processed_data/revenue_proxy_features.csv",
-	distances_path: str = "data/processed_data/interaction_mode_results/main_clustering/full_normalized_distances.csv",
+	distances_path: str = "data/processed_data/interaction_mode_results/main_clustering/full_signed_distances.csv",
 	output_path: str = "data/processed_data/merged_analytic_scores.csv"
 ) -> None:
 	"""
@@ -25,7 +25,7 @@ def merge_analytic_scores(
 	distances_cols = [
 		"WALLET",
 		"DEX_EVENTS_MEDIAN", "CEX_EVENTS_MEDIAN", "BRIDGE_EVENTS_MEDIAN", "DEFI_EVENTS_MEDIAN",
-		"DEX_EVENTS_NORM_DIST", "CEX_EVENTS_NORM_DIST", "BRIDGE_EVENTS_NORM_DIST", "DEFI_EVENTS_NORM_DIST"
+		"DEX_EVENTS_SIGNED_DIST", "CEX_EVENTS_SIGNED_DIST", "BRIDGE_EVENTS_SIGNED_DIST", "DEFI_EVENTS_SIGNED_DIST"
 	]
 	distances_df = pd.read_csv(distances_path, usecols=distances_cols)
 

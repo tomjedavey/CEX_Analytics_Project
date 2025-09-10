@@ -5,7 +5,7 @@ import os
 import pandas as pd
 import numpy as np
 from source_code_package.features.interaction_mode_distance_source import (
-    load_medians, preprocess_features, compute_distances,
+    load_medians, compute_distances,
     compute_mad, normalize_distances, compute_proportionality_weights,
     apply_proportionality_weighting
 )
@@ -39,10 +39,8 @@ for cluster in cluster_dirs:
     wallet_full_df = pd.read_csv(clustering_data_path)
     wallet_df = wallet_full_df[FEATURES]
 
-    # Preprocess
-    #medians_proc = preprocess_features(medians_df, FEATURES)
-    #wallet_proc = preprocess_features(wallet_df, FEATURES)
 
+    # No preprocessing: use raw medians and wallet data
     medians_proc = medians_df
     wallet_proc = wallet_df
 

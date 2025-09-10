@@ -1,5 +1,5 @@
 """
-Module for calculating distance from feature medians with preprocessing, normalization, and proportionality weighting.
+Module for calculating distance from feature medians with normalization and proportionality weighting.
 """
 import pandas as pd
 import numpy as np
@@ -12,14 +12,7 @@ def load_medians(median_csv_path: str, features: List[str]) -> pd.DataFrame:
     df = pd.read_csv(median_csv_path)
     return df[features]
 
-def preprocess_features(df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
-    """
-    Apply log(1 + x) transformation to the specified features in the DataFrame.
-    """
-    df_proc = df.copy()
-    for feat in features:
-        df_proc[feat] = np.log1p(df_proc[feat])
-    return df_proc  
+
 
 def compute_distances(wallet_df: pd.DataFrame, median_df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
     """
