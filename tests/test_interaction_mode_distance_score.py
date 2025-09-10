@@ -23,7 +23,7 @@ import shutil
 sys.path.append(os.path.join(os.path.dirname(__file__), '../source_code_package'))
 
 from source_code_package.features.interaction_mode_distance_source import (
-    load_medians, preprocess_features, compute_absolute_distances,
+    load_medians, preprocess_features, compute_distances,
     compute_mad, normalize_distances, compute_proportionality_weights,
     apply_proportionality_weighting
 )
@@ -51,15 +51,18 @@ def test_interaction_mode_distance_score():
         # Step 3: Preprocess features (should be idempotent for log1p if already preprocessed)
         wallet_proc = preprocess_features(wallet_data, features)
         medians_proc = preprocess_features(loaded_medians, features)
-        # Step 4: Compute signed distances
-        dist = compute_absolute_distances(wallet_proc, medians_proc, features)
-        assert dist.shape == wallet_data[features].shape, "Distance shape mismatch"
+        # Step 4: Compute signed distances (median - value)
+        signed_dist = compute_distances(wallet_proc, medians_proc, features)
+        assert signed_dist.shape == wallet_data[features].shape, "Signed distance shape mismatch"
+        # Step 4b: Compute absolute distances (raw distances)
+        abs_dist = signed_dist.abs()
+        assert abs_dist.shape == wallet_data[features].shape, "Absolute distance shape mismatch"
         # Step 5: Compute MAD
         mad = compute_mad(wallet_proc, features, medians_proc)
         assert isinstance(mad, dict) and all(f in mad for f in features), "MAD keys missing"
-        # Step 6: Normalize distances
-        norm_dist = normalize_distances(dist, mad, features)
-        assert norm_dist.shape == dist.shape, "Normalized distance shape mismatch"
+        # Step 6: Normalize absolute distances
+        norm_dist = normalize_distances(abs_dist, mad, features)
+        assert norm_dist.shape == abs_dist.shape, "Normalized distance shape mismatch"
         # Step 7: Proportionality weights
         weights = compute_proportionality_weights(wallet_proc, features)
         assert weights.shape == wallet_proc.shape, "Weights shape mismatch"
