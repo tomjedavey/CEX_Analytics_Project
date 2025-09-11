@@ -1,15 +1,3 @@
-
-# Example execution (for direct script use)
-if __name__ == "__main__":
-	# Load merged analytic scores dataset
-	df = pd.read_csv("data/processed_data/merged_analytic_scores.csv")
-	# Plot distributions for all analytic scores
-	print("Plotting analytic score distributions (all data)...")
-	plot_analytic_score_distributions(df)
-	# Plot density overlays by cluster
-	print("Plotting analytic score density distributions by cluster...")
-	plot_analytic_score_density_by_cluster(df)
-
 import pandas as pd
 import plotly.graph_objects as go
 import plotly.colors as pc
@@ -87,3 +75,14 @@ def plot_analytic_score_density_by_cluster(
 		fig.show()
 
 
+
+# Example execution (for direct script use)
+if __name__ == "__main__":
+	# Load merged analytic scores dataset
+	df = pd.read_csv("data/processed_data/merged_analytic_scores.csv")
+	# Plot distributions for all analytic scores
+	print("Plotting analytic score distributions (all data)...")
+	plot_analytic_score_distributions(df)
+	# Plot density overlays by cluster
+	print("Plotting analytic score density distributions by cluster...")
+	plot_analytic_score_density_by_cluster(df)
