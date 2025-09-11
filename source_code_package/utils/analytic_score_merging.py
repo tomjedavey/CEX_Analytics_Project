@@ -8,7 +8,7 @@ def merge_analytic_scores(
 	engagement_path: str = "data/processed_data/cross_domain_engagement_features.csv",
 	revenue_path: str = "data/processed_data/revenue_proxy_features.csv",
 	distances_path: str = "data/processed_data/interaction_mode_results/main_clustering/full_signed_distances.csv",
-	output_path: str = "data/processed_data/merged_analytic_scores.csv"
+	output_path: str = "artifacts/Dashboards/merged_analytic_scores.csv"
 ) -> None:
 	"""
 	Merge analytic score columns from various processed_data CSVs into a single CSV.
