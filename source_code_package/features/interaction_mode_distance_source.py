@@ -12,8 +12,6 @@ def load_medians(median_csv_path: str, features: List[str]) -> pd.DataFrame:
     df = pd.read_csv(median_csv_path)
     return df[features]
 
-
-
 def compute_distances(wallet_df: pd.DataFrame, median_df: pd.DataFrame, features: List[str]) -> pd.DataFrame:
     """
     Compute signed distances from the median for each feature and wallet.

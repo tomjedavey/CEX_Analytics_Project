@@ -23,7 +23,7 @@ import shutil
 sys.path.append(os.path.join(os.path.dirname(__file__), '../source_code_package'))
 
 from source_code_package.features.interaction_mode_distance_source import (
-    load_medians, preprocess_features, compute_distances,
+    load_medians, compute_distances,
     compute_mad, normalize_distances, compute_proportionality_weights,
     apply_proportionality_weighting
 )
@@ -48,29 +48,29 @@ def test_interaction_mode_distance_score():
         # Step 2: Load medians using pipeline function
         loaded_medians = load_medians(median_csv, features)
         assert loaded_medians.equals(medians), "Loaded medians do not match expected values"
-        # Step 3: Preprocess features (should be idempotent for log1p if already preprocessed)
-        wallet_proc = preprocess_features(wallet_data, features)
-        medians_proc = preprocess_features(loaded_medians, features)
-        # Step 4: Compute signed distances (median - value)
-        signed_dist = compute_distances(wallet_proc, medians_proc, features)
+        # Step 3: Compute signed distances (median - value)
+        signed_dist = compute_distances(wallet_data, loaded_medians, features)
         assert signed_dist.shape == wallet_data[features].shape, "Signed distance shape mismatch"
-        # Step 4b: Compute absolute distances (raw distances)
+        # Step 4: Compute absolute distances (raw distances)
         abs_dist = signed_dist.abs()
         assert abs_dist.shape == wallet_data[features].shape, "Absolute distance shape mismatch"
         # Step 5: Compute MAD
-        mad = compute_mad(wallet_proc, features, medians_proc)
+        mad = compute_mad(wallet_data, features, loaded_medians)
         assert isinstance(mad, dict) and all(f in mad for f in features), "MAD keys missing"
         # Step 6: Normalize absolute distances
         norm_dist = normalize_distances(abs_dist, mad, features)
         assert norm_dist.shape == abs_dist.shape, "Normalized distance shape mismatch"
         # Step 7: Proportionality weights
-        weights = compute_proportionality_weights(wallet_proc, features)
-        assert weights.shape == wallet_proc.shape, "Weights shape mismatch"
+        weights = compute_proportionality_weights(wallet_data, features)
+        assert weights.shape == wallet_data.shape, "Weights shape mismatch"
         # Step 8: Apply proportionality weighting
         weighted_dist = apply_proportionality_weighting(norm_dist, weights, features)
         assert weighted_dist.shape == norm_dist.shape, "Weighted distance shape mismatch"
         print("  ✅ All steps in distance score production passed!")
-    finally:
+    except Exception as e:
+        shutil.rmtree(temp_dir)
+        raise e
+    else:
         shutil.rmtree(temp_dir)
 
 def main():
