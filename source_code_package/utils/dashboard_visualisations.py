@@ -190,15 +190,7 @@ def plot_filtered_wallets_analytic_score_distributions(
 				fig.write_html(os.path.join(save_dir, f"filtered_density_by_cluster_{col}.html"))
 			if show:
 				fig.show()
-	# Load merged analytic scores dataset
-	df = pd.read_csv("data/processed_data/merged_analytic_scores.csv")
-	output_dir = "artifacts/Dashboards"
-	# Plot distributions for all analytic scores, save and show
-	print("Saving and displaying analytic score distributions (all data) to artifacts/Dashboards ...")
-	plot_analytic_score_distributions(df, save_dir=output_dir, show=True)
-	# Plot density overlays by cluster, save and show
-	print("Saving and displaying analytic score density distributions by cluster to artifacts/Dashboards ...")
-	plot_analytic_score_density_by_cluster(df, save_dir=output_dir, show=True)
+	# Removed redundant code that reloads the CSV and calls plotting functions again.
 
 
 # Example execution (for direct script use)
