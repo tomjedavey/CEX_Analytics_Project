@@ -22,8 +22,9 @@ def plot_analytic_score_distributions(
 	save_dir: Optional[str] = None,
 	show: bool = True,
 	lower_percentile: float = 0,
-	upper_percentile: float = 100
-) -> None:
+	upper_percentile: float = 100,
+	return_fig: bool = False
+) -> 'Optional[go.Figure]':
 	"""
 	Plot distributions of analytic scores using Plotly histograms (all data, not separated by cluster).
 	If save_dir is provided, saves each plot as an HTML file in that directory.
@@ -31,8 +32,8 @@ def plot_analytic_score_distributions(
 	"""
 	if columns is None:
 		columns = ANALYTIC_SCORE_COLUMNS
+	figs = []
 	for col in columns:
-		# Filter outliers based on percentiles
 		lower = df[col].quantile(lower_percentile / 100)
 		upper = df[col].quantile(upper_percentile / 100)
 		filtered_data = df[(df[col] >= lower) & (df[col] <= upper)][col]
@@ -45,7 +46,7 @@ def plot_analytic_score_distributions(
 			opacity=0.75
 		))
 		fig.update_layout(
-			title=f"Distribution of {col} (Showing {lower_percentile}th to {upper_percentile}th percentiles)",
+			title=f"Distribution of {col} ({lower_percentile}th-{upper_percentile}th pct)",
 			xaxis_title=col,
 			yaxis_title="Count",
 			bargap=0.1
@@ -56,6 +57,9 @@ def plot_analytic_score_distributions(
 			fig.write_html(os.path.join(save_dir, f"distribution_{col}.html"))
 		if show:
 			fig.show()
+		figs.append(fig)
+	if return_fig:
+		return figs[0] if len(figs) == 1 else figs
 
 
 def plot_analytic_score_density_by_cluster(
@@ -66,8 +70,9 @@ def plot_analytic_score_density_by_cluster(
 	save_dir: Optional[str] = None,
 	show: bool = True,
 	lower_percentile: float = 0,
-	upper_percentile: float = 100
-) -> None:
+	upper_percentile: float = 100,
+	return_fig: bool = False
+) -> 'Optional[go.Figure]':
 	"""
 	For each analytic score, plot density histograms overlayed for each cluster using Plotly.
 	If save_dir is provided, saves each plot as an HTML file in that directory.
@@ -77,6 +82,7 @@ def plot_analytic_score_density_by_cluster(
 		columns = ANALYTIC_SCORE_COLUMNS
 	clusters = sorted(df[cluster_col].dropna().unique())
 	color_seq = ['orange']
+	figs = []
 	for col in columns:
 		# Filter outliers based on percentiles for the whole column
 		lower = df[col].quantile(lower_percentile / 100)
@@ -85,7 +91,6 @@ def plot_analytic_score_density_by_cluster(
 		for i, cluster in enumerate(clusters):
 			cluster_wallets = df[(df[cluster_col] == cluster) & (df[col] >= lower) & (df[col] <= upper)][col]
 			fig = go.Figure()
-			# Plot full dataset (all wallets) as density
 			fig.add_trace(go.Histogram(
 				x=all_wallets,
 				nbinsx=bins,
@@ -94,7 +99,6 @@ def plot_analytic_score_density_by_cluster(
 				opacity=0.5,
 				histnorm='probability density'
 			))
-			# Overlay cluster wallets as density
 			fig.add_trace(go.Histogram(
 				x=cluster_wallets,
 				nbinsx=bins,
@@ -105,7 +109,7 @@ def plot_analytic_score_density_by_cluster(
 			))
 			fig.update_layout(
 				barmode='overlay',
-				title=f"Density of {col} (All wallets vs. Cluster {cluster}, Showing {lower_percentile}th to {upper_percentile}th percentiles)",
+				title=f"Density of {col} (All wallets vs. Cluster {cluster}, {lower_percentile}th-{upper_percentile}th pct)",
 				xaxis_title=col,
 				yaxis_title="Density",
 				legend_title="Wallet Group",
@@ -117,6 +121,9 @@ def plot_analytic_score_density_by_cluster(
 				fig.write_html(os.path.join(save_dir, f"density_{col}_cluster_{cluster}.html"))
 			if show:
 				fig.show()
+			figs.append(fig)
+	if return_fig:
+		return figs[0] if len(figs) == 1 else figs
 
 
 
@@ -127,8 +134,9 @@ def plot_stable_high_value_analytic_score_distributions(
 	save_dir: Optional[str] = None,
 	show: bool = True,
 	lower_percentile: float = 0,
-	upper_percentile: float = 100
-) -> None:
+	upper_percentile: float = 100,
+	return_fig: bool = False
+) -> 'Optional[go.Figure]':
 	"""
 	Plots analytic score distributions for the whole dataset, overlays the distribution for the "Stable High-Value Wallets Archetype":
 	- BEHAVIOURAL_VOLATILITY_SCORE < 0.5
@@ -165,7 +173,7 @@ def plot_stable_high_value_analytic_score_distributions(
 			opacity=0.8
 		))
 		fig.update_layout(
-			title="Cluster Distribution: All Wallets vs. Stable High-Value Wallets (BEHAVIOURAL_VOLATILITY_SCORE < 0.5 & REVENUE_SCORE_PROXY > 75th pct)",
+			title="Cluster Distribution: All Wallets with Stable High-Value Wallets Archetype Proportion Overlay",
 			xaxis_title="Cluster Label",
 			yaxis_title="Wallet Count",
 			barmode='overlay',
@@ -179,6 +187,7 @@ def plot_stable_high_value_analytic_score_distributions(
 
 	# 2. For each analytic score, plot density overlays: all data vs. stable high value
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
+	figs = []
 	for col in columns:
 		# Filter outliers based on percentiles for the whole column
 		lower = df[col].quantile(lower_percentile / 100)
@@ -206,7 +215,7 @@ def plot_stable_high_value_analytic_score_distributions(
 		))
 		fig.update_layout(
 			barmode='overlay',
-			title=f"Density of {col}: All Wallets vs. Stable High-Value Wallets (BEHAVIOURAL_VOLATILITY_SCORE < 0.5 & REVENUE_SCORE_PROXY > 75th pct, {lower_percentile}th-{upper_percentile}th pct)",
+			title=f"Density of {col}: All Wallets vs. Stable High-Value Wallets",
 			xaxis_title=col,
 			yaxis_title="Density",
 			legend_title="Wallet Group",
@@ -216,6 +225,9 @@ def plot_stable_high_value_analytic_score_distributions(
 			fig.write_html(os.path.join(save_dir, f"density_{col}_all_vs_stable_high_value.html"))
 		if show:
 			fig.show()
+		figs.append(fig)
+	if return_fig:
+		return figs[0] if len(figs) == 1 else figs
 
 
 
@@ -227,8 +239,9 @@ def plot_erratic_speculator_analytic_score_distributions(
 	save_dir: Optional[str] = None,
 	show: bool = True,
 	lower_percentile: float = 0,
-	upper_percentile: float = 100
-) -> None:
+	upper_percentile: float = 100,
+	return_fig: bool = False
+) -> 'Optional[go.Figure]':
 	"""
 	Plots analytic score distributions for the whole dataset, overlays the distribution for the "Erratic Speculator" archetype:
 	- BEHAVIOURAL_VOLATILITY_SCORE > 0.6
@@ -263,7 +276,7 @@ def plot_erratic_speculator_analytic_score_distributions(
 			opacity=0.8
 		))
 		fig.update_layout(
-			title="Cluster Distribution: All Wallets vs. Erratic Speculator (BEHAVIOURAL_VOLATILITY_SCORE > 0.6 & CROSS_DOMAIN_ENGAGEMENT_SCORE < 0.25)",
+			title="Cluster Distribution: All Wallets with Erratic Speculator Archetype Proportion Overlay",
 			xaxis_title="Cluster Label",
 			yaxis_title="Wallet Count",
 			barmode='overlay',
@@ -277,6 +290,7 @@ def plot_erratic_speculator_analytic_score_distributions(
 
 	# 2. For each analytic score, plot density overlays: all data vs. erratic speculator
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
+	figs = []
 	for col in columns:
 		lower = df[col].quantile(lower_percentile / 100)
 		upper = df[col].quantile(upper_percentile / 100)
@@ -301,7 +315,7 @@ def plot_erratic_speculator_analytic_score_distributions(
 		))
 		fig.update_layout(
 			barmode='overlay',
-			title=f"Density of {col}: All Wallets vs. Erratic Speculator Wallets (BEHAVIOURAL_VOLATILITY_SCORE > 0.6 & CROSS_DOMAIN_ENGAGEMENT_SCORE < 0.25, {lower_percentile}th-{upper_percentile}th pct)",
+			title=f"Density of {col}: All Wallets vs. Erratic Speculator Wallets",
 			xaxis_title=col,
 			yaxis_title="Density",
 			legend_title="Wallet Group",
@@ -311,6 +325,9 @@ def plot_erratic_speculator_analytic_score_distributions(
 			fig.write_html(os.path.join(save_dir, f"density_{col}_all_vs_erratic_speculator.html"))
 		if show:
 			fig.show()
+		figs.append(fig)
+	if return_fig:
+		return figs[0] if len(figs) == 1 else figs
 
 
 # New function for wallets with DEFI_EVENTS_SIGNED_DIST <= 11
@@ -321,8 +338,9 @@ def plot_defi_power_users_analytic_score_distributions(
 	save_dir: Optional[str] = None,
 	show: bool = True,
 	lower_percentile: float = 0,
-	upper_percentile: float = 100
-) -> None:
+	upper_percentile: float = 100,
+	return_fig: bool = False
+) -> 'Optional[go.Figure]':
 	"""
 	Plots analytic score distributions for the whole dataset, overlays the distribution for wallets with DEFI_EVENTS_SIGNED_DIST <= 11.
 	Also produces visualisations of the cluster distribution (activity_cluster_label) for these wallets.
@@ -355,7 +373,7 @@ def plot_defi_power_users_analytic_score_distributions(
 			opacity=0.8
 		))
 		fig.update_layout(
-			title="Cluster Distribution: All Wallets vs. DeFi Power Users (DEFI_EVENTS_SIGNED_DIST <= 11)",
+			title="Cluster Distribution: All Wallets with DeFi Power Users Archetype Proportion Overlay",
 			xaxis_title="Cluster Label",
 			yaxis_title="Wallet Count",
 			barmode='overlay',
@@ -369,6 +387,7 @@ def plot_defi_power_users_analytic_score_distributions(
 
 	# 2. For each analytic score, plot density overlays: all data vs. DeFi Power Users
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
+	figs = []
 	for col in columns:
 		lower = df[col].quantile(lower_percentile / 100)
 		upper = df[col].quantile(upper_percentile / 100)
@@ -393,7 +412,7 @@ def plot_defi_power_users_analytic_score_distributions(
 		))
 		fig.update_layout(
 			barmode='overlay',
-			title=f"Density of {col}: All Wallets vs. DeFi Power Users Wallets (DEFI_EVENTS_SIGNED_DIST <= 11, {lower_percentile}th-{upper_percentile}th pct)",
+			title=f"Density of {col}: All Wallets vs. DeFi Power Users Wallets",
 			xaxis_title=col,
 			yaxis_title="Density",
 			legend_title="Wallet Group",
@@ -403,6 +422,9 @@ def plot_defi_power_users_analytic_score_distributions(
 			fig.write_html(os.path.join(save_dir, f"density_{col}_all_vs_defi_power_users.html"))
 		if show:
 			fig.show()
+		figs.append(fig)
+	if return_fig:
+		return figs[0] if len(figs) == 1 else figs
 
 
 def plot_omnichain_explorers_analytic_score_distributions(
@@ -412,8 +434,9 @@ def plot_omnichain_explorers_analytic_score_distributions(
 	save_dir: Optional[str] = None,
 	show: bool = True,
 	lower_percentile: float = 0,
-	upper_percentile: float = 100
-) -> None:
+	upper_percentile: float = 100,
+	return_fig: bool = False
+) -> 'Optional[go.Figure]':
 	"""
 	Plots analytic score distributions for the whole dataset, overlays the distribution for wallets with CROSS_DOMAIN_ENGAGEMENT_SCORE >= 0.1.
 	Also produces visualisations of the cluster distribution (activity_cluster_label) for these wallets.
@@ -446,7 +469,7 @@ def plot_omnichain_explorers_analytic_score_distributions(
 			opacity=0.8
 		))
 		fig.update_layout(
-			title="Cluster Distribution: All Wallets vs. Omnichain Explorers (CROSS_DOMAIN_ENGAGEMENT_SCORE >= 0.1)",
+			title="Cluster Distribution: All Wallets with Omnichain Explorers Archetype Proportion Overlay",
 			xaxis_title="Cluster Label",
 			yaxis_title="Wallet Count",
 			barmode='overlay',
@@ -460,6 +483,7 @@ def plot_omnichain_explorers_analytic_score_distributions(
 
 	# 2. For each analytic score, plot density overlays: all data vs. Omnichain Explorers
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
+	figs = []
 	for col in columns:
 		lower = df[col].quantile(lower_percentile / 100)
 		upper = df[col].quantile(upper_percentile / 100)
@@ -484,7 +508,7 @@ def plot_omnichain_explorers_analytic_score_distributions(
 		))
 		fig.update_layout(
 			barmode='overlay',
-			title=f"Density of {col}: All Wallets vs. Omnichain Explorers Wallets (CROSS_DOMAIN_ENGAGEMENT_SCORE >= 0.1, {lower_percentile}th-{upper_percentile}th pct)",
+			title=f"Density of {col}: All Wallets vs. Omnichain Explorers Wallets",
 			xaxis_title=col,
 			yaxis_title="Density",
 			legend_title="Wallet Group",
@@ -494,6 +518,9 @@ def plot_omnichain_explorers_analytic_score_distributions(
 			fig.write_html(os.path.join(save_dir, f"density_{col}_all_vs_omnichain_explorers.html"))
 		if show:
 			fig.show()
+		figs.append(fig)
+	if return_fig:
+		return figs[0] if len(figs) == 1 else figs
 
 
 # Example execution (for direct script use)
