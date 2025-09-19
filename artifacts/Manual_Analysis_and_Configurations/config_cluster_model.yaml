@@ -1,0 +1,103 @@
+# Copied from config_cluster.yaml
+# Model version
+
+#Configurations for relative clustering algorithms - activity based clustering in regular use
+
+data:
+  raw_data_path: "data/raw_data/new_raw_data_polygon.csv"
+
+
+preprocessing:
+  log_transformation:
+    enabled: true
+    exclude_columns:
+      - "TX_PER_MONTH"
+      - "ACTIVE_DURATION_DAYS"
+    method: "log1p"  # Use log1p for handling zero/negative values
+  
+  scaling:
+    enabled: true
+    method: "standard"  # StandardScaler
+    exclude_columns: []  # Add any columns to exclude from scaling
+    # Example: exclude_columns: ["WALLET", "CATEGORY_ID"]
+
+
+# UMAP Dimensionality Reduction Configuration
+umap:
+  # Enable/disable UMAP dimensionality reduction
+  enabled: true            # Set to false to skip UMAP and run HDBSCAN directly on preprocessed features
+  
+  # Core UMAP parameters
+  n_neighbors: 30          # Number of neighbors to consider for manifold approximation (2-100)
+  n_components: 2           # Number of dimensions to reduce to
+  metric: "cosine"      # Distance metric ("euclidean", "manhattan", "cosine", "correlation", etc.)
+  
+  # Advanced UMAP parameters
+  min_dist: 0.1          # Minimum distance between points in low-dimensional space (0.0-1.0)
+  spread: 1.0             # How spread out the embedded points should be (>0.0)
+  
+  # Learning parameters
+  learning_rate: 1.0      # Learning rate for optimization (>0.0)
+  n_epochs: null          # Number of training epochs (null for auto)
+  init: "spectral"        # Initialization method ("spectral", "random", "pca")
+  
+  # Reproducibility
+  random_state: 42        # Random seed for reproducibility
+  
+  # Performance parameters
+  verbose: true           # Whether to print progress information
+  low_memory: false       # Use low memory mode (slower but uses less RAM)
+  
+  # Advanced metric parameters (for specific metrics)
+  metric_kwds: null       # Additional keyword arguments for the metric
+  
+  # Embedding parameters
+  output_metric: "euclidean"     # Metric for the output space
+  output_metric_kwds: null       # Additional arguments for output metric
+
+  # Negative sampling parameters
+  negative_sample_rate: 5        # Number of negative samples per positive sample
+  
+  # Transform parameters (for new data)
+  transform_queue_size: 4.0      # Queue size for approximate nearest neighbor search
+
+  #specialized parameters
+  angular_rp_forest: true
+
+  # features to be included in UMAP
+  include_columns:
+    - "TX_PER_MONTH"
+    #- "TOKEN_DIVERSITY"
+    - "PROTOCOL_DIVERSITY"
+    #- "INTERACTION_DIVERSITY"
+    - "ACTIVE_DURATION_DAYS"
+    #- "AVG_TRANSFER_USD"
+    #- "USD_TRANSFER_STDDEV"
+    - "TOTAL_TRANSFER_USD"
+    #- "DEX_EVENTS"
+    #- "GAMES_EVENTS"
+    #- "CEX_EVENTS"
+    #- "DAPP_EVENTS"
+    #- "DEFI_EVENTS"
+    #- "BRIDGE_EVENTS"
+    #- "NFT_EVENTS"
+    #- "TOKEN_EVENTS"
+    #- "BRIDGE_TOTAL_VOLUME_USD"
+    # NOTE: Updated UMAP code to include these columns and maintain consistency with preprocessing
+
+
+# HDBSCAN Clustering Configuration
+hdbscan:
+  # Core HDBSCAN parameters
+  min_cluster_size: 140          # Minimum number of points required to form a cluster. Smaller values create more clusters but may include noise as clusters
+  min_samples: 30                # Number of samples in a neighborhood for a point to be considered a core point. Higher values make clustering more conservative (fewer outliers become core points)
+  cluster_selection_epsilon: 0.0 # Distance threshold for cluster selection (0.0 for auto)
+  
+  # Distance metric
+  metric: "euclidean"            # Distance metric ("euclidean", "manhattan", "cosine", "minkowski")
+  
+  # Algorithm parameters
+  alpha: 1.0                     # Strength of regularization for soft clustering (>0.0)
+  algorithm: "best"              # Algorithm to use ("best", "generic", "prims_kdtree", "prims_balltree", "boruvka_kdtree", "boruvka_balltree")
+  leaf_size: 40                  # Leaf size for tree-based algorithms (10-100)
+  
