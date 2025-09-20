@@ -22,6 +22,8 @@ def merge_analytic_scores(
 	revenue_df = pd.read_csv(revenue_path, usecols=["WALLET", "REVENUE_SCORE_PROXY"])
 
 	# Load and select required columns from distances file
+
+	# Update SIGNED_DIST columns to INTERACTION_MODE
 	distances_cols = [
 		"WALLET",
 		"DEX_EVENTS_MEDIAN", "CEX_EVENTS_MEDIAN", "BRIDGE_EVENTS_MEDIAN", "DEFI_EVENTS_MEDIAN",
@@ -29,6 +31,9 @@ def merge_analytic_scores(
 	]
 	distances_df = pd.read_csv(distances_path, usecols=distances_cols)
 
+	# Rename *_SIGNED_DIST columns to *_INTERACTION_MODE
+	rename_map = {col: col.replace("SIGNED_DIST", "INTERACTION_MODE") for col in distances_df.columns if col.endswith("SIGNED_DIST")}
+	distances_df = distances_df.rename(columns=rename_map)
 
 	# Merge all on WALLET
 	merged = clustered_df.merge(volatility_df, on="WALLET", how="left") \

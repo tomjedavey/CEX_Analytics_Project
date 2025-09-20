@@ -8,10 +8,10 @@ ANALYTIC_SCORE_COLUMNS = [
 	"BEHAVIOURAL_VOLATILITY_SCORE",
 	"CROSS_DOMAIN_ENGAGEMENT_SCORE",
 	"REVENUE_SCORE_PROXY",
-	"DEX_EVENTS_SIGNED_DIST",
-	"CEX_EVENTS_SIGNED_DIST",
-	"BRIDGE_EVENTS_SIGNED_DIST",
-	"DEFI_EVENTS_SIGNED_DIST"
+	"DEX_EVENTS_INTERACTION_MODE",
+	"CEX_EVENTS_INTERACTION_MODE",
+	"BRIDGE_EVENTS_INTERACTION_MODE",
+	"DEFI_EVENTS_INTERACTION_MODE"
 ]
 
 
@@ -330,7 +330,7 @@ def plot_erratic_speculator_analytic_score_distributions(
 		return figs[0] if len(figs) == 1 else figs
 
 
-# New function for wallets with DEFI_EVENTS_SIGNED_DIST <= 11
+# New function for wallets with DEFI_EVENTS_INTERACTION_MODE <= 11
 def plot_defi_power_users_analytic_score_distributions(
 	df: pd.DataFrame,
 	columns: Optional[List[str]] = None,
@@ -342,14 +342,14 @@ def plot_defi_power_users_analytic_score_distributions(
 	return_fig: bool = False
 ) -> 'Optional[go.Figure]':
 	"""
-	Plots analytic score distributions for the whole dataset, overlays the distribution for wallets with DEFI_EVENTS_SIGNED_DIST <= 11.
+	Plots analytic score distributions for the whole dataset, overlays the distribution for wallets with DEFI_EVENTS_INTERACTION_MODE <= 11.
 	Also produces visualisations of the cluster distribution (activity_cluster_label) for these wallets.
 	Plots are clearly labelled as "DeFi Power Users Archetype".
 	"""
 	if columns is None:
 		columns = ANALYTIC_SCORE_COLUMNS
 	# Filter for DeFi Power Users archetype
-	defi_power_users_wallets = df[df["DEFI_EVENTS_SIGNED_DIST"] <= 11]
+	defi_power_users_wallets = df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 11]
 
 	# 1. Plot cluster distribution with archetype proportions overlayed
 	if "activity_cluster_label" in df.columns:
