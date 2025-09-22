@@ -130,7 +130,19 @@ def produce_dashboard_html(
 		(dashboard_visualisations.plot_omnichain_explorers_analytic_score_distributions, "Omnichain Explorers Wallets"),
 	]
 	for func, label in archetype_funcs:
+		# Get wallet count for each archetype
+		if label == "Stable High-Value Traders":
+			count = len(df[(df["BEHAVIOURAL_VOLATILITY_SCORE"] < 0.5) & (df["REVENUE_SCORE_PROXY"] > 2000)])
+		elif label == "DeFi Power Users Wallets":
+			count = len(df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 11])
+		elif label == "Omnichain Explorers Wallets":
+			count = len(df[df["CROSS_DOMAIN_ENGAGEMENT_SCORE"] >= 0.1])
+		else:
+			count = None
 		section4_html += f"<h3>{label}</h3>"
+		if count is not None:
+			percent = (count / len(df)) * 100 if len(df) > 0 else 0
+			section4_html += f'<div style="font-size:1.1em;margin-bottom:10px;color:#2c3e50;"><b>Number of wallets in this archetype:</b> {count:,} <br><b>Percentage of whole dataset:</b> {percent:.2f}%</div>'
 		for col in (stats_columns or dashboard_visualisations.ANALYTIC_SCORE_COLUMNS):
 			fig = func(
 				df, columns=[col], bins=bins, save_dir=None, show=False,

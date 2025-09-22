@@ -467,7 +467,7 @@ def plot_omnichain_explorers_analytic_score_distributions(
 			x=all_clusters,
 			y=[all_cluster_counts[cl] * archetype_props[i] for i, cl in enumerate(all_clusters)],
 			name="Omnichain Explorers Archetype Proportion",
-			marker_color='orange',
+			marker_color='green',
 			opacity=0.8
 		))
 		fig.update_layout(
@@ -504,7 +504,7 @@ def plot_omnichain_explorers_analytic_score_distributions(
 			x=omni_data,
 			nbinsx=bins,
 			name="Omnichain Explorers Wallets",
-			marker_color='orange',
+			marker_color='green',
 			opacity=0.7,
 			histnorm='probability density'
 		))
