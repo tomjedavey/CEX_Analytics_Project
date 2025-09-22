@@ -97,18 +97,30 @@ def produce_dashboard_html(
 	# --- Section 3: Cluster Stats and Density Visualisations by Cluster ---
 	section3_html = "<h2>Analytic Score Stats by Cluster</h2>"
 	cluster_stats = dashboard_statistics.analytic_score_stats_by_cluster(df, cluster_col=cluster_col, columns=stats_columns)
-	clusters = list(cluster_stats.keys())
+	clusters = [c for c in cluster_stats.keys() if c != -1]
 	for cluster in clusters:
 		section3_html += f"<h3>Cluster {cluster}</h3>"
 		cdf = cluster_stats[cluster]
 		section3_html += cdf.to_html(classes="stats-table", border=1)
 		section3_html += f"<h4>Analytic Score Density Visualisations for Cluster {cluster}</h4>"
 		for col in (stats_columns or dashboard_visualisations.ANALYTIC_SCORE_COLUMNS):
+			# Overlay cluster distribution on whole dataset's distribution
 			fig = dashboard_visualisations.plot_analytic_score_density_by_cluster(
-				df[df[cluster_col] == cluster], cluster_col=cluster_col, columns=[col], bins=bins, save_dir=None, show=False,
+				df, cluster_col=cluster_col, columns=[col], bins=bins, save_dir=None, show=False,
 				lower_percentile=5, upper_percentile=95, return_fig=True
 			)
-			section3_html += _fig_to_html(fig)
+			# Only show the plot for the current cluster (figs is a list)
+			if isinstance(fig, list):
+				# Find the figure for the current cluster
+				cluster_fig = None
+				for f in fig:
+					if hasattr(f, 'layout') and f.layout.title and str(cluster) in str(f.layout.title):
+						cluster_fig = f
+						break
+				if cluster_fig:
+					section3_html += _fig_to_html(cluster_fig)
+			else:
+				section3_html += _fig_to_html(fig)
 
 	# --- Section 4: Archetype Visualisations (in specified order) ---
 	section4_html = "<h2>Archetype Visualisations</h2>"

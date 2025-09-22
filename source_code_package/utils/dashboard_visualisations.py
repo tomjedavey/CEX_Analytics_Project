@@ -80,11 +80,12 @@ def plot_analytic_score_density_by_cluster(
 	"""
 	if columns is None:
 		columns = ANALYTIC_SCORE_COLUMNS
-	clusters = sorted(df[cluster_col].dropna().unique())
-	color_seq = ['orange']
+	clusters = [c for c in sorted(df[cluster_col].dropna().unique()) if c != -1]
+	# Use a consistent color scheme: shades of blue
+	# Use archetype color scheme: blue for all wallets, orange for overlays
+	color_seq = ['orange'] * 10
 	figs = []
 	for col in columns:
-		# Filter outliers based on percentiles for the whole column
 		lower = df[col].quantile(lower_percentile / 100)
 		upper = df[col].quantile(upper_percentile / 100)
 		all_wallets = df[(df[col] >= lower) & (df[col] <= upper)][col]
@@ -103,7 +104,7 @@ def plot_analytic_score_density_by_cluster(
 				x=cluster_wallets,
 				nbinsx=bins,
 				name=f"Cluster {cluster}",
-				marker_color='orange',
+				marker_color=color_seq[i % len(color_seq)],
 				opacity=0.7,
 				histnorm='probability density'
 			))
