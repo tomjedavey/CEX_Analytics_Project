@@ -233,7 +233,8 @@ def plot_stable_high_value_analytic_score_distributions(
 
 
 # New function for the "Erratic Speculator" archetype
-def plot_erratic_speculator_analytic_score_distributions(
+
+def plot_stable_high_value_traders_analytic_score_distributions(
 	df: pd.DataFrame,
 	columns: Optional[List[str]] = None,
 	bins: int = 30,
@@ -244,21 +245,21 @@ def plot_erratic_speculator_analytic_score_distributions(
 	return_fig: bool = False
 ) -> 'Optional[go.Figure]':
 	"""
-	Plots analytic score distributions for the whole dataset, overlays the distribution for the "Erratic Speculator" archetype:
-	- BEHAVIOURAL_VOLATILITY_SCORE > 0.6
-	- CROSS_DOMAIN_ENGAGEMENT_SCORE < 0.25
+	Plots analytic score distributions for the whole dataset, overlays the distribution for the "Stable High-Value Traders" archetype:
+	- BEHAVIOURAL_VOLATILITY_SCORE < 0.5
+	- REVENUE_SCORE_PROXY > 2000
 	Also produces visualisations of the cluster distribution (activity_cluster_label) for these wallets.
-	Plots are clearly labelled as "Erratic Speculator Archetype".
+	Plots are clearly labelled as "Stable High-Value Traders".
 	"""
 	if columns is None:
 		columns = ANALYTIC_SCORE_COLUMNS
-	# Filter for Erratic Speculator archetype
-	erratic_speculator_wallets = df[(df["BEHAVIOURAL_VOLATILITY_SCORE"] > 0.6) & (df["CROSS_DOMAIN_ENGAGEMENT_SCORE"] < 0.25)]
+	# Filter for Stable High-Value Traders archetype
+	stable_high_value_wallets = df[(df["BEHAVIOURAL_VOLATILITY_SCORE"] < 0.5) & (df["REVENUE_SCORE_PROXY"] > 2000)]
 
 	# 1. Plot cluster distribution with archetype proportions overlayed
 	if "activity_cluster_label" in df.columns:
 		all_cluster_counts = df["activity_cluster_label"].value_counts().sort_index()
-		archetype_cluster_counts = erratic_speculator_wallets["activity_cluster_label"].value_counts().sort_index()
+		archetype_cluster_counts = stable_high_value_wallets["activity_cluster_label"].value_counts().sort_index()
 		all_clusters = all_cluster_counts.index.tolist()
 		archetype_props = [archetype_cluster_counts.get(cl, 0) / all_cluster_counts[cl] if cl in all_cluster_counts and all_cluster_counts[cl] > 0 else 0 for cl in all_clusters]
 		fig = go.Figure()
@@ -272,12 +273,12 @@ def plot_erratic_speculator_analytic_score_distributions(
 		fig.add_trace(go.Bar(
 			x=all_clusters,
 			y=[all_cluster_counts[cl] * archetype_props[i] for i, cl in enumerate(all_clusters)],
-			name="Erratic Speculator Archetype Proportion",
-			marker_color='red',
+			name="Stable High-Value Traders Proportion",
+			marker_color='green',
 			opacity=0.8
 		))
 		fig.update_layout(
-			title="Cluster Distribution: All Wallets with Erratic Speculator Archetype Proportion Overlay",
+			title="Cluster Distribution: All Wallets with Stable High-Value Traders Proportion Overlay",
 			xaxis_title="Cluster Label",
 			yaxis_title="Wallet Count",
 			barmode='overlay',
@@ -285,18 +286,18 @@ def plot_erratic_speculator_analytic_score_distributions(
 		)
 		if save_dir:
 			os.makedirs(save_dir, exist_ok=True)
-			fig.write_html(os.path.join(save_dir, "all_vs_erratic_speculator_cluster_distribution.html"))
+			fig.write_html(os.path.join(save_dir, "all_vs_stable_high_value_traders_cluster_distribution.html"))
 		if show:
 			fig.show()
 
-	# 2. For each analytic score, plot density overlays: all data vs. erratic speculator
+	# 2. For each analytic score, plot density overlays: all data vs. stable high-value traders
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
 	figs = []
 	for col in columns:
 		lower = df[col].quantile(lower_percentile / 100)
 		upper = df[col].quantile(upper_percentile / 100)
 		all_data = df[(df[col] >= lower) & (df[col] <= upper)][col]
-		erratic_data = erratic_speculator_wallets[(erratic_speculator_wallets[col] >= lower) & (erratic_speculator_wallets[col] <= upper)][col]
+		stable_data = stable_high_value_wallets[(stable_high_value_wallets[col] >= lower) & (stable_high_value_wallets[col] <= upper)][col]
 		fig = go.Figure()
 		fig.add_trace(go.Histogram(
 			x=all_data,
@@ -307,23 +308,23 @@ def plot_erratic_speculator_analytic_score_distributions(
 			histnorm='probability density'
 		))
 		fig.add_trace(go.Histogram(
-			x=erratic_data,
+			x=stable_data,
 			nbinsx=bins,
-			name="Erratic Speculator Wallets",
-			marker_color='red',
+			name="Stable High-Value Traders",
+			marker_color='green',
 			opacity=0.7,
 			histnorm='probability density'
 		))
 		fig.update_layout(
 			barmode='overlay',
-			title=f"Density of {col}: All Wallets vs. Erratic Speculator Wallets",
+			title=f"Density of {col}: All Wallets vs. Stable High-Value Traders",
 			xaxis_title=col,
 			yaxis_title="Density",
 			legend_title="Wallet Group",
 			bargap=0.1
 		)
 		if save_dir:
-			fig.write_html(os.path.join(save_dir, f"density_{col}_all_vs_erratic_speculator.html"))
+			fig.write_html(os.path.join(save_dir, f"density_{col}_all_vs_stable_high_value_traders.html"))
 		if show:
 			fig.show()
 		figs.append(fig)
@@ -540,8 +541,8 @@ if __name__ == "__main__":
 	print("Saving and displaying Stable High-Value Wallets Archetype overlays and cluster analysis to artifacts/Dashboards ...")
 	plot_stable_high_value_analytic_score_distributions(df, save_dir=output_dir, show=True)
 	# Plot overlays and cluster analysis for Erratic Speculator Archetype
-	print("Saving and displaying Erratic Speculator Archetype overlays and cluster analysis to artifacts/Dashboards ...")
-	plot_erratic_speculator_analytic_score_distributions(df, save_dir=output_dir, show=True)
+	print("Saving and displaying Stable High-Value Traders overlays and cluster analysis to artifacts/Dashboards ...")
+	plot_stable_high_value_traders_analytic_score_distributions(df, save_dir=output_dir, show=True)
 	# Plot overlays and cluster analysis for DeFi Power Users Archetype
 	print("Saving and displaying DeFi Power Users Archetype overlays and cluster analysis to artifacts/Dashboards ...")
 	plot_defi_power_users_analytic_score_distributions(df, save_dir=output_dir, show=True)

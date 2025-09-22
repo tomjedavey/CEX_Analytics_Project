@@ -125,9 +125,9 @@ def produce_dashboard_html(
 	# --- Section 4: Archetype Visualisations (in specified order) ---
 	section4_html = "<h2>Archetype Visualisations</h2>"
 	archetype_funcs = [
-		(dashboard_visualisations.plot_erratic_speculator_analytic_score_distributions, "Erratic Speculator Wallets"),
+		(dashboard_visualisations.plot_stable_high_value_traders_analytic_score_distributions, "Stable High-Value Traders"),
 		(dashboard_visualisations.plot_defi_power_users_analytic_score_distributions, "DeFi Power Users Wallets"),
-		(dashboard_visualisations.plot_omnichain_explorers_analytic_score_distributions, "Omnichain Explorers Wallets")
+		(dashboard_visualisations.plot_omnichain_explorers_analytic_score_distributions, "Omnichain Explorers Wallets"),
 	]
 	for func, label in archetype_funcs:
 		section4_html += f"<h3>{label}</h3>"
