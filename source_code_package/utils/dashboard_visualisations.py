@@ -245,15 +245,15 @@ def plot_stable_high_value_traders_analytic_score_distributions(
 	return_fig: bool = False
 ) -> 'Optional[go.Figure]':
 	"""
-	Plots analytic score distributions for the whole dataset, overlays the distribution for the "Stable High-Value Traders" archetype:
+	Plots analytic score distributions for the whole dataset, overlays the distribution for the "Stable High-Value Transactors" archetype:
 	- BEHAVIOURAL_VOLATILITY_SCORE < 0.5
 	- REVENUE_SCORE_PROXY > 2000
 	Also produces visualisations of the cluster distribution (activity_cluster_label) for these wallets.
-	Plots are clearly labelled as "Stable High-Value Traders".
+	Plots are clearly labelled as "Stable High-Value Transactors".
 	"""
 	if columns is None:
 		columns = ANALYTIC_SCORE_COLUMNS
-	# Filter for Stable High-Value Traders archetype
+	# Filter for Stable High-Value Transactors archetype
 	stable_high_value_wallets = df[(df["BEHAVIOURAL_VOLATILITY_SCORE"] < 0.5) & (df["REVENUE_SCORE_PROXY"] > 2000)]
 
 	# 1. Plot cluster distribution with archetype proportions overlayed
@@ -273,12 +273,12 @@ def plot_stable_high_value_traders_analytic_score_distributions(
 		fig.add_trace(go.Bar(
 			x=all_clusters,
 			y=[all_cluster_counts[cl] * archetype_props[i] for i, cl in enumerate(all_clusters)],
-			name="Stable High-Value Traders Proportion",
+			name="Stable High-Value Transactors Proportion",
 			marker_color='green',
 			opacity=0.8
 		))
 		fig.update_layout(
-			title="Cluster Distribution: All Wallets with Stable High-Value Traders Proportion Overlay",
+			title="Cluster Distribution: All Wallets with Stable High-Value Transactors Proportion Overlay",
 			xaxis_title="Cluster Label",
 			yaxis_title="Wallet Count",
 			barmode='overlay',
@@ -290,7 +290,7 @@ def plot_stable_high_value_traders_analytic_score_distributions(
 		if show:
 			fig.show()
 
-	# 2. For each analytic score, plot density overlays: all data vs. stable high-value traders
+	# 2. For each analytic score, plot density overlays: all data vs. stable high-value transactors
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
 	figs = []
 	for col in columns:
@@ -310,14 +310,14 @@ def plot_stable_high_value_traders_analytic_score_distributions(
 		fig.add_trace(go.Histogram(
 			x=stable_data,
 			nbinsx=bins,
-			name="Stable High-Value Traders",
+			name="Stable High-Value Transactors",
 			marker_color='green',
 			opacity=0.7,
 			histnorm='probability density'
 		))
 		fig.update_layout(
 			barmode='overlay',
-			title=f"Density of {col}: All Wallets vs. Stable High-Value Traders",
+			title=f"Density of {col}: All Wallets vs. Stable High-Value Transactors",
 			xaxis_title=col,
 			yaxis_title="Density",
 			legend_title="Wallet Group",
@@ -332,7 +332,7 @@ def plot_stable_high_value_traders_analytic_score_distributions(
 		return figs[0] if len(figs) == 1 else figs
 
 
-# New function for wallets with DEFI_EVENTS_INTERACTION_MODE <= 11
+# New function for wallets with DEFI_EVENTS_INTERACTION_MODE <= 9
 def plot_defi_power_users_analytic_score_distributions(
 	df: pd.DataFrame,
 	columns: Optional[List[str]] = None,
@@ -351,7 +351,7 @@ def plot_defi_power_users_analytic_score_distributions(
 	if columns is None:
 		columns = ANALYTIC_SCORE_COLUMNS
 	# Filter for DeFi Power Users archetype
-	defi_power_users_wallets = df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 11]
+	defi_power_users_wallets = df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 9]
 
 	# 1. Plot cluster distribution with archetype proportions overlayed
 	if "activity_cluster_label" in df.columns:
@@ -541,7 +541,7 @@ if __name__ == "__main__":
 	print("Saving and displaying Stable High-Value Wallets Archetype overlays and cluster analysis to artifacts/Dashboards ...")
 	plot_stable_high_value_analytic_score_distributions(df, save_dir=output_dir, show=True)
 	# Plot overlays and cluster analysis for Erratic Speculator Archetype
-	print("Saving and displaying Stable High-Value Traders overlays and cluster analysis to artifacts/Dashboards ...")
+	print("Saving and displaying Stable High-Value Transactors overlays and cluster analysis to artifacts/Dashboards ...")
 	plot_stable_high_value_traders_analytic_score_distributions(df, save_dir=output_dir, show=True)
 	# Plot overlays and cluster analysis for DeFi Power Users Archetype
 	print("Saving and displaying DeFi Power Users Archetype overlays and cluster analysis to artifacts/Dashboards ...")
