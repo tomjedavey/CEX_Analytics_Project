@@ -51,6 +51,57 @@ In terms of the objectives pursued in this project to build a valid analytic pro
 - Produce an interpretable score that measures the diversity of interaction of a wallets interaction with different features, forming the cross domain engagement score.
 - Produce the neccessary functionality to effectively visualise and display results of this project's output in a reproducible dashboard.
 
+## 4. Repository Structure
+
+CEX_Analytic_Project/
+│
+├── README.md
+├── LICENSE
+├── pyproject.toml
+├── INTERACTION_MODE_README.md
+├── query_new_raw_data.sql
+│
+├── Notebooks/
+│   └── Jupyter notebooks for EDA, clustering, and visualization
+│
+├── TLADS_Documents/
+│   └── Business initiative and analytics documentation (Word files)
+│
+├── artifacts/
+│   ├── Configurations_and_Pipeline_Metadata/   # YAML configs for pipeline and clustering
+│   ├── Dashboards/                            # HTML dashboard outputs
+│   └── Manual_Analysis_and_Configurations/     # Manual analysis reports and configs
+│
+├── data/
+│   ├── data_description.md
+│   ├── processed_data/
+│   └── raw_data/
+│
+├── docs/
+│   └── Markdown documentation for analytic modules and clustering
+│
+├── scripts/
+│   ├── analytic_scores_merging_execution.py
+│   ├── archive_execution_scripts/
+│   ├── artifact_production_execution/
+│   ├── behavioural_volatility_feature_engineering.py/
+│   ├── clustering/
+│   ├── cross_domain_/
+│   ├── interaction_mode_score/
+│   └── revenue_score/
+│
+├── source_code_package/
+│   ├── __init__.py
+│   ├── config/
+│   ├── data/
+│   ├── features/
+│   ├── models/
+│   └── utils/
+│
+└── tests/
+    ├── __init__.py
+    └── Unit tests for configuration, clustering, scoring, and feature engineering
+
 ## Author
 
 [Tom Davey](https://github.com/tomjedavey)
