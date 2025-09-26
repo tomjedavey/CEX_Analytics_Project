@@ -447,7 +447,7 @@ def plot_omnichain_explorers_analytic_score_distributions(
 	if columns is None:
 		columns = ANALYTIC_SCORE_COLUMNS
 	# Filter for Omnichain Explorers archetype
-	omnichain_explorers_wallets = df[df["CROSS_DOMAIN_ENGAGEMENT_SCORE"] >= 0.1]
+	omnichain_explorers_wallets = df[df["CROSS_DOMAIN_ENGAGEMENT_SCORE"] >= 0.8]
 
 	# 1. Plot cluster distribution with archetype proportions overlayed
 	if "activity_cluster_label" in df.columns:

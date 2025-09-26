@@ -136,7 +136,7 @@ def produce_dashboard_html(
 		elif label == "DeFi Power Users Wallets":
 			count = len(df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 9])
 		elif label == "Omnichain Explorers Wallets":
-			count = len(df[df["CROSS_DOMAIN_ENGAGEMENT_SCORE"] >= 0.1])
+			count = len(df[df["CROSS_DOMAIN_ENGAGEMENT_SCORE"] >= 0.8])
 		else:
 			count = None
 
