@@ -4,6 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "CEX_Analytics_Project"
+package-mode = false
 version = "0.1.0"
 description = "Machine Learning Project"
 readme = "README.md"
