@@ -18,7 +18,7 @@ from typing import Optional, Dict, Any
 import sys
 
 # Add the parent directory to path to import from source_code_package
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
+#sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
 
 from source_code_package.models.clustering_functionality.HBDSCAN_cluster import (
     load_hdbscan_config,
