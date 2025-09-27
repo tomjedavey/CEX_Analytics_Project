@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document explains the HDBSCAN clustering functionality built for the MLProject1. The implementation provides a comprehensive clustering solution that integrates with UMAP dimensionality reduction and includes extensive configuration options, quality evaluation metrics, and visualization capabilities.
+This document explains the HDBSCAN clustering functionality built for the CEX_Analytics_Project. The implementation provides a comprehensive clustering solution that integrates with UMAP dimensionality reduction and includes extensive configuration options, quality evaluation metrics, and visualization capabilities.
 
 ## 🚨 Important Changes - UMAP Data Storage
 

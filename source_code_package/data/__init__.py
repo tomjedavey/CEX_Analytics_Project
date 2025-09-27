@@ -1,5 +1,5 @@
 """
-Data processing modules for MLProject1.
+Data processing modules for CEX_Analytics_Project.
 
 This module contains:
 - Cluster dataset management

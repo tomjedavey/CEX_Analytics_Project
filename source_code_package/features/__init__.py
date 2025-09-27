@@ -1,5 +1,5 @@
 """
-Feature engineering modules for MLProject1.
+Feature engineering modules for CEX_Analytics_Project.
 
 This module contains:
 - AS_1 feature engineering functions

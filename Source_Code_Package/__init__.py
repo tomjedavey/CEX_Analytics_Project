@@ -1,5 +1,5 @@
 """
-Source code package for MLProject1.
+Source code package for CEX_Analytics_Project.
 
 This package contains the core functionality for:
 - Data processing and feature engineering

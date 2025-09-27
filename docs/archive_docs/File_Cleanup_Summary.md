@@ -84,7 +84,7 @@
 
 ### **Streamlined File Structure**
 ```
-MLProject1/
+CEX_Analytics_Project/
 ├── scripts/
 │   ├── cross_domain_engagement_feature_engineering.py  ✅
 │   └── validate_cross_domain_engagement.py             ✅

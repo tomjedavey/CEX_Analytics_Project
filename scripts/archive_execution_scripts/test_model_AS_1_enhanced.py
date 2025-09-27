@@ -30,7 +30,7 @@ def main():
     print("=" * 40)
     
     # Configuration file path
-    config_path = "/Users/tomdavey/Documents/GitHub/MLProject1/source_code_package/config/config_AS_1_full_dataset.yaml"
+    config_path = "/Users/tomdavey/Documents/GitHub/CEX_Analytics_Project/source_code_package/config/config_AS_1_full_dataset.yaml"
     
     if not os.path.exists(config_path):
         print(f"❌ Config file not found: {config_path}")

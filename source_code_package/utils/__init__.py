@@ -1,5 +1,5 @@
 """
-Utility modules for MLProject1.
+Utility modules for CEX_Analytics_Project.
 
 This module contains:
 - Validation and testing utilities

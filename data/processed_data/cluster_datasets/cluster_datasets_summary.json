@@ -26,13 +26,13 @@
   },
   "created_datasets": {
     "cluster_0": {
-      "file_path": "/Users/tomdavey/Documents/GitHub/MLProject1/data/processed_data/cluster_datasets/new_raw_data_polygon_cluster_0.csv",
+  "file_path": "/Users/tomdavey/Documents/GitHub/CEX_Analytics_Project/data/processed_data/cluster_datasets/new_raw_data_polygon_cluster_0.csv",
       "filename": "new_raw_data_polygon_cluster_0.csv",
       "record_count": 8713,
       "description": "cluster 0"
     },
     "cluster_1": {
-      "file_path": "/Users/tomdavey/Documents/GitHub/MLProject1/data/processed_data/cluster_datasets/new_raw_data_polygon_cluster_1.csv",
+  "file_path": "/Users/tomdavey/Documents/GitHub/CEX_Analytics_Project/data/processed_data/cluster_datasets/new_raw_data_polygon_cluster_1.csv",
       "filename": "new_raw_data_polygon_cluster_1.csv",
       "record_count": 11390,
       "description": "cluster 1"

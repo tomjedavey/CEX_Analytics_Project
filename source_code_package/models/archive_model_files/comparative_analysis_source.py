@@ -512,9 +512,9 @@ def compare_as1_models(config_paths: List[str], verbose: bool = True) -> Dict[st
 if __name__ == "__main__":
     # Example comparative analysis
     config_paths = [
-        "/Users/tomdavey/Documents/GitHub/MLProject1/source_code_package/config/config_AS_1_full_dataset.yaml",
-        "/Users/tomdavey/Documents/GitHub/MLProject1/source_code_package/config/config_AS_1_cluster_0.yaml",
-        "/Users/tomdavey/Documents/GitHub/MLProject1/source_code_package/config/config_AS_1_cluster_1.yaml"
+    "/Users/tomdavey/Documents/GitHub/CEX_Analytics_Project/source_code_package/config/config_AS_1_full_dataset.yaml",
+    "/Users/tomdavey/Documents/GitHub/CEX_Analytics_Project/source_code_package/config/config_AS_1_cluster_0.yaml",
+    "/Users/tomdavey/Documents/GitHub/CEX_Analytics_Project/source_code_package/config/config_AS_1_cluster_1.yaml"
     ]
     
     results = compare_as1_models(config_paths, verbose=True)

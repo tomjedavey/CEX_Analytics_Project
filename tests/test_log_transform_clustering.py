@@ -77,7 +77,7 @@ if __name__ == "__main__":
 
 
 # run the following in terminal to execute the test:
-#cd /Users/tomdavey/Documents/GitHub/MLProject1 && python test_log_transform.py
+#cd /Users/tomdavey/Documents/GitHub/CEX_Analytics_Project && python test_log_transform.py
 #or 
-#cd /Users/tomdavey/Documents/GitHub/MLProject1 && ls -la test_log_transform.py
+#cd /Users/tomdavey/Documents/GitHub/CEX_Analytics_Project && ls -la test_log_transform.py
 #MAY HAVE TO CHANGE THE PATH ABOVE TO WHERE THE FILE IS LOCATED ON YOUR MACHINE - added to tests folder after building the terminal command

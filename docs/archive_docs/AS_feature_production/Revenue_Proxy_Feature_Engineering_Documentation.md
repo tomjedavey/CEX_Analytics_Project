@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes the **REVENUE_SCORE_PROXY** feature engineering system, which estimates potential revenue contribution of cryptocurrency wallets for Centralized Exchange (CEX) analytics. The system follows the established modular design pattern used throughout the MLProject1 codebase.
+This document describes the **REVENUE_SCORE_PROXY** feature engineering system, which estimates potential revenue contribution of cryptocurrency wallets for Centralized Exchange (CEX) analytics. The system follows the established modular design pattern used throughout the CEX_Analytics_Project codebase.
 
 ## Business Context
 
@@ -41,7 +41,7 @@ REVENUE_SCORE_PROXY = 0.4 × (AVG_TRANSFER_USD × TX_PER_MONTH) +
 ## Architecture
 
 ### Modular Design Pattern
-Following the established MLProject1 methodology:
+Following the established CEX_Analytics_Project methodology:
 
 ```
 source_code_package/features/revenue_proxy_features.py    # Core functionality

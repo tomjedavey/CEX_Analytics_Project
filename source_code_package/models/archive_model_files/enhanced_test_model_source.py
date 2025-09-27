@@ -746,7 +746,7 @@ def test_multiple_models_batch(config_paths: List[str], verbose: bool = True) ->
 
 if __name__ == "__main__":
     # Example single model testing
-    config_path = "/Users/tomdavey/Documents/GitHub/MLProject1/source_code_package/config/config_AS_1_full_dataset.yaml"
+    config_path = "/Users/tomdavey/Documents/GitHub/CEX_Analytics_Project/source_code_package/config/config_AS_1_full_dataset.yaml"
     
     print("Testing AS_1 Enhanced Testing Module")
     print("=" * 40)

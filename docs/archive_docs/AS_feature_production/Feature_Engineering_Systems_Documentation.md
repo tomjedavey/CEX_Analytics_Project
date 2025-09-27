@@ -237,7 +237,7 @@ Both systems follow identical architectural patterns:
 
 ### File Structure
 ```
-MLProject1/
+CEX_Analytics_Project/
 ├── source_code_package/
 │   ├── features/
 │   │   ├── revenue_proxy_features.py       # Revenue proxy calculations

@@ -50,8 +50,8 @@ cluster_0:
 
 Configuration Summary:
 --------------------
-Config file: /Users/tomdavey/Documents/GitHub/MLProject1/source_code_package/config/config_interaction_mode.yaml
-Output directory: /Users/tomdavey/Documents/GitHub/MLProject1/data/processed_data/interaction_mode_results
+Config file: /Users/tomdavey/Documents/GitHub/CEX_Analytics_Project/source_code_package/config/config_interaction_mode.yaml
+Output directory: /Users/tomdavey/Documents/GitHub/CEX_Analytics_Project/data/processed_data/interaction_mode_results
 UMAP enabled: True
 Min cluster size: 300
 Min samples: 25
