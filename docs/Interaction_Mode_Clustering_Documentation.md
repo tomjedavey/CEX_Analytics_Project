@@ -31,6 +31,8 @@ The pipeline processes three related datasets:
    - 8,647 data points, 22 columns
    - Represents another interaction mode category
 
+**with current data and configurations used as model**
+
 ## Configuration
 
 The pipeline uses a specialized configuration file (`config_interaction_mode.yaml`) that includes:
