@@ -1,86 +1,109 @@
-**NEED TO UPDATE THE FOLLOWING TO FILL OUT EACH OF THE BELOW SECTIONS ONCE THE NECCESSARY PROGRESS HAS BEEN MADE (LIKELY POST THE MODEL FUNCTIONALTIY BUILT IN WHOLE AND PRE END OUTPUT/UEX). MAKE SURE IN AREAS TO INTEGRATE THE EXPLORATION COMPLETED MAKING USE OF THE TLADS DOCUMENTS - THIS IN TERMS OF MAKING SURE DESCRIPTION OF THE PROJECT IS DONE FACING THE VALUE PROVISION TO A CEX WITH IDENTIFIED BUSINESS INITIATIVE AND USE CASES**
+# Producing analytic profiles of onchain crypto wallets to provide value in key decision making for Centralised Exchange Stakeholders
+A project to produce a number of analytic scores on 20,000 model Polygon wallets to show example of value possible through this form of data analytics and science.
 
-# Producing analytic profiles of onchain crypto wallets to provide analytic value for Centralised Exchanges
+## README structure:
+
+The following is the structure of this README documentation:
+
+1. Introduction and Project Overview
+2. Motivation and Business Relevance
+3. Project Objectives
+4. Repository Structure
+5. Setup and Installation
+6. Usage
+7. Methods and Technical Details
+8. Result and Insights
+9. Key Learnings and Building Approach
+10. Next Steps Possible With Actual Application
+12. Acknowledgments and References
+13. Link to the TLADS Canvases
+14. License
+
+## 1. Introduction and Project Overview
+
+This project provides the neccessary processing and analytic score production for crypto wallets (making use of onachain crypto data) in order to allow for wallet segmentation based on behaviour. The purpose of this is in order to provide the opportunity for a Centralised Cryptocurrency Exchange (CEX) stakeholder to group wallets by behaviour and gain information relevant to the following business initative: "improve user retention and personalised engagement strategies for Centralised Crypto Exchanges (CEXs - user retention, churn prediction and behavioural segmentation) to increase fee revenue". This therefore forms the use case being looked at which can be summarised as "User segmentation based on wallet behavioural archetypes." 
+
+The methods utilised to attempt to show an example of what this could look like in practice include a UMAP dimensionality reduction and HDBSCAN clustering pipeline utilised in activity clustering, along with other formulas to engineer analytic scores from the raw data. These analytic scores are simply a glimpse into the type of analytics intented, which would be available in practice with the correct levels of data (of course considering all other factors). The analytic scores built are labelled as follows and are explained in later parts of this documentation:
+
+- Behavioural Volatility Score
+- Cross Domain Engagement Score
+- Revenue Proxy Score
+- DEX events Interaction Mode Score
+- CEX events Interaction Mode Score
+- Bridge events Interaction Mode Score
+- DeFi events Interaction Mode Score
+
+## 2. Motivation and Business Relevance
+
+Mentioned briefly in the introduction, the business relevance of this project (in its final form with integration of further data and more models and features) is in order to achieve improved user retention and engagement strategies for CEX stakeholders through the use case that is segmenting crypto wallets by behaviour. The full link to the business value from the methods produced in this repository will become clear when analytic scores and models are understood fully; but in terms of making this more clear in how it would work in practice, the wallet data would be linked to users of a CEX (of course with all privacy considerations included for) so that this project's output would build a valuable insight to a CEX's users. 
+
+Of course, this project is not near actual application in this way. Therefore, building from this link to business relevance, my motivation in building this project was in order to show a glimpse of what is possible with this type of analytics and this methodology of thinking with use of the TLADs (Thinking Like a Data Scientist) methodology described by Bill Schmarzo (references later in this documentation). I built all the relevant TLADs canvases to develop my personal ways of thinking in regards to producing business value through data science and analytics, held in this repository also, and used these to sculpt the type of processes built in this project. This was completed in order to not only improve my understanding of this discipline and type of work, but also to display my understanding of how to go about building a project with valid connection to real-world analytics in practice.
+
+## 3. Project Objectives
+
+In terms of the objectives pursued in this project to build a valid analytic profile that described wallet behaviour, the following is a description of all the goals undertaken, of course a lot of these are not neccessarily the best methods to achieve the analytic value aspired to which is evaluated and explained later in this document: 
+
+- Produce a clustering pipleine with the purpose of clustering wallets based on their general activity level. This involved the production of the UMAP dimensionality reduction (uniform maniford approximation and projection) and HDBSCAN clustering (hierarchical density based spatial clustering of applications with noise).
+- Produce the neccessary functionality to preprocess and log-transform features being utilised in models and feature engineering of analytic scores.
+- Produce an interpretable score that measures volatility of a wallet's transaction behaviour over time to form the behavioural volatility score.
+- Produce an interpretable score that estimates the revenue a wallet provides in the given dataset's time period (of course something that would look different with integration of a CEX's data, the estimation proxy is only used to show how actual revenue data would be intergrated into an analytic profile).
+- Produce an interpretable score that effectively measures a wallets interaction with a number of different event types in comparison to the dataset to form a interaction mode score.
+- Produce an interpretable score that measures the diversity of interaction of a wallets interaction with different features, forming the cross domain engagement score.
+- Produce the neccessary functionality to effectively visualise and display results of this project's output in a reproducible dashboard.
+
+## 4. Repository Structure
+
+CEX_Analytics_Project/
+├── README.md
+├── LICENSE
+├── pyproject.toml
+├── INTERACTION_MODE_README.md
+├── query_new_raw_data.sql
+
+├── Notebooks/
+│   └── Jupyter notebooks for EDA, clustering, and visualization
+
+├── TLADS_Documents/
+│   └── Business initiative and analytics documentation (Word files)
+
+├── artifacts/
+│   ├── Configurations_and_Pipeline_Metadata/   # YAML configs for pipeline and clustering
+│   ├── Dashboards/                            # HTML dashboard outputs
+│   └── Manual_Analysis_and_Configurations/     # Manual analysis reports and configs
+
+├── data/
+│   ├── data_description.md
+│   ├── processed_data/
+│   └── raw_data/
+
+├── docs/
+│   └── Markdown documentation for analytic modules and clustering
+
+├── scripts/
+│   ├── analytic_scores_merging_execution.py
+│   ├── archive_execution_scripts/
+│   ├── artifact_production_execution/
+│   ├── behavioural_volatility_feature_engineering.py/
+│   ├── clustering/
+│   ├── cross_domain_/
+│   ├── interaction_mode_score/
+│   └── revenue_score/
+
+├── source_code_package/
+│   ├── __init__.py
+│   ├── config/
+│   ├── data/
+│   ├── features/
+│   ├── models/
+│   └── utils/
+
+└── tests/
+    ├── __init__.py
+    └── Unit tests for configuration, clustering, scoring, and feature engineering
+
+## 5. Setup and Installation
 
 
-## Project Overview
-
-Objective:
-This project applies the Thinking Like a Data Scientist (TLADS) methodology to design and build a wallet-level segmentation framework for Centralized Crypto Exchanges (CEXs). The aim is to enhance user retention, personalize engagement strategies, and ultimately increase fee-based revenue through nanoeconomics-driven decision-making.
-
-Use Case Focus:
-The core use case is wallet segmentation based on behavioral archetypes derived from on-chain activity. By creating analytic scores that quantify user behaviors and propensities, CEXs can identify strategic cohorts (e.g., high-LTV users, dormant accounts, product explorers) and tailor retention, UX, and incentive mechanisms accordingly.
-
-LTV Prediction Score
-**(More to be confirmed during model development)**
-
-Data:
-The project uses granular wallet activity data from the Polygon blockchain, sourced via Flipside Crypto’s polygon.core schema. This includes:
-**UPDATE WHEN MOVING ON FROM JUST POLYGON BLOCKCHAIN DATA WITH POTENTIAL AUTOMATED DATA INTEGRATION INTO THE MODEL PIPELINES**
-📄 **[INSERT data types] — e.g., transaction records, contract interactions, value transfers**
-
-📅 **[INSERT date range or snapshot period]**
-
-🔍 **[INSERT any preprocessing or filtering rules]**
-
-Output:
-The segmentation pipelines with produce an output with the following presentation:
-
-🧠 **Per-wallet analytic scores (e.g., LTV, innovation, volatility)**
-
-🧩 **Cluster labels representing behavioral archetypes**
-
-📊 **Dashboard-ready insights for strategy teams at CEXs**
-
-**NEED TO FULLY UPDATE ALL OF THE ABOVE WHEN GETTING TO THE ACTUAL OUTPUT SECTION - UEX FEEDBACK LOOP ETC...**
-
-CEXs could use this output to:
-
-Prioritize incentive programs and A/B test offers
-
-Route users to different UX paths based on complexity preference
-
-Identify retention risks early and deploy interventions
-
-Target high-value users for premium services
-
-Methodology Alignment:
-The project follows the TLADS 8-step framework, particularly emphasizing:
-
-Entity-level nanoeconomic insights
-
-Score transparency and interpretability
-
-Algorithm selection based on stakeholder value and explainability
-
-••IN THIS SECTION AT THE END - ONCE EVERYTHING FULLY COMPLETED CODE WISE ETC - NEED TO BE VERY SPECIFIC ABOUT HOW THE PROJECT'S OUTPUT FOLLOWS THE BUSINESS VALUE BASED APPROACH DESCRIBED IN THE TLADS BOOK (ALSO EXPLAINING THE SELECTED DATA STACK AND ALGORITHMS ALONG WITH THIS RATIONALE)**
-
-## Key Features
-
-- UMAP dimensionality reduction into a HDBSCAN clustering algorithm to segment wallets based on activity level
--
-**NEED TO ADD IN HERE ALL THE ANALYTIC SCORES AND MODELS BUILT TO PRODUCE THE ANALYTICAL OUTPUT**
-
-## Testing & CI/CD
-
-**DO ONCE GITHUB ACTIONS, PYPROJECT.TOML AND RELATED TESTING FOLDER ALL UPDATED AND RUNNING AS NEEDED**
-
-## Getting Started
-
-**INSTRUCTIONS FOR HOW TO RUN AND USE THIS REPOSITORY TO GAIN THE INTENTED OUTPUT ETC - MAYBE NOTES ABOUT THE WAY PEOPLE NEED TO USE IT TO LOOK AT CERTAIN DATA ETC**
-
-## Project Structure
-
-**FULL REPOSITORY STRUCTURE - DO WITH ALL NEW FOLDERS FOR THE MODELS TO BE BUILT**
-
-## Results
-
-**NEED TO RESEARCH WHAT TO PUT HERE MORE - MAYBE SCREENSHOTS OF INTENDED OUTPUT GIVEN CURRENT CONFIGURATIONS FOR THE PEOPLE USING THE REPO**
-
-## References
-
-Data sourced from Flipside Crypto's 'Polygon.core' schema.
-**IF AUTOMATED DATA INTEGRATION USED ETC -- UPDATE ACCORDINGLY BASED ON THE FRAMING OF THIS PROJECT AND HOW THE DATA FLOW IS CHANGED IN RELATION**
 
 ## Author
 
