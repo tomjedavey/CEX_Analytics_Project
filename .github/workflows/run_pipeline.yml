@@ -25,7 +25,7 @@ jobs:
           poetry install --no-root
 
       - name: Set PYTHONPATH
-        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)/source_code_package" >> $GITHUB_ENV
+        run: echo "PYTHONPATH=$PYTHONPATH:$(pwd)" >> $GITHUB_ENV
 
       - name: Run clustering pipeline
         run: python scripts/clustering/run_clustering_pipeline.py
