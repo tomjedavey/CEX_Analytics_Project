@@ -103,7 +103,9 @@ CEX_Analytics_Project/
 
 ## 5. Setup and Installation
 
+In terms of how to gain the correct setup to be able to utilise this project's repository, the following must be attended to in terms of installing dependencies and gaining the right environment of which is reproducible. 
 
+The first thing to consider is to 
 
 ## Author
 
