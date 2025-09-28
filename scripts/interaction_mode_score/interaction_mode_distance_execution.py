@@ -4,7 +4,7 @@ Script to calculate distance from medians for each clustering dataset (cluster 0
 import os
 import pandas as pd
 import numpy as np
-from source_code_package.features.interaction_mode_distance_source import (
+from Source_Code_Package.features.interaction_mode_distance_source import (
     load_medians, compute_distances,
     compute_mad, normalize_distances, compute_proportionality_weights,
     apply_proportionality_weighting

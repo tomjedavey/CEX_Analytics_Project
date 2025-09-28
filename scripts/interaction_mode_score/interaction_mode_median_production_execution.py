@@ -76,7 +76,8 @@ Examples:
     parser.add_argument(
         '--force', 
         action='store_true',
-        help='Overwrite existing output files'
+        default=True,
+        help='Overwrite existing output files (default: True)'
     )
     
     parser.add_argument(

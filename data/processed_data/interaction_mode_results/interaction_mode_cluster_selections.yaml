@@ -18,21 +18,21 @@ datasets:
         selected_cluster: 1
         selection_score: 26.0
       CEX_EVENTS:
-        cluster_size: 1394
+        cluster_size: 3311
         feature_stats:
-          activity_count: 269
-          max: 275.0
-          mean: 1.7847919655667146
+          activity_count: 0
+          max: 0.0
+          mean: 0.0
           median: 0.0
-          median_nonzero: 2.0
+          median_nonzero: 0.0
           min: 0.0
-          non_zero_proportion: 0.19296987087517933
-          std: 12.688222421910952
-          variance: 160.9909882278838
-        median_nonzero_value: 2.0
-        meets_activity_threshold: true
-        selected_cluster: 7
-        selection_score: 0.38593974175035867
+          non_zero_proportion: 0.0
+          std: 0.0
+          variance: 0.0
+        median_nonzero_value: 0.0
+        meets_activity_threshold: false
+        selected_cluster: 0
+        selection_score: 0.0
       DEFI_EVENTS:
         cluster_size: 1394
         feature_stats:
@@ -208,10 +208,10 @@ datasets:
     valid_clusters: 21
 selection_parameters:
   algorithm: activity_required
-  min_activity_threshold: 0.1
+  min_activity_threshold: 0.3
   min_cluster_size: 50
 summary:
-  activity_threshold_met: 12
+  activity_threshold_met: 11
   fallback_selections: 0
   features_analyzed: 4
   median_value_ranges:
@@ -223,12 +223,12 @@ summary:
       min: 19.0
       threshold_compliance: 3/3
     CEX_EVENTS:
-      avg_activity_rate: 0.709530729490582
+      avg_activity_rate: 0.6452074391988555
       datasets_with_selections: 3
       max: 2.0
-      mean: 2.0
-      min: 2.0
-      threshold_compliance: 3/3
+      mean: 1.3333333333333333
+      min: 0.0
+      threshold_compliance: 2/3
     DEFI_EVENTS:
       avg_activity_rate: 0.7682926829268292
       datasets_with_selections: 3
