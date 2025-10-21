@@ -190,11 +190,14 @@ def plot_stable_high_value_analytic_score_distributions(
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
 	figs = []
 	for col in columns:
-		# Filter outliers based on percentiles for the whole column
-		lower = df[col].quantile(lower_percentile / 100)
-		upper = df[col].quantile(upper_percentile / 100)
-		all_data = df[(df[col] >= lower) & (df[col] <= upper)][col]
-		stable_data = stable_high_value_wallets[(stable_high_value_wallets[col] >= lower) & (stable_high_value_wallets[col] <= upper)][col]
+		# Calculate percentiles separately for each group to ensure proper comparison
+		all_lower = df[col].quantile(lower_percentile / 100)
+		all_upper = df[col].quantile(upper_percentile / 100)
+		stable_lower = stable_high_value_wallets[col].quantile(lower_percentile / 100)
+		stable_upper = stable_high_value_wallets[col].quantile(upper_percentile / 100)
+		
+		all_data = df[(df[col] >= all_lower) & (df[col] <= all_upper)][col]
+		stable_data = stable_high_value_wallets[(stable_high_value_wallets[col] >= stable_lower) & (stable_high_value_wallets[col] <= stable_upper)][col]
 		fig = go.Figure()
 		# Plot full dataset as density
 		fig.add_trace(go.Histogram(
@@ -391,10 +394,14 @@ def plot_defi_power_users_analytic_score_distributions(
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
 	figs = []
 	for col in columns:
-		lower = df[col].quantile(lower_percentile / 100)
-		upper = df[col].quantile(upper_percentile / 100)
-		all_data = df[(df[col] >= lower) & (df[col] <= upper)][col]
-		defi_power_data = defi_power_users_wallets[(defi_power_users_wallets[col] >= lower) & (defi_power_users_wallets[col] <= upper)][col]
+		# Calculate percentiles separately for each group to ensure proper comparison
+		all_lower = df[col].quantile(lower_percentile / 100)
+		all_upper = df[col].quantile(upper_percentile / 100)
+		defi_lower = defi_power_users_wallets[col].quantile(lower_percentile / 100)
+		defi_upper = defi_power_users_wallets[col].quantile(upper_percentile / 100)
+		
+		all_data = df[(df[col] >= all_lower) & (df[col] <= all_upper)][col]
+		defi_power_data = defi_power_users_wallets[(defi_power_users_wallets[col] >= defi_lower) & (defi_power_users_wallets[col] <= defi_upper)][col]
 		fig = go.Figure()
 		fig.add_trace(go.Histogram(
 			x=all_data,
@@ -487,10 +494,14 @@ def plot_omnichain_explorers_analytic_score_distributions(
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
 	figs = []
 	for col in columns:
-		lower = df[col].quantile(lower_percentile / 100)
-		upper = df[col].quantile(upper_percentile / 100)
-		all_data = df[(df[col] >= lower) & (df[col] <= upper)][col]
-		omni_data = omnichain_explorers_wallets[(omnichain_explorers_wallets[col] >= lower) & (omnichain_explorers_wallets[col] <= upper)][col]
+		# Calculate percentiles separately for each group to ensure proper comparison
+		all_lower = df[col].quantile(lower_percentile / 100)
+		all_upper = df[col].quantile(upper_percentile / 100)
+		omni_lower = omnichain_explorers_wallets[col].quantile(lower_percentile / 100)
+		omni_upper = omnichain_explorers_wallets[col].quantile(upper_percentile / 100)
+		
+		all_data = df[(df[col] >= all_lower) & (df[col] <= all_upper)][col]
+		omni_data = omnichain_explorers_wallets[(omnichain_explorers_wallets[col] >= omni_lower) & (omnichain_explorers_wallets[col] <= omni_upper)][col]
 		fig = go.Figure()
 		fig.add_trace(go.Histogram(
 			x=all_data,
