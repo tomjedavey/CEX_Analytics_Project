@@ -344,7 +344,7 @@ def plot_defi_power_users_analytic_score_distributions(
 	return_fig: bool = False
 ) -> 'Optional[go.Figure]':
 	"""
-	Plots analytic score distributions for the whole dataset, overlays the distribution for wallets with DEFI_EVENTS_INTERACTION_MODE <= 11.
+	Plots analytic score distributions for the whole dataset, overlays the distribution for wallets with DEFI_EVENTS_INTERACTION_MODE <= 9.
 	Also produces visualisations of the cluster distribution (activity_cluster_label) for these wallets.
 	Plots are clearly labelled as "DeFi Power Users Archetype".
 	"""
