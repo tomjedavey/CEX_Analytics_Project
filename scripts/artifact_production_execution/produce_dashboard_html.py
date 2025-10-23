@@ -1,9 +1,15 @@
 import sys
 import os
 
-# Ensure the Source_Code_Package is importable
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
+# Get the project root directory (two levels up from this script)
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(script_dir, '..', '..'))
 
+# Add project root to Python path
+if project_root not in sys.path:
+    sys.path.insert(0, project_root)
+
+# Now import the module
 from Source_Code_Package.utils.dashboard_html import produce_dashboard_html
 
 if __name__ == "__main__":
