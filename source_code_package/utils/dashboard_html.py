@@ -29,6 +29,17 @@ def produce_dashboard_html(
 	ensuring reproducibility with new data/configurations.
 	"""
 	os.makedirs(os.path.dirname(output_path), exist_ok=True)
+	
+	# DEBUG: Confirm which file is being read
+	print(f"DEBUG - Reading dashboard data from: {data_path}")
+	print(f"DEBUG - File exists: {os.path.exists(data_path)}")
+	if os.path.exists(data_path):
+		import time
+		mod_time = os.path.getmtime(data_path)
+		print(f"DEBUG - File last modified: {time.ctime(mod_time)}")
+		file_size = os.path.getsize(data_path)
+		print(f"DEBUG - File size: {file_size:,} bytes")
+	
 	df = pd.read_csv(data_path)
 
 	# DEBUG: Print DEFI_EVENTS_INTERACTION_MODE statistics
@@ -36,10 +47,17 @@ def produce_dashboard_html(
 		defi_col = df["DEFI_EVENTS_INTERACTION_MODE"]
 		print(f"DEBUG - DEFI_EVENTS_INTERACTION_MODE in dashboard data:")
 		print(f"  Total wallets: {len(df)}")
+		print(f"  Data type: {defi_col.dtype}")
 		print(f"  Min: {defi_col.min():.2f}, Max: {defi_col.max():.2f}")
 		print(f"  Mean: {defi_col.mean():.2f}, Median: {defi_col.median():.2f}")
 		print(f"  Wallets with <= 9: {(defi_col <= 9).sum()} / {len(defi_col)} ({(defi_col <= 9).mean()*100:.2f}%)")
 		print(f"  Unique values (first 10): {sorted(defi_col.unique())[:10]}")
+		print(f"  Sample values: {defi_col.head(10).tolist()}")
+		
+		# DEBUG: Test the exact filtering condition
+		filter_result = defi_col <= 9
+		print(f"  Filter condition results (first 10): {filter_result.head(10).tolist()}")
+		print(f"  Filter true count: {filter_result.sum()}")
 	else:
 		print("DEBUG - DEFI_EVENTS_INTERACTION_MODE column not found in dashboard data!")
 
