@@ -39,6 +39,11 @@ for cluster in cluster_dirs:
     wallet_full_df = pd.read_csv(clustering_data_path)
     wallet_df = wallet_full_df[FEATURES]
 
+    # DEBUG: Print median values for this cluster
+    print(f"  Median values for {cluster}:")
+    for feat in FEATURES:
+        median_val = medians_df.iloc[0][feat]
+        print(f"    {feat}: {median_val}")
 
     # No preprocessing: use raw medians and wallet data
     medians_proc = medians_df
@@ -47,6 +52,14 @@ for cluster in cluster_dirs:
     # Compute signed distances
     dist = compute_distances(wallet_proc, medians_proc, FEATURES)
     abs_dist = np.abs(dist)
+
+    # DEBUG: Print distance statistics for DEFI_EVENTS specifically
+    if "DEFI_EVENTS" in FEATURES:
+        defi_dist = dist["DEFI_EVENTS"]
+        print(f"  DEFI_EVENTS_SIGNED_DIST statistics:")
+        print(f"    Min: {defi_dist.min():.2f}, Max: {defi_dist.max():.2f}")
+        print(f"    Mean: {defi_dist.mean():.2f}, Median: {defi_dist.median():.2f}")
+        print(f"    Wallets with <= 9: {(defi_dist <= 9).sum()} / {len(defi_dist)} ({(defi_dist <= 9).mean()*100:.2f}%)")
 
     # Compute MAD
     mad = compute_mad(wallet_proc, FEATURES, medians_proc)

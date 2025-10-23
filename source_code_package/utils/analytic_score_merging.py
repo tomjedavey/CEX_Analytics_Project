@@ -31,6 +31,14 @@ def merge_analytic_scores(
 	]
 	distances_df = pd.read_csv(distances_path, usecols=distances_cols)
 
+	# DEBUG: Print DEFI_EVENTS distance statistics before renaming
+	if "DEFI_EVENTS_SIGNED_DIST" in distances_df.columns:
+		defi_dist = distances_df["DEFI_EVENTS_SIGNED_DIST"]
+		print(f"DEBUG - DEFI_EVENTS_SIGNED_DIST in distances file:")
+		print(f"  Min: {defi_dist.min():.2f}, Max: {defi_dist.max():.2f}")
+		print(f"  Mean: {defi_dist.mean():.2f}, Median: {defi_dist.median():.2f}")
+		print(f"  Wallets with <= 9: {(defi_dist <= 9).sum()} / {len(defi_dist)} ({(defi_dist <= 9).mean()*100:.2f}%)")
+
 	# Rename *_SIGNED_DIST columns to *_INTERACTION_MODE
 	rename_map = {col: col.replace("SIGNED_DIST", "INTERACTION_MODE") for col in distances_df.columns if col.endswith("SIGNED_DIST")}
 	distances_df = distances_df.rename(columns=rename_map)

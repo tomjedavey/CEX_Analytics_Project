@@ -31,6 +31,18 @@ def produce_dashboard_html(
 	os.makedirs(os.path.dirname(output_path), exist_ok=True)
 	df = pd.read_csv(data_path)
 
+	# DEBUG: Print DEFI_EVENTS_INTERACTION_MODE statistics
+	if "DEFI_EVENTS_INTERACTION_MODE" in df.columns:
+		defi_col = df["DEFI_EVENTS_INTERACTION_MODE"]
+		print(f"DEBUG - DEFI_EVENTS_INTERACTION_MODE in dashboard data:")
+		print(f"  Total wallets: {len(df)}")
+		print(f"  Min: {defi_col.min():.2f}, Max: {defi_col.max():.2f}")
+		print(f"  Mean: {defi_col.mean():.2f}, Median: {defi_col.median():.2f}")
+		print(f"  Wallets with <= 9: {(defi_col <= 9).sum()} / {len(defi_col)} ({(defi_col <= 9).mean()*100:.2f}%)")
+		print(f"  Unique values (first 10): {sorted(defi_col.unique())[:10]}")
+	else:
+		print("DEBUG - DEFI_EVENTS_INTERACTION_MODE column not found in dashboard data!")
+
 
 	# --- Dashboard Structure Explanation ---
 	structure_html = """

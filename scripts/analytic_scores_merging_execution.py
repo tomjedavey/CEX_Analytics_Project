@@ -1,10 +1,12 @@
 import sys
 import os
 
-# Ensure the utils package is importable
-sys.path.append(os.path.join(os.path.dirname(__file__), '../source_code_package/utils'))
+# Add the project root to Python path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(script_dir, '..'))
+sys.path.insert(0, project_root)
 
-from source_code_package.utils.analytic_score_merging import merge_analytic_scores
+from Source_Code_Package.utils.analytic_score_merging import merge_analytic_scores
 
 if __name__ == "__main__":
     merge_analytic_scores()

@@ -297,6 +297,12 @@ def calculate_median_feature_values_for_clusters(
                     print(f"      ✅ Cluster {selected_cluster}: median_nonzero={median_nonzero_value:.1f}, "
                           f"activity={stats['non_zero_proportion']*100:.1f}%, "
                           f"size={stats['cluster_size']:,}")
+                    
+                    # DEBUG: Special attention to DEFI_EVENTS
+                    if feature == "DEFI_EVENTS":
+                        print(f"      🔍 DEBUG - DEFI_EVENTS median selection details:")
+                        print(f"         Selected median value: {median_nonzero_value}")
+                        print(f"         This will be used as baseline for distance calculations")
 
                 except Exception as e:
                     print(f"      ❌ Error processing {feature}: {e}")
