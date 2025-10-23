@@ -1,10 +1,10 @@
 import sys
 import os
 
-# Ensure the utils package is importable
-sys.path.append(os.path.join(os.path.dirname(__file__), '../source_code_package/utils'))
+# Ensure the Source_Code_Package is importable
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
 
-from source_code_package.utils.dashboard_html import produce_dashboard_html
+from Source_Code_Package.utils.dashboard_html import produce_dashboard_html
 
 if __name__ == "__main__":
     # You can add arguments for input/output if needed
