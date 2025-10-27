@@ -43,6 +43,14 @@ def merge_analytic_scores(
 	rename_map = {col: col.replace("SIGNED_DIST", "INTERACTION_MODE") for col in distances_df.columns if col.endswith("SIGNED_DIST")}
 	distances_df = distances_df.rename(columns=rename_map)
 
+	# DEBUG: Print DEFI_EVENTS distance statistics after renaming
+	if "DEFI_EVENTS_INTERACTION_MODE" in distances_df.columns:
+		defi_mode = distances_df["DEFI_EVENTS_INTERACTION_MODE"]
+		print(f"DEBUG - DEFI_EVENTS_INTERACTION_MODE after renaming:")
+		print(f"  Min: {defi_mode.min():.2f}, Max: {defi_mode.max():.2f}")
+		print(f"  Mean: {defi_mode.mean():.2f}, Median: {defi_mode.median():.2f}")
+		print(f"  Wallets with <= 9: {(defi_mode <= 9).sum()} / {len(defi_mode)} ({(defi_mode <= 9).mean()*100:.2f}%)")
+
 	# Merge all on WALLET
 	merged = clustered_df.merge(volatility_df, on="WALLET", how="left") \
 						.merge(engagement_df, on="WALLET", how="left") \
@@ -53,7 +61,17 @@ def merge_analytic_scores(
 	if 'cluster_label' in merged.columns:
 		merged = merged.rename(columns={'cluster_label': 'activity_cluster_label'})
 
-	# Save to output
+	# DEBUG: Print final DEFI_EVENTS_INTERACTION_MODE statistics in merged dataset
+	if "DEFI_EVENTS_INTERACTION_MODE" in merged.columns:
+		final_defi = merged["DEFI_EVENTS_INTERACTION_MODE"]
+		print(f"DEBUG - Final DEFI_EVENTS_INTERACTION_MODE in merged dataset:")
+		print(f"  Total rows: {len(merged)}")
+		print(f"  Min: {final_defi.min():.2f}, Max: {final_defi.max():.2f}")
+		print(f"  Mean: {final_defi.mean():.2f}, Median: {final_defi.median():.2f}")
+		print(f"  Wallets with <= 9: {(final_defi <= 9).sum()} / {len(final_defi)} ({(final_defi <= 9).mean()*100:.2f}%)")
+		print(f"  Value counts (top 10): {final_defi.value_counts().head(10).to_dict()}")
+
+	# Save merged data	# Save to output
 	merged.to_csv(output_path, index=False)
 
 if __name__ == "__main__":
