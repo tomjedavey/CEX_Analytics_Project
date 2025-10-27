@@ -32,6 +32,14 @@ def produce_dashboard_html(
 	
 	df = pd.read_csv(data_path)
 
+	# DEBUG: Check if DataFrame is pre-filtered
+	print(f"DEBUG - Dashboard DataFrame info:")
+	print(f"  Total rows: {len(df)}")
+	print(f"  DEFI_EVENTS_INTERACTION_MODE min: {df['DEFI_EVENTS_INTERACTION_MODE'].min()}")
+	print(f"  DEFI_EVENTS_INTERACTION_MODE max: {df['DEFI_EVENTS_INTERACTION_MODE'].max()}")
+	print(f"  Values > 9: {(df['DEFI_EVENTS_INTERACTION_MODE'] > 9).sum()}")
+	print(f"  Values <= 9: {(df['DEFI_EVENTS_INTERACTION_MODE'] <= 9).sum()}")
+
 	# --- Dashboard Structure Explanation ---
 	structure_html = """
 	<div style='background:#f0f4f8;padding:18px 24px 18px 24px;border-radius:8px;margin-bottom:32px;'>
