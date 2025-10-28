@@ -13,11 +13,11 @@ Date: July 2025
 import os
 import sys
 
-# Add source_code_package to path
-sys.path.append(os.path.join(os.path.dirname(__file__), 'source_code_package', '..'))
+# Add Source_Code_Package to path
+sys.path.append(os.path.join(os.path.dirname(__file__), 'Source_Code_Package', '..'))
 
-# Importing the neccessary function to prepare cluster datasets as csv files from cluster_datasets.py in source code package.
-from source_code_package.data.cluster_datasets import prepare_cluster_datasets
+# Import cluster datasets functionality
+from Source_Code_Package.data.cluster_datasets import prepare_cluster_datasets
 
 def main():
     """
