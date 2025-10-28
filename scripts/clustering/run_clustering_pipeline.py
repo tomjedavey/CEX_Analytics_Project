@@ -15,12 +15,12 @@ import sys
 import argparse
 from typing import Optional
 
-# Add Source_Code_Package to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../Source_Code_Package'))
+# Add source_code_package to path
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../source_code_package'))
 
 # Import the simplified clustering pipeline
 try:
-    from Source_Code_Package.models.clustering_functionality.simplified_clustering import (
+    from source_code_package.models.clustering_functionality.simplified_clustering import (
         run_clustering_pipeline,
         load_hdbscan_config,
         validate_hdbscan_config
@@ -169,7 +169,7 @@ Examples:
         config_path = args.config_path
     else:
         config_path = os.path.join(os.path.dirname(__file__), 
-                                  '../../Source_Code_Package/config/config_cluster.yaml')
+                                  '../../source_code_package/config/config_cluster.yaml')
     
     # Determine output directory (convert to absolute path)
     if not os.path.isabs(args.output_dir):
