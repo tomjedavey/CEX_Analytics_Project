@@ -2,9 +2,16 @@
 Script to calculate distance from medians for each clustering dataset (cluster 0, cluster 1, main).
 """
 import os
+import sys
 import pandas as pd
 import numpy as np
-from source_code_package.features.interaction_mode_distance_source import (
+
+# Add the project root to Python path
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = os.path.abspath(os.path.join(script_dir, '../..'))
+sys.path.insert(0, project_root)
+
+from Source_Code_Package.features.interaction_mode_distance_source import (
     load_medians, compute_distances,
     compute_mad, normalize_distances, compute_proportionality_weights,
     apply_proportionality_weighting
@@ -34,19 +41,25 @@ for cluster in cluster_dirs:
         print(f"Warning: Clustered data not found for {cluster}: {clustering_data_path}")
         continue
 
-    # Load medians and wallet data
+    # Load medians for features from CSV
     medians_df = load_medians(median_path, FEATURES)
-    wallet_full_df = pd.read_csv(clustering_data_path)
-    wallet_df = wallet_full_df[FEATURES]
+    medians_proc = medians_df[FEATURES]
 
-    # DEBUG: Print median values for this cluster
-    print(f"  Median values for {cluster}:")
+    # Load wallet/clustered data
+    wallet_df = pd.read_csv(clustering_data_path)
+    wallet_full_df = wallet_df.copy()
+
+    # DEBUG: Print median values being used, especially for DEFI_EVENTS
+    print(f"  Median values being used for {cluster}:")
     for feat in FEATURES:
         median_val = medians_df.iloc[0][feat]
-        print(f"    {feat}: {median_val}")
+        print(f"    {feat}_MEDIAN: {median_val:.2f}")
 
-    # No preprocessing: use raw medians and wallet data
-    medians_proc = medians_df
+    # Select rows based on cluster
+    if 'cluster_label' in wallet_df.columns:
+        wallet_proc = wallet_df[wallet_df['cluster_label'] == 1][FEATURES]  # Use cluster 1 for now
+    else:
+        wallet_proc = wallet_df[FEATURES]
     wallet_proc = wallet_df
 
     # Compute signed distances
