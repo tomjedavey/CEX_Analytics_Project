@@ -15,12 +15,12 @@ import sys
 import argparse
 from typing import Optional
 
-# Add source_code_package to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../source_code_package'))
+# Add Source_Code_Package to path
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../Source_Code_Package'))
 
 # Import the simplified clustering pipeline
 try:
-    from source_code_package.models.clustering_functionality.simplified_clustering import (
+    from Source_Code_Package.models.clustering_functionality.simplified_clustering import (
         run_clustering_pipeline,
         load_hdbscan_config,
         validate_hdbscan_config
