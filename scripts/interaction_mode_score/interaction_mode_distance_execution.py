@@ -6,12 +6,10 @@ import sys
 import pandas as pd
 import numpy as np
 
-# Add the project root to Python path
-script_dir = os.path.dirname(os.path.abspath(__file__))
-project_root = os.path.abspath(os.path.join(script_dir, '../..'))
-sys.path.insert(0, project_root)
+# Ensure the features package is importable
+sys.path.append(os.path.join(os.path.dirname(__file__), '../../Source_Code_Package/features'))
 
-from Source_Code_Package.features.interaction_mode_distance_source import (
+from interaction_mode_distance_source import (
     load_medians, compute_distances,
     compute_mad, normalize_distances, compute_proportionality_weights,
     apply_proportionality_weighting
