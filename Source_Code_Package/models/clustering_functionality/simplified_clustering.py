@@ -20,7 +20,7 @@ import sys
 # Add the parent directory to path to import from source_code_package
 #sys.path.append(os.path.join(os.path.dirname(__file__), '../../'))
 
-from .HBDSCAN_cluster import (
+from source_code_package.models.clustering_functionality.HBDSCAN_cluster import (
     load_hdbscan_config,
     validate_hdbscan_config,
     hdbscan_clustering_pipeline
@@ -198,7 +198,7 @@ def _run_direct_hdbscan_pipeline(config_path: str,
     try:
         # Import preprocessing functionality  
         try:
-            from ...data.preprocess_cluster import preprocess_for_clustering
+            from data.preprocess_cluster import preprocess_for_clustering
         except ImportError:
             sys.path.append(os.path.join(os.path.dirname(__file__), '../../data'))
             from preprocess_cluster import preprocess_for_clustering

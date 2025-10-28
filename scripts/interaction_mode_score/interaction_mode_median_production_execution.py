@@ -11,9 +11,9 @@ import argparse
 
 import sys
 import os
-# Dynamically add the absolute path to Source_Code_Package to sys.path
+# Dynamically add the absolute path to source_code_package to sys.path
 project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
-source_code_path = os.path.join(project_root, 'Source_Code_Package')
+source_code_path = os.path.join(project_root, 'source_code_package')
 if source_code_path not in sys.path:
     sys.path.insert(0, source_code_path)
 
