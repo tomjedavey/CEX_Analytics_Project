@@ -5,15 +5,34 @@ import os
 import sys
 import pandas as pd
 import numpy as np
+import importlib.util
 
-# Ensure the features package is importable
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../Source_Code_Package/features'))
+# Dynamically add the absolute path to Source_Code_Package to sys.path
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+source_code_path = os.path.join(project_root, 'Source_Code_Package')
 
-from interaction_mode_distance_source import (
-    load_medians, compute_distances,
-    compute_mad, normalize_distances, compute_proportionality_weights,
-    apply_proportionality_weighting
-)
+if not os.path.exists(source_code_path):
+    raise ImportError(f"Could not find Source_Code_Package directory at {source_code_path}")
+
+if source_code_path not in sys.path:
+    sys.path.insert(0, source_code_path)
+
+# Dynamically import the interaction_mode_distance_source module
+features_path = os.path.join(source_code_path, 'features', 'interaction_mode_distance_source.py')
+if not os.path.exists(features_path):
+    raise ImportError(f"Could not find interaction_mode_distance_source.py at {features_path}")
+
+spec = importlib.util.spec_from_file_location('interaction_mode_distance_source', features_path)
+interaction_mode_distance_source = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(interaction_mode_distance_source)
+
+# Import functions from the dynamically loaded module
+load_medians = interaction_mode_distance_source.load_medians
+compute_distances = interaction_mode_distance_source.compute_distances
+compute_mad = interaction_mode_distance_source.compute_mad
+normalize_distances = interaction_mode_distance_source.normalize_distances
+compute_proportionality_weights = interaction_mode_distance_source.compute_proportionality_weights
+apply_proportionality_weighting = interaction_mode_distance_source.apply_proportionality_weighting
 
 
 # Define paths and features
