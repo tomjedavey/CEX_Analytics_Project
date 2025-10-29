@@ -75,7 +75,8 @@ def get_dataset_paths() -> Dict[str, str]:
     # Dynamically find all cluster datasets
     cluster_datasets_dir = os.path.join(project_root, 'data/processed_data/cluster_datasets')
     if os.path.exists(cluster_datasets_dir):
-        for fname in os.listdir(cluster_datasets_dir):
+        # Sort files for deterministic processing order
+        for fname in sorted(os.listdir(cluster_datasets_dir)):
             if fname.startswith('new_raw_data_polygon_cluster_') and fname.endswith('.csv'):
                 # Extract just the number, e.g. new_raw_data_polygon_cluster_0.csv -> 0
                 cluster_num = fname.replace('new_raw_data_polygon_cluster_', '').replace('.csv', '')

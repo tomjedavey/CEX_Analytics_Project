@@ -113,7 +113,7 @@ hdbscan:
   prediction_data: true          # Whether to generate data for predicting cluster membership
   
   # Performance parameters
-  core_dist_n_jobs: -1          # Number of parallel jobs for core distance computation (-1 for all cores)
+  core_dist_n_jobs: 1          # Use single core for deterministic results in CI
   
   # Output parameters
   gen_min_span_tree: false      # Generate minimum spanning tree

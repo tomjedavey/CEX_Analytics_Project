@@ -108,7 +108,8 @@ def select_strongest_cluster_for_feature(
     
     candidate_clusters = []
     
-    for cluster_id in valid_df['cluster'].unique():
+    # Sort cluster IDs for deterministic processing order
+    for cluster_id in sorted(valid_df['cluster'].unique()):
         cluster_data = valid_df[valid_df['cluster'] == cluster_id]
         # Skip small clusters
         if len(cluster_data) < min_cluster_size:
@@ -302,6 +303,7 @@ def calculate_median_feature_values_for_clusters(
                     if feature == "DEFI_EVENTS":
                         print(f"      🔍 DEBUG - DEFI_EVENTS median selection details:")
                         print(f"         Selected median value: {median_nonzero_value}")
+                        print(f"         Environment: {'CI' if os.environ.get('CI') else 'Local'}")
                         print(f"         This will be used as baseline for distance calculations")
 
                 except Exception as e:
