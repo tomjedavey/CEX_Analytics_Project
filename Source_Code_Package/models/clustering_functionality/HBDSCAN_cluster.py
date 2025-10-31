@@ -218,7 +218,7 @@ def apply_hdbscan_clustering(data: np.ndarray, config_path: Optional[str] = None
         'core_dist_n_jobs': hdbscan_config.get('core_dist_n_jobs', -1),
         'gen_min_span_tree': hdbscan_config.get('gen_min_span_tree', False),
         'approx_min_span_tree': hdbscan_config.get('approx_min_span_tree', True),
-        'match_reference_implementation': hdbscan_config.get('match_reference_implementation', False)
+        'match_reference_implementation': config.get('match_reference_implementation', False)
     }
     
     # Remove parameters that are 0 or None where appropriate

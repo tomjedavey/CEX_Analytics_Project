@@ -234,6 +234,9 @@ def plot_stable_high_value_analytic_score_distributions(
 		return figs[0] if len(figs) == 1 else figs
 
 
+
+# New function for the "Erratic Speculator" archetype
+
 def plot_stable_high_value_traders_analytic_score_distributions(
 	df: pd.DataFrame,
 	columns: Optional[List[str]] = None,
