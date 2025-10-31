@@ -89,6 +89,10 @@ def run_clustering_pipeline(config_path: Optional[str] = None,
     ... )
     """
     try:
+        # Set global random seed for reproducibility across environments
+        np.random.seed(42)
+        print("🎯 Set global random seed to 42 for reproducibility")
+        
         print("🚀 Starting unified clustering pipeline...")
         
         # Step 1: Load and validate configuration

@@ -97,9 +97,6 @@ hdbscan:
   # Distance metric
   metric: "euclidean"            # Distance metric ("euclidean", "manhattan", "cosine", "minkowski")
   
-  # Reproducibility
-  random_state: 42               # Random seed for reproducibility
-  
   # Algorithm parameters
   alpha: 1.0                     # Strength of regularization for soft clustering (>0.0)
   algorithm: "best"              # Algorithm to use ("best", "generic", "prims_kdtree", "prims_balltree", "boruvka_kdtree", "boruvka_balltree")

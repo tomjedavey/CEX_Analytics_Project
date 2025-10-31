@@ -37,7 +37,7 @@ def test_numpy_random_determinism():
     print("  ✅ NumPy random sampling is deterministic with seed")
 
 def test_hdbscan_config_loading():
-    """Test that HDBSCAN config includes random_state."""
+    """Test that HDBSCAN config loads without random_state (not supported in current version)."""
     print("=== Testing HDBSCAN config loading ===")
     
     from source_code_package.models.clustering_functionality.HBDSCAN_cluster import load_hdbscan_config
@@ -47,10 +47,12 @@ def test_hdbscan_config_loading():
     
     hdbscan_config = config.get('hdbscan', {})
     
-    assert 'random_state' in hdbscan_config, "random_state not found in HDBSCAN config"
-    assert hdbscan_config['random_state'] == 42, f"Expected random_state=42, got {hdbscan_config['random_state']}"
+    # HDBSCAN doesn't support random_state in current version, so we just verify it loads
+    assert 'min_cluster_size' in hdbscan_config, "min_cluster_size not found in HDBSCAN config"
+    assert hdbscan_config['min_cluster_size'] == 300, f"Expected min_cluster_size=300, got {hdbscan_config['min_cluster_size']}"
     
-    print(f"  ✅ HDBSCAN random_state = {hdbscan_config['random_state']}")
+    print(f"  ✅ HDBSCAN min_cluster_size = {hdbscan_config['min_cluster_size']}")
+    print(f"  ℹ️  Note: random_state not supported in current HDBSCAN version")
 
 def test_umap_config_loading():
     """Test that UMAP config includes random_state."""

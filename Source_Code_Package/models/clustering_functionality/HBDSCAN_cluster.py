@@ -221,10 +221,6 @@ def apply_hdbscan_clustering(data: np.ndarray, config_path: Optional[str] = None
         'match_reference_implementation': hdbscan_config.get('match_reference_implementation', False)
     }
     
-    # Add random_state if specified for reproducibility
-    if 'random_state' in hdbscan_config:
-        hdbscan_params['random_state'] = hdbscan_config['random_state']
-    
     # Remove parameters that are 0 or None where appropriate
     if hdbscan_params['max_cluster_size'] == 0:
         del hdbscan_params['max_cluster_size']

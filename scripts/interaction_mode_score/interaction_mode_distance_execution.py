@@ -1,10 +1,12 @@
 """
 Script to calculate distance from medians for each clustering dataset (cluster 0, cluster 1, main).
 """
+import numpy as np
+np.random.seed(42)  # Set deterministic random seed for clustering consistency
+
 import os
 import sys
 import pandas as pd
-import numpy as np
 import importlib.util
 
 # Dynamically add the absolute path to Source_Code_Package to sys.path

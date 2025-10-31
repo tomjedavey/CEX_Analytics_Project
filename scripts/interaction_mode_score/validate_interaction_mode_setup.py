@@ -6,6 +6,9 @@ This script performs basic validation of the new interaction mode clustering
 configuration and ensures all components are properly set up.
 """
 
+import numpy as np
+np.random.seed(42)  # Set deterministic random seed for clustering consistency
+
 import os
 import sys
 import yaml

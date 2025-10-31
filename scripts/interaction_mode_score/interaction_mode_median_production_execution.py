@@ -7,6 +7,9 @@ thresholds for cluster selection, ensuring selected clusters represent meaningfu
 activity levels rather than just large groups of inactive wallets.
 """
 
+import numpy as np
+np.random.seed(42)  # Set deterministic random seed for clustering consistency
+
 import argparse
 
 import sys
