@@ -4,6 +4,7 @@ Addresses the sparse data problem by requiring minimum activity thresholds.
 """
 
 import os
+import sys
 import pandas as pd
 import numpy as np
 import yaml
@@ -201,16 +202,20 @@ def calculate_median_feature_values_for_clusters(
         'summary': {}
     }
     
-    # Dynamically find all *_clustering folders in interaction_mode_results dir
+    # Dynamically find all *_clustering folders in interaction_mode_results dir - SORTED for deterministic order
     dataset_names = []
     if os.path.exists(results_dir):
-        for fname in os.listdir(results_dir):
+        found_dirs = sorted(os.listdir(results_dir))  # SORTED for deterministic processing
+        print(f"🔍 DEBUG - Found directories in results_dir: {found_dirs}")
+        for fname in found_dirs:
             if fname.endswith('_clustering') and os.path.isdir(os.path.join(results_dir, fname)):
                 if fname == 'main_clustering':
                     dataset_names.append('main')
                 elif fname.startswith('cluster_'):
                     # Extract cluster name from folder, e.g. cluster_0_clustering -> cluster_0
                     dataset_names.append(fname.replace('_clustering', ''))
+        print(f"🔍 DEBUG - Dataset processing order: {dataset_names}")
+        print(f"🔍 DEBUG - Environment: {'CI' if os.environ.get('CI') else 'Local'}")
     total_datasets = 0
 
     for dataset_name in dataset_names:
@@ -303,7 +308,11 @@ def calculate_median_feature_values_for_clusters(
                     if feature == "DEFI_EVENTS":
                         print(f"      🔍 DEBUG - DEFI_EVENTS median selection details:")
                         print(f"         Selected median value: {median_nonzero_value}")
+                        print(f"         Dataset: {dataset_name}")
+                        print(f"         Selected cluster: {selected_cluster}")
                         print(f"         Environment: {'CI' if os.environ.get('CI') else 'Local'}")
+                        print(f"         Python version: {sys.version}")
+                        print(f"         NumPy version: {np.__version__}")
                         print(f"         This will be used as baseline for distance calculations")
 
                 except Exception as e:

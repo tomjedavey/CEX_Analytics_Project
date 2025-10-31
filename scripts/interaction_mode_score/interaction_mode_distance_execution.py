@@ -41,9 +41,12 @@ EVENT_FEATURES = ["DEX_EVENTS", "CEX_EVENTS", "BRIDGE_EVENTS", "DEFI_EVENTS"]
 # You may want to adjust this list to match all features in the medians
 FEATURES = EVENT_FEATURES  # Extend as needed
 
-# Dynamically find all cluster folders and median files
-cluster_dirs = [d for d in os.listdir(BASE_PATH) if os.path.isdir(os.path.join(BASE_PATH, d)) and d.endswith('_clustering')]
+# Dynamically find all cluster folders and median files - SORTED for deterministic order
+cluster_dirs = sorted([d for d in os.listdir(BASE_PATH) if os.path.isdir(os.path.join(BASE_PATH, d)) and d.endswith('_clustering')])
 median_files = {d: f"{d}_feature_medians.csv" for d in cluster_dirs}
+
+print(f"🔍 DEBUG - Distance calculation processing order: {cluster_dirs}")
+print(f"🔍 DEBUG - Environment: {'CI' if os.environ.get('CI') else 'Local'}")
 
 for cluster in cluster_dirs:
     print(f"Processing {cluster}...")
@@ -71,6 +74,11 @@ for cluster in cluster_dirs:
     for feat in FEATURES:
         median_val = medians_df.iloc[0][feat]
         print(f"    {feat}_MEDIAN: {median_val:.2f}")
+        # Special attention to DEFI_EVENTS
+        if feat == "DEFI_EVENTS":
+            print(f"      🔍 DEBUG - Using DEFI_EVENTS median: {median_val}")
+            print(f"      🔍 Environment: {'CI' if os.environ.get('CI') else 'Local'}")
+            print(f"      🔍 Expected: Local=12.0, CI=9.0")
 
     # Select rows based on cluster
     if 'cluster_label' in wallet_df.columns:
