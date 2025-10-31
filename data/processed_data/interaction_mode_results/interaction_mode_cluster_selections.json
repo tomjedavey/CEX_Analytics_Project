@@ -90,85 +90,6 @@
         }
       }
     },
-    "main": {
-      "total_points": 20174,
-      "valid_clusters": 21,
-      "noise_points": 3022,
-      "feature_selections": {
-        "DEX_EVENTS": {
-          "selected_cluster": 17,
-          "median_nonzero_value": 29.0,
-          "cluster_size": 1164,
-          "selection_score": 29.0,
-          "feature_stats": {
-            "mean": 47.68298969072165,
-            "median": 29.0,
-            "median_nonzero": 29.0,
-            "std": 59.99361380100113,
-            "variance": 3599.2336969036737,
-            "min": 1.0,
-            "max": 714.0,
-            "non_zero_proportion": 1.0,
-            "activity_count": 1164
-          },
-          "meets_activity_threshold": true
-        },
-        "CEX_EVENTS": {
-          "selected_cluster": 18,
-          "median_nonzero_value": 2.0,
-          "cluster_size": 699,
-          "selection_score": 1.871244635193133,
-          "feature_stats": {
-            "mean": 7.170243204577969,
-            "median": 2.0,
-            "median_nonzero": 2.0,
-            "std": 20.82197656896241,
-            "variance": 433.55470823841955,
-            "min": 0.0,
-            "max": 275.0,
-            "non_zero_proportion": 0.9356223175965666,
-            "activity_count": 654
-          },
-          "meets_activity_threshold": true
-        },
-        "DEFI_EVENTS": {
-          "selected_cluster": 17,
-          "median_nonzero_value": 12.0,
-          "cluster_size": 1164,
-          "selection_score": 12.0,
-          "feature_stats": {
-            "mean": 27.18470790378007,
-            "median": 12.0,
-            "median_nonzero": 12.0,
-            "std": 45.51217963000816,
-            "variance": 2071.35849467413,
-            "min": 4.0,
-            "max": 689.0,
-            "non_zero_proportion": 1.0,
-            "activity_count": 1164
-          },
-          "meets_activity_threshold": true
-        },
-        "BRIDGE_EVENTS": {
-          "selected_cluster": 10,
-          "median_nonzero_value": 29.0,
-          "cluster_size": 1248,
-          "selection_score": 29.0,
-          "feature_stats": {
-            "mean": 33.18990384615385,
-            "median": 29.0,
-            "median_nonzero": 29.0,
-            "std": 20.1840488394885,
-            "variance": 407.395827554857,
-            "min": 9.0,
-            "max": 87.0,
-            "non_zero_proportion": 1.0,
-            "activity_count": 1248
-          },
-          "meets_activity_threshold": true
-        }
-      }
-    },
     "cluster_1": {
       "total_points": 11390,
       "valid_clusters": 12,
@@ -243,6 +164,85 @@
             "max": 41.0,
             "non_zero_proportion": 1.0,
             "activity_count": 556
+          },
+          "meets_activity_threshold": true
+        }
+      }
+    },
+    "main": {
+      "total_points": 20174,
+      "valid_clusters": 21,
+      "noise_points": 3022,
+      "feature_selections": {
+        "DEX_EVENTS": {
+          "selected_cluster": 17,
+          "median_nonzero_value": 29.0,
+          "cluster_size": 1164,
+          "selection_score": 29.0,
+          "feature_stats": {
+            "mean": 47.68298969072165,
+            "median": 29.0,
+            "median_nonzero": 29.0,
+            "std": 59.99361380100113,
+            "variance": 3599.2336969036737,
+            "min": 1.0,
+            "max": 714.0,
+            "non_zero_proportion": 1.0,
+            "activity_count": 1164
+          },
+          "meets_activity_threshold": true
+        },
+        "CEX_EVENTS": {
+          "selected_cluster": 18,
+          "median_nonzero_value": 2.0,
+          "cluster_size": 699,
+          "selection_score": 1.871244635193133,
+          "feature_stats": {
+            "mean": 7.170243204577969,
+            "median": 2.0,
+            "median_nonzero": 2.0,
+            "std": 20.82197656896241,
+            "variance": 433.55470823841955,
+            "min": 0.0,
+            "max": 275.0,
+            "non_zero_proportion": 0.9356223175965666,
+            "activity_count": 654
+          },
+          "meets_activity_threshold": true
+        },
+        "DEFI_EVENTS": {
+          "selected_cluster": 17,
+          "median_nonzero_value": 12.0,
+          "cluster_size": 1164,
+          "selection_score": 12.0,
+          "feature_stats": {
+            "mean": 27.18470790378007,
+            "median": 12.0,
+            "median_nonzero": 12.0,
+            "std": 45.51217963000816,
+            "variance": 2071.35849467413,
+            "min": 4.0,
+            "max": 689.0,
+            "non_zero_proportion": 1.0,
+            "activity_count": 1164
+          },
+          "meets_activity_threshold": true
+        },
+        "BRIDGE_EVENTS": {
+          "selected_cluster": 10,
+          "median_nonzero_value": 29.0,
+          "cluster_size": 1248,
+          "selection_score": 29.0,
+          "feature_stats": {
+            "mean": 33.18990384615385,
+            "median": 29.0,
+            "median_nonzero": 29.0,
+            "std": 20.1840488394885,
+            "variance": 407.395827554857,
+            "min": 9.0,
+            "max": 87.0,
+            "non_zero_proportion": 1.0,
+            "activity_count": 1248
           },
           "meets_activity_threshold": true
         }

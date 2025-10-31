@@ -220,6 +220,9 @@ def _safe_distance_calculation(data: np.ndarray, max_samples: int = 500) -> np.n
         Pairwise distances, or empty array if calculation fails
     """
     try:
+        # Set random seed for deterministic sampling
+        np.random.seed(42)
+        
         # Limit sample size for performance
         if data.shape[0] > max_samples:
             sample_indices = np.random.choice(data.shape[0], max_samples, replace=False)
@@ -590,6 +593,9 @@ def _evaluate_umap_quality_internal(original_data: pd.DataFrame, reduced_data: n
     try:
         neighborhood_metrics = {}
         
+        # Set random seed for deterministic sampling
+        np.random.seed(42)
+        
         # Limit sample size for performance on large datasets
         sample_size = min(1000, original_numerical.shape[0])
         if sample_size < original_numerical.shape[0]:
@@ -651,6 +657,9 @@ def _evaluate_umap_quality_internal(original_data: pd.DataFrame, reduced_data: n
                 'optimal_clusters': {},
                 'cluster_comparison': {}
             }
+            
+            # Set random seed for deterministic sampling
+            np.random.seed(42)
             
             # Limit sample size for performance
             sample_size = min(500, original_numerical.shape[0])
@@ -748,6 +757,9 @@ def _evaluate_umap_quality_internal(original_data: pd.DataFrame, reduced_data: n
             'total_volume': np.prod(embedding_range),
             'mean_range': np.mean(embedding_range)
         }
+        
+        # Set random seed for deterministic sampling
+        np.random.seed(42)
         
         # Global distance preservation (sample for performance)
         sample_size = min(200, original_numerical.shape[0])

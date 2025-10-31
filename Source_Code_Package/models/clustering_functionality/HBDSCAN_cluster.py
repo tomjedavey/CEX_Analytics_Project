@@ -218,8 +218,12 @@ def apply_hdbscan_clustering(data: np.ndarray, config_path: Optional[str] = None
         'core_dist_n_jobs': hdbscan_config.get('core_dist_n_jobs', -1),
         'gen_min_span_tree': hdbscan_config.get('gen_min_span_tree', False),
         'approx_min_span_tree': hdbscan_config.get('approx_min_span_tree', True),
-        'match_reference_implementation': config.get('match_reference_implementation', False)
+        'match_reference_implementation': hdbscan_config.get('match_reference_implementation', False)
     }
+    
+    # Add random_state if specified for reproducibility
+    if 'random_state' in hdbscan_config:
+        hdbscan_params['random_state'] = hdbscan_config['random_state']
     
     # Remove parameters that are 0 or None where appropriate
     if hdbscan_params['max_cluster_size'] == 0:
