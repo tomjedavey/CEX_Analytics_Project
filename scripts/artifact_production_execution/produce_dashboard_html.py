@@ -8,7 +8,7 @@ sys.path.insert(0, project_root)
 
 # Try importing with the correct case-sensitive directory name
 try:
-    from Source_Code_Package.utils.dashboard_html import produce_dashboard_html
+    from source_code_package.utils.dashboard_html import produce_dashboard_html
 except ImportError:
     # Fallback for CI environments that might have lowercase
     sys.path.append(os.path.join(os.path.dirname(__file__), '../source_code_package/utils'))
