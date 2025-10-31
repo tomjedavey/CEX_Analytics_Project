@@ -3,12 +3,10 @@ Interaction Mode Features with Activity Thresholds
 Addresses the sparse data problem by requiring minimum activity thresholds.
 """
 
-import numpy as np
-np.random.seed(42)  # Set deterministic random seed for clustering consistency
-
 import os
 import sys
 import pandas as pd
+import numpy as np
 import yaml
 from typing import Dict, List, Tuple, Any, Optional
 import logging
