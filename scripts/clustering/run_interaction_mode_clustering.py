@@ -28,8 +28,10 @@ from typing import Dict, Any, List, Tuple, Optional
 import pandas as pd
 from datetime import datetime
 
-# Add source_code_package to path
-sys.path.append(os.path.join(os.path.dirname(__file__), '../../source_code_package'))
+# Add project root to Python path so we can import source_code_package
+# Get the project root directory (2 levels up from this script)
+project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
+sys.path.insert(0, project_root)
 
 # Import the simplified clustering pipeline
 try:
