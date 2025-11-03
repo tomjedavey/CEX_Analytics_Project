@@ -38,7 +38,7 @@ def produce_dashboard_html(
 	print(f"  DEFI_EVENTS_INTERACTION_MODE min: {df['DEFI_EVENTS_INTERACTION_MODE'].min()}")
 	print(f"  DEFI_EVENTS_INTERACTION_MODE max: {df['DEFI_EVENTS_INTERACTION_MODE'].max()}")
 	print(f"  Values > 9: {(df['DEFI_EVENTS_INTERACTION_MODE'] > 9).sum()}")
-	print(f"  Values <= 9: {(df['DEFI_EVENTS_INTERACTION_MODE'] <= 9).sum()}")
+	print(f"  Values <= 7: {(df['DEFI_EVENTS_INTERACTION_MODE'] <= 7).sum()}")
 
 	# --- Dashboard Structure Explanation ---
 	structure_html = """
@@ -142,7 +142,7 @@ def produce_dashboard_html(
 		if label == "Stable High-Value Transactors":
 			count = len(df[(df["BEHAVIOURAL_VOLATILITY_SCORE"] < 0.5) & (df["REVENUE_SCORE_PROXY"] > 2000)])
 		elif label == "DeFi Power Users Wallets":
-			count = len(df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 9])
+			count = len(df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 7])
 		elif label == "Omnichain Explorers Wallets":
 			count = len(df[df["CROSS_DOMAIN_ENGAGEMENT_SCORE"] >= 0.8])
 		else:
