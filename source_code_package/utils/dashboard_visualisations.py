@@ -335,7 +335,7 @@ def plot_stable_high_value_traders_analytic_score_distributions(
 		return figs[0] if len(figs) == 1 else figs
 
 
-# New function for wallets with DEFI_EVENTS_INTERACTION_MODE <= 9
+# New function for wallets with DEFI_EVENTS_INTERACTION_MODE <= 7
 def plot_defi_power_users_analytic_score_distributions(
 	df: pd.DataFrame,
 	columns: Optional[List[str]] = None,
@@ -347,14 +347,14 @@ def plot_defi_power_users_analytic_score_distributions(
 	return_fig: bool = False
 ) -> 'Optional[go.Figure]':
 	"""
-	Plots analytic score distributions for the whole dataset, overlays the distribution for wallets with DEFI_EVENTS_INTERACTION_MODE <= 9.
+	Plots analytic score distributions for the whole dataset, overlays the distribution for wallets with DEFI_EVENTS_INTERACTION_MODE <= 7.
 	Also produces visualisations of the cluster distribution (activity_cluster_label) for these wallets.
 	Plots are clearly labelled as "DeFi Power Users Archetype".
 	"""
 	if columns is None:
 		columns = ANALYTIC_SCORE_COLUMNS
 	# Filter for DeFi Power Users archetype
-	defi_power_users_wallets = df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 9]
+	defi_power_users_wallets = df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 7]
 
 	# 1. Plot cluster distribution with archetype proportions overlayed
 	if "activity_cluster_label" in df.columns:
