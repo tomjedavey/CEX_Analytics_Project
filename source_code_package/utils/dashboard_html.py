@@ -139,7 +139,6 @@ def produce_dashboard_html(
 	for func, label in archetype_funcs:
 		# Get wallet count for each archetype
 		if label == "DeFi Power Users Wallets":
-		elif label == "DeFi Power Users Wallets":
 			count = len(df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 7])
 		elif label == "Omnichain Explorers Wallets":
 			count = len(df[df["CROSS_DOMAIN_ENGAGEMENT_SCORE"] >= 0.8])
