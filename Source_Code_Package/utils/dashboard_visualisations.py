@@ -152,6 +152,7 @@ def plot_stable_high_value_analytic_score_distributions(
 	stable_high_value_wallets = df[(df["BEHAVIOURAL_VOLATILITY_SCORE"] < 0.5) & (df["REVENUE_SCORE_PROXY"] > revenue_75th)]
 
 	# 1. Plot cluster distribution with archetype proportions overlayed
+	cluster_figs = []
 	if "activity_cluster_label" in df.columns:
 		import plotly.graph_objects as go
 		all_cluster_counts = df["activity_cluster_label"].value_counts().sort_index()
@@ -185,6 +186,27 @@ def plot_stable_high_value_analytic_score_distributions(
 			fig.write_html(os.path.join(save_dir, "all_vs_stable_high_value_cluster_distribution.html"))
 		if show:
 			fig.show()
+		cluster_figs.append(fig)
+		
+		# 1b. Plot bar chart showing distribution of filtered wallets across clusters
+		fig_filtered = go.Figure()
+		fig_filtered.add_trace(go.Bar(
+			x=archetype_cluster_counts.index.tolist(),
+			y=archetype_cluster_counts.values,
+			marker_color='orange',
+			opacity=0.8
+		))
+		fig_filtered.update_layout(
+			title="Stable High-Value Wallets Archetype: Distribution Across Activity-Based Clusters",
+			xaxis_title="Cluster Label",
+			yaxis_title="Wallet Count",
+			showlegend=False
+		)
+		if save_dir:
+			fig_filtered.write_html(os.path.join(save_dir, "stable_high_value_filtered_cluster_distribution.html"))
+		if show:
+			fig_filtered.show()
+		cluster_figs.append(fig_filtered)
 
 	# 2. For each analytic score, plot density overlays: all data vs. stable high value
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
@@ -231,108 +253,10 @@ def plot_stable_high_value_analytic_score_distributions(
 			fig.show()
 		figs.append(fig)
 	if return_fig:
-		return figs[0] if len(figs) == 1 else figs
+		# Return cluster figures first, then density figures
+		all_figs = cluster_figs + figs
+		return all_figs[0] if len(all_figs) == 1 else all_figs
 
-
-
-# New function for the "Erratic Speculator" archetype
-
-def plot_stable_high_value_traders_analytic_score_distributions(
-	df: pd.DataFrame,
-	columns: Optional[List[str]] = None,
-	bins: int = 30,
-	save_dir: Optional[str] = None,
-	show: bool = True,
-	lower_percentile: float = 0,
-	upper_percentile: float = 100,
-	return_fig: bool = False
-) -> 'Optional[go.Figure]':
-	"""
-	Plots analytic score distributions for the whole dataset, overlays the distribution for the "Stable High-Value Transactors" archetype:
-	- BEHAVIOURAL_VOLATILITY_SCORE < 0.5
-	- REVENUE_SCORE_PROXY > 2000
-	Also produces visualisations of the cluster distribution (activity_cluster_label) for these wallets.
-	Plots are clearly labelled as "Stable High-Value Transactors".
-	"""
-	if columns is None:
-		columns = ANALYTIC_SCORE_COLUMNS
-	# Filter for Stable High-Value Transactors archetype
-	stable_high_value_wallets = df[(df["BEHAVIOURAL_VOLATILITY_SCORE"] < 0.5) & (df["REVENUE_SCORE_PROXY"] > 2000)]
-
-	# 1. Plot cluster distribution with archetype proportions overlayed
-	if "activity_cluster_label" in df.columns:
-		all_cluster_counts = df["activity_cluster_label"].value_counts().sort_index()
-		archetype_cluster_counts = stable_high_value_wallets["activity_cluster_label"].value_counts().sort_index()
-		all_clusters = all_cluster_counts.index.tolist()
-		archetype_props = [archetype_cluster_counts.get(cl, 0) / all_cluster_counts[cl] if cl in all_cluster_counts and all_cluster_counts[cl] > 0 else 0 for cl in all_clusters]
-		fig = go.Figure()
-		fig.add_trace(go.Bar(
-			x=all_clusters,
-			y=all_cluster_counts.values,
-			name="All Wallets",
-			marker_color='blue',
-			opacity=0.5
-		))
-		fig.add_trace(go.Bar(
-			x=all_clusters,
-			y=[all_cluster_counts[cl] * archetype_props[i] for i, cl in enumerate(all_clusters)],
-			name="Stable High-Value Transactors Proportion",
-			marker_color='green',
-			opacity=0.8
-		))
-		fig.update_layout(
-			title="Cluster Distribution: All Wallets with Stable High-Value Transactors Proportion Overlay",
-			xaxis_title="Cluster Label",
-			yaxis_title="Wallet Count",
-			barmode='overlay',
-			legend_title="Wallet Group"
-		)
-		if save_dir:
-			os.makedirs(save_dir, exist_ok=True)
-			fig.write_html(os.path.join(save_dir, "all_vs_stable_high_value_traders_cluster_distribution.html"))
-		if show:
-			fig.show()
-
-	# 2. For each analytic score, plot density overlays: all data vs. stable high-value transactors
-	os.makedirs(save_dir, exist_ok=True) if save_dir else None
-	figs = []
-	for col in columns:
-		lower = df[col].quantile(lower_percentile / 100)
-		upper = df[col].quantile(upper_percentile / 100)
-		all_data = df[(df[col] >= lower) & (df[col] <= upper)][col]
-		stable_data = stable_high_value_wallets[(stable_high_value_wallets[col] >= lower) & (stable_high_value_wallets[col] <= upper)][col]
-		fig = go.Figure()
-		fig.add_trace(go.Histogram(
-			x=all_data,
-			nbinsx=bins,
-			name="All Wallets",
-			marker_color='blue',
-			opacity=0.5,
-			histnorm='probability density'
-		))
-		fig.add_trace(go.Histogram(
-			x=stable_data,
-			nbinsx=bins,
-			name="Stable High-Value Transactors",
-			marker_color='green',
-			opacity=0.7,
-			histnorm='probability density'
-		))
-		fig.update_layout(
-			barmode='overlay',
-			title=f"Density of {col}: All Wallets vs. Stable High-Value Transactors",
-			xaxis_title=col,
-			yaxis_title="Density",
-			legend_title="Wallet Group",
-			bargap=0.1
-		)
-		if save_dir:
-			fig.write_html(os.path.join(save_dir, f"density_{col}_all_vs_stable_high_value_traders.html"))
-		if show:
-			fig.show()
-		figs.append(fig)
-	if return_fig:
-		return figs[0] if len(figs) == 1 else figs
 
 
 # New function for wallets with DEFI_EVENTS_INTERACTION_MODE <= 7
@@ -357,6 +281,7 @@ def plot_defi_power_users_analytic_score_distributions(
 	defi_power_users_wallets = df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 7]
 
 	# 1. Plot cluster distribution with archetype proportions overlayed
+	cluster_figs = []
 	if "activity_cluster_label" in df.columns:
 		all_cluster_counts = df["activity_cluster_label"].value_counts().sort_index()
 		archetype_cluster_counts = defi_power_users_wallets["activity_cluster_label"].value_counts().sort_index()
@@ -389,6 +314,27 @@ def plot_defi_power_users_analytic_score_distributions(
 			fig.write_html(os.path.join(save_dir, "all_vs_defi_power_users_cluster_distribution.html"))
 		if show:
 			fig.show()
+		cluster_figs.append(fig)
+		
+		# 1b. Plot bar chart showing distribution of filtered wallets across clusters
+		fig_filtered = go.Figure()
+		fig_filtered.add_trace(go.Bar(
+			x=archetype_cluster_counts.index.tolist(),
+			y=archetype_cluster_counts.values,
+			marker_color='green',
+			opacity=0.8
+		))
+		fig_filtered.update_layout(
+			title="DeFi Power Users Archetype: Distribution Across Activity-Based Clusters",
+			xaxis_title="Cluster Label",
+			yaxis_title="Wallet Count",
+			showlegend=False
+		)
+		if save_dir:
+			fig_filtered.write_html(os.path.join(save_dir, "defi_power_users_filtered_cluster_distribution.html"))
+		if show:
+			fig_filtered.show()
+		cluster_figs.append(fig_filtered)
 
 	# 2. For each analytic score, plot density overlays: all data vs. DeFi Power Users
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
@@ -433,9 +379,12 @@ def plot_defi_power_users_analytic_score_distributions(
 			fig.show()
 		figs.append(fig)
 	if return_fig:
-		return figs[0] if len(figs) == 1 else figs
+		# Return cluster figures first, then density figures
+		all_figs = cluster_figs + figs
+		return all_figs[0] if len(all_figs) == 1 else all_figs
 
 
+#Plotting function for Omnichain Explorers Archetype - filter = CROSS_DOMAIN_ENGAGEMENT_SCORE >= 0.1
 def plot_omnichain_explorers_analytic_score_distributions(
 	df: pd.DataFrame,
 	columns: Optional[List[str]] = None,
@@ -457,6 +406,7 @@ def plot_omnichain_explorers_analytic_score_distributions(
 	omnichain_explorers_wallets = df[df["CROSS_DOMAIN_ENGAGEMENT_SCORE"] >= 0.8]
 
 	# 1. Plot cluster distribution with archetype proportions overlayed
+	cluster_figs = []
 	if "activity_cluster_label" in df.columns:
 		all_cluster_counts = df["activity_cluster_label"].value_counts().sort_index()
 		archetype_cluster_counts = omnichain_explorers_wallets["activity_cluster_label"].value_counts().sort_index()
@@ -489,6 +439,27 @@ def plot_omnichain_explorers_analytic_score_distributions(
 			fig.write_html(os.path.join(save_dir, "all_vs_omnichain_explorers_cluster_distribution.html"))
 		if show:
 			fig.show()
+		cluster_figs.append(fig)
+		
+		# 1b. Plot bar chart showing distribution of filtered wallets across clusters
+		fig_filtered = go.Figure()
+		fig_filtered.add_trace(go.Bar(
+			x=archetype_cluster_counts.index.tolist(),
+			y=archetype_cluster_counts.values,
+			marker_color='green',
+			opacity=0.8
+		))
+		fig_filtered.update_layout(
+			title="Omnichain Explorers Archetype: Distribution Across Activity-Based Clusters",
+			xaxis_title="Cluster Label",
+			yaxis_title="Wallet Count",
+			showlegend=False
+		)
+		if save_dir:
+			fig_filtered.write_html(os.path.join(save_dir, "omnichain_explorers_filtered_cluster_distribution.html"))
+		if show:
+			fig_filtered.show()
+		cluster_figs.append(fig_filtered)
 
 	# 2. For each analytic score, plot density overlays: all data vs. Omnichain Explorers
 	os.makedirs(save_dir, exist_ok=True) if save_dir else None
@@ -533,7 +504,9 @@ def plot_omnichain_explorers_analytic_score_distributions(
 			fig.show()
 		figs.append(fig)
 	if return_fig:
-		return figs[0] if len(figs) == 1 else figs
+		# Return cluster figures first, then density figures
+		all_figs = cluster_figs + figs
+		return all_figs[0] if len(all_figs) == 1 else all_figs
 
 
 # Example execution (for direct script use)
@@ -551,9 +524,6 @@ if __name__ == "__main__":
 	# Plot overlays and cluster analysis for Stable High-Value Wallets Archetype
 	print("Saving and displaying Stable High-Value Wallets Archetype overlays and cluster analysis to artifacts/Dashboards ...")
 	plot_stable_high_value_analytic_score_distributions(df, save_dir=output_dir, show=True)
-	# Plot overlays and cluster analysis for Erratic Speculator Archetype
-	print("Saving and displaying Stable High-Value Transactors overlays and cluster analysis to artifacts/Dashboards ...")
-	plot_stable_high_value_traders_analytic_score_distributions(df, save_dir=output_dir, show=True)
 	# Plot overlays and cluster analysis for DeFi Power Users Archetype
 	print("Saving and displaying DeFi Power Users Archetype overlays and cluster analysis to artifacts/Dashboards ...")
 	plot_defi_power_users_analytic_score_distributions(df, save_dir=output_dir, show=True)

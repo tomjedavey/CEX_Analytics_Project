@@ -133,14 +133,12 @@ def produce_dashboard_html(
 	# --- Section 4: Archetype Visualisations (in specified order) ---
 	section4_html = "<h2>Archetype Visualisations</h2>"
 	archetype_funcs = [
-	(dashboard_visualisations.plot_stable_high_value_traders_analytic_score_distributions, "Stable High-Value Transactors"),
 		(dashboard_visualisations.plot_defi_power_users_analytic_score_distributions, "DeFi Power Users Wallets"),
 		(dashboard_visualisations.plot_omnichain_explorers_analytic_score_distributions, "Omnichain Explorers Wallets"),
 	]
 	for func, label in archetype_funcs:
 		# Get wallet count for each archetype
-		if label == "Stable High-Value Transactors":
-			count = len(df[(df["BEHAVIOURAL_VOLATILITY_SCORE"] < 0.5) & (df["REVENUE_SCORE_PROXY"] > 2000)])
+		if label == "DeFi Power Users Wallets":
 		elif label == "DeFi Power Users Wallets":
 			count = len(df[df["DEFI_EVENTS_INTERACTION_MODE"] <= 7])
 		elif label == "Omnichain Explorers Wallets":
@@ -152,12 +150,33 @@ def produce_dashboard_html(
 		if count is not None:
 			percent = (count / len(df)) * 100 if len(df) > 0 else 0
 			section4_html += f'<div style="font-size:1.1em;margin-bottom:10px;color:#2c3e50;"><b>Number of wallets in this archetype:</b> {count:,} <br><b>Percentage of whole dataset:</b> {percent:.2f}%</div>'
-		for col in (stats_columns or dashboard_visualisations.ANALYTIC_SCORE_COLUMNS):
-			fig = func(
-				df, columns=[col], bins=bins, save_dir=None, show=False,
-				lower_percentile=5, upper_percentile=95, return_fig=True
-			)
-			section4_html += _fig_to_html(fig)
+		
+		# First call to get cluster distribution figures (only need to call once per archetype)
+		all_figs = func(
+			df, columns=stats_columns or dashboard_visualisations.ANALYTIC_SCORE_COLUMNS, 
+			bins=bins, save_dir=None, show=False,
+			lower_percentile=5, upper_percentile=95, return_fig=True
+		)
+		
+		# all_figs now contains: [overlay_cluster_fig, filtered_cluster_fig, density_fig1, density_fig2, ...]
+		# We want to show cluster figures first, then density figures
+		if isinstance(all_figs, list):
+			# First 2 figures are cluster distributions
+			cluster_figs = all_figs[:2] if len(all_figs) >= 2 else []
+			density_figs = all_figs[2:] if len(all_figs) > 2 else []
+			
+			# Add cluster distribution figures
+			section4_html += "<h4>Cluster Distribution Analysis</h4>"
+			for cluster_fig in cluster_figs:
+				section4_html += _fig_to_html(cluster_fig)
+			
+			# Add density figures for each analytic score
+			section4_html += "<h4>Analytic Score Distributions</h4>"
+			for density_fig in density_figs:
+				section4_html += _fig_to_html(density_fig)
+		else:
+			# Single figure case (shouldn't happen with current implementation)
+			section4_html += _fig_to_html(all_figs)
 
 	# --- Combine all sections ---
 	html = f"""
