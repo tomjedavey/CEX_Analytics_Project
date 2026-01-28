@@ -9,3 +9,4 @@ from source_code_package.utils.analytic_score_merging import merge_analytic_scor
 if __name__ == "__main__":
     merge_analytic_scores()
     print("Merged analytic scores CSV created at data/processed_data/merged_analytic_scores.csv")
+    print("Copy also saved to artifacts/merged_analytic_scores.csv")
